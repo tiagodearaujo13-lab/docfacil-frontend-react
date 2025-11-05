@@ -1,11 +1,27 @@
-function App() {
+import Header from './components/Header.jsx'; 
 
-return (
-  <div>
-    <h1>Olá, Mundo! Este é o meu primeiro Componente React!</h1>
-    <p>Esta será a base do nosso projeto docfacil.pt</p>
-  </div>
- );
+function ConteudoPrincipal() {
+  return (
+    <main>
+      <h2>Bem-vindo á sua biblioteca de documentos!</h2>
+      <p>Aqui vamos mostrar os seus contratos, propostas, etc.</p>
+    </main>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      {/* 3. "ENCAIXAR" AS PEÇAS */}
+      
+      {/* CORREÇÃO 2: O nome da tag é 'Header', igual ao 'import' */}
+      <Header />
+      
+      {/* CORREÇÃO 3: O nome da tag é 'ConteudoPrincipal', igual à 'function' */}
+      <ConteudoPrincipal />
+
+    </div>
+  );
 }
 
 export default App;
