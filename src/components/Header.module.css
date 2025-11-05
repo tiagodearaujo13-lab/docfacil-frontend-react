@@ -1,0 +1,20 @@
+.navBar {
+    background-color: #1a202c;
+    padding:  20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.menuIcon {
+    color: #ffffff;
+    font-size: 30px;
+    cursor: pointer;
+}

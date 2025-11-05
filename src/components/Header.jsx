@@ -1,13 +1,15 @@
-function Header() {
-    return(
-        <header>
-            <h1>DocFacil.pt</h1>
-            <nav>
-                <a href="#">Início</a>
-                <a href="#">Documentos</a>
-                <a href="#">Login</a>
-            </nav>
-        </header>
+import styles from './Header.module.css';
+
+function Header () {
+    
+    const iconeMenu = '☰';
+    
+    return (
+        <header className={styles.navBar}>
+            <a href="# className={styles.logo}">DocFacil.pt</a>
+
+            <div className={styles.menuIcon}>{iconeMenu}</div>
+            </header>
     );
 }
 
