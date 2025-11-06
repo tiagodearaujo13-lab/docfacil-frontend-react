@@ -1,0 +1,40 @@
+.heroSection {
+    background-color: #1a202c;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 60px 30px;
+}
+
+.titulo {
+    font-size: 42px;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.destaque {
+    color: #f6ad65;
+}
+
+.subtitulo {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-bottom: 30px;
+}
+
+.botaoCta {
+    background-color: #f6ad55;
+    color: #1a202c;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+}
+
+.botaoCta:hover {
+    background-color: #dd9b4c;
+}
