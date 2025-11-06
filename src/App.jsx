@@ -1,5 +1,7 @@
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
+import Features from './components/Features.jsx';
+
 
 function App() {
   return (
@@ -9,6 +11,7 @@ function App() {
 
     <Hero />
 
+    <Features />
     </>
   );
 }

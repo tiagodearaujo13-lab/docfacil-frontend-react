@@ -1,0 +1,54 @@
+.featuresSection {
+    background-color: #1a202c;
+    color: white;
+    padding: 60px 30px;
+}
+
+.tituloSecao {
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #f6ad55;
+}
+
+.subtituloSecao {
+    font-size: 18px;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+}
+
+/* A "Grelha" (Grid) dos Cartões */
+.gridDeCards {
+    display: grid;
+    
+    /* Isto é magia: "crie colunas que tenham no mínimo 300px, 
+     mas que se ajustem (1fr)" */
+     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+     gap: 30px; /* O "espaço" entre os cartões */
+     max-width: 1000px; /* A grelha não fica demasiado larga */
+     margin: 0 auto; /* Centrar a grelha */
+}
+
+/* O "autocolante" para cada Cartão individual */
+.card {
+   background-color: #2d3748;
+   padding: 30px;
+   border-radius: 10px;
+   border: 1px solid #4a5568;
+}
+
+/* O 'h3' (título) dentro do cartão */
+.card h3 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #f6ad55;
+    margin-bottom: 15px;
+}
+
+/* O '<p>' (texto) dentro do cartão */
+.card p {
+    font-size: 16px;
+    line-height: 1.6;
+}
