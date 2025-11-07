@@ -3,8 +3,10 @@
     color: white;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     padding: 60px 30px;
+    max-width: 0 auto;
+    margin: 0 auto;
 }
 
 .titulo {
@@ -12,6 +14,10 @@
     font-weight: bold;
     line-height: 1.2;
     margin-bottom: 20px;
+}
+
+.titulo, .subtitulo {
+    text-align: center;
 }
 
 .destaque {
@@ -33,8 +39,11 @@
     text-decoration: none;
     padding: 15px 30px;
     border-radius: 8px;
+    border: 1px solid #4a5568;
 }
 
 .botaoCta:hover {
-    background-color: #dd9b4c;
+    background-color: #ff8c00;
+    cursor: pointer;
+    border-color: #ff8c00;
 }

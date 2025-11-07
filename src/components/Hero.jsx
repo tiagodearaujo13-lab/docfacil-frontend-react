@@ -17,7 +17,7 @@ function Hero() {
         </p>
 
         <a href="#" className={styles.botaoCta}>
-            Começar a Criar (É Grátis)
+            Começar a Criar
         </a>
 
         </div>
