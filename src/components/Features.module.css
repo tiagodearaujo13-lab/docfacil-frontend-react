@@ -1,5 +1,5 @@
 .featuresSection {
-    background-color: #2b3548;
+    background-color: #293344;
     color: white;
     padding: 60px 30px;
 }
@@ -10,6 +10,7 @@
     text-align: center;
     margin-bottom: 10px;
     color: #ff8c00;
+    border: #ff8c00;
 }
 
 .subtituloSecao {

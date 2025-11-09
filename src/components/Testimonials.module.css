@@ -1,0 +1,93 @@
+.testimonialsSection {
+    background-color: #293344;
+    color: white;
+    padding: 60px 30px;
+    max-width: 0 auto;
+    margin: 0 auto;
+}
+
+.tituloSecao {
+    font-size: 36px;
+    font-weight:  bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.subtituloSecao {
+    font-size: 18px;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 50px auto;
+}
+
+.gridDeCards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.card {
+    background-color: #1a202c;
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid #293344;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+     border-color: #ff8c00;
+    cursor: pointer;   
+}
+
+
+.estrelas {
+    color: #ff8c00;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.citacao {
+    font-size: 18px;
+    line-height: 1.6;
+    font-style: italic;
+    flex-grow: 1;
+    margin-bottom: 20px;
+}
+
+.autorInfo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.avatar {
+    background-color: #ff8c00;
+    color: #1a202c;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 50%;
+    width: 50%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nomeAutor {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.tituloAutor {
+    font-size: 14px;
+    color: #ff8c00;
+}
+
+@media (max-width: 768px) {
+    .gridDeCards {
+        grid-template-columns: 1fr;
+    }
+}
