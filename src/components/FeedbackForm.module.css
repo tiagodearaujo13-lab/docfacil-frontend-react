@@ -1,0 +1,80 @@
+.feedbackSection {
+    background-color: #1a202c;
+    color: white;
+    padding: 60px 30px;
+}
+
+.formCard {
+    background-color: #293344;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px;
+    border-radius: 10px;
+    border: 1px solid #293344;
+}
+
+.formCard:hover {
+    border-color: #ff8c00;
+    cursor: pointer;
+}
+
+.formCard h2 {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.formCard p {
+    text-align: center;
+    font-size: 18px;
+    color: #ff8c00;
+    margin-bottom: 30px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form label {
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    margin-bottom: -5px;
+}
+
+.form input[type="text"],
+.form textarea {
+    background-color: #1a202c;
+    border: 1px solid #4a5568;
+    color: white;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+}
+
+.botaoLaranja {
+    background-color: #dd9b4c;
+    color: #1a202c;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.botaoLaranja:hover {
+    background-color: #ff8c00;
+}
+
+.estrelasInput {
+    color: #4a5568;
+    font-size: 30px;
+}
