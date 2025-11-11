@@ -6,6 +6,7 @@ import Testimonials from './components/Testimonials.jsx';
 import FeedbackForm from './components/FeedbackForm.jsx';
 import Pricing from './components/Pricing.jsx';
 import FAQ from './components/FAQ.jsx';
+import Footer from './components/Footer.jsx';
 
 function App() {
   return (
@@ -26,6 +27,8 @@ function App() {
     <FAQ />
 
     <FeedbackForm />
+
+    <Footer />
 
 
     </>
