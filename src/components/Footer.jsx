@@ -17,9 +17,9 @@ function Footer() {
 
                 <div className={styles.footerColuna}>
                     <h4>Produtos</h4>
-                    <a href="#">Funcionalidades</a>
-                    <a href="#">Como Funciona</a>
-                    <a href="#">Preços</a>
+                    <a href="#funcionalidades">Funcionalidades</a>
+                    <a href="#como-funciona">Como Funciona</a>
+                    <a href="#precos">Preços</a>
                     <a href="#">Login</a>
                 </div>
 

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styles from './Header.module.css';
 
 function Header() {
@@ -22,7 +23,7 @@ function Header() {
           <a href="#testemunhos" className={styles.linkDesktop}>Testemunhos</a>
           <a href="#precos" className={styles.linkDesktop}>Preços</a>
           <a href="#faq" className={styles.linkDesktop}>FAQ</a>
-          <a href="#" className={styles.linkDesktop}>Login</a>
+          <Link to="/login" className={styles.linkDesktop}>Login</Link>
         </nav>
 
       <div 
@@ -46,7 +47,7 @@ function Header() {
     <a href="#testemunhos" className={styles.linkMenuMobile}>Testemunhos</a>
     <a href="#precos" className={styles.linkMenuMobile}>Preços</a>
     <a href="#faq" className={styles.linkMenuMobile}>FAQ</a>
-    <a href="#" className={styles.linkMenuMobile}>Login</a>
+    <Link to="/login" className={styles.linkMenuMobile}>Login</Link>
 
      </div>
     )}
