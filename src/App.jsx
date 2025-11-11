@@ -5,6 +5,7 @@ import Steps from './components/Steps.jsx';
 import Testimonials from './components/Testimonials.jsx';
 import FeedbackForm from './components/FeedbackForm.jsx';
 import Pricing from './components/Pricing.jsx';
+import FAQ from './components/FAQ.jsx';
 
 function App() {
   return (
@@ -22,7 +23,10 @@ function App() {
 
     <Pricing />
 
+    <FAQ />
+
     <FeedbackForm />
+
 
     </>
   );

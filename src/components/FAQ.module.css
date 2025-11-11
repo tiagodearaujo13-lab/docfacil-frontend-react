@@ -1,0 +1,68 @@
+.faqSection {
+    background-color: #293344;
+    color: white;
+    padding: 60px 30px;
+}
+
+.tituloSecao, .subtituloSecao {
+    text-align: center;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tituloSecao {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.subtituloSecao {
+    font-size: 18px;
+    color: #ff8c00;
+    margin-bottom: 50px;
+}
+
+
+.faqContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.faqItem {
+    background-color: #1a202c;
+    border: 1px solid #4a5568;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.pergunta {
+    padding: 20px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.iconeToggle {
+    font-size: 24px;
+    color: #ff8c00;
+}
+
+.resposta {
+    padding: 0 25px 25px 25px;
+    border-top: 1px solid #4a5568;
+}
+
+.resposta p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #a0aec0;
+    margin: 0;
+    padding-top: 20px;
+}
