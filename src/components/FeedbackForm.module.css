@@ -1,11 +1,11 @@
 .feedbackSection {
-    background-color: #1a202c;
+    background-color: #293344;
     color: white;
     padding: 60px 30px;
 }
 
 .formCard {
-    background-color: #293344;
+    background-color: #1a202c;
     max-width: 600px;
     margin: 0 auto;
     padding: 40px;
@@ -48,8 +48,8 @@
 
 .form input[type="text"],
 .form textarea {
-    background-color: #1a202c;
-    border: 1px solid #4a5568;
+    background-color: #293344;
+    border: 1px solid #1a202c;
     color: white;
     padding: 12px 15px;
     border-radius: 8px;

@@ -1,0 +1,150 @@
+.pricingSection {
+    background-color: #1a202c;
+    color: white;
+    padding: 60px 30px;
+}
+
+.tituloSecao {
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.subtituloSecao {
+    font-size: 18px;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+}
+
+.toggleContainer {
+    display: flex;
+    justify-content: center;
+    background-color: #2d3748;
+    border-radius: 99px;
+    padding: 5px;
+    width: 250px;
+    margin: 0 auto 50px auto;
+}
+
+.toggleContainer span {
+    padding: 10px 20px;
+    border-radius: 99px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.toggleContainer .toggleAtivo {
+    background-color: #ff8c00;
+    color: #1a202c;
+}
+
+.desconto {
+    background-color: #fefcbf;
+    color: #b7791f;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 5px;
+}
+
+.gridDeCards {
+    display: grid;
+    grid-template-columns: 1fr 1 fr;
+    gap: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.card {
+    background-color: #2d3748;
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid #4a5568;
+    display: flex;
+    flex-direction: column;
+}
+
+.popular {
+    border: 2px solid #ff8c00;
+    position: relative;
+}
+
+.fitaPopular {
+    position: absolute;
+    top: -15px;
+    right: 20px;
+    background-color: #ff8c00;
+    color: #1a202c;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.planoTitulo {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.planoDescricao {
+    color: #a0aec0;
+    margin: 10px 0 20px 0;
+    flex-grow: 1;
+}
+
+.planoPreco{
+    font-size: 48px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.precoDetalhe {
+    font-size: 16px;
+    font-weight: normal;
+    color: #a0aec0;
+}
+
+.featuresList {
+    list-style: none;
+    padding: 0;
+    margin: 30px 0;
+    color: #a0aec0;
+}
+
+.featuresList  li {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.botaoPlano{
+    background-color: #dd9b4c;
+    color: #1a202c;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.botaoPlano:hover {
+    background-color: #ff8c00;
+}
+
+.card:not(.popular) .botaoPlano {
+    background-color: #4a5568;
+    color: white;
+}
+
+.card:not(.popular) .botaoPlano:hover {
+    background-color: #ff8c00;
+    color: #1a202c;
+}
+
+@media (max-width: 768px) {
+    .gridDeCards {
+        grid-template-columns: 1fr;
+    }
+}

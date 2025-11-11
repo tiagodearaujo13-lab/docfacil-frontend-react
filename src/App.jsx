@@ -4,7 +4,7 @@ import Features from './components/Features.jsx';
 import Steps from './components/Steps.jsx';
 import Testimonials from './components/Testimonials.jsx';
 import FeedbackForm from './components/FeedbackForm.jsx';
-
+import Pricing from './components/Pricing.jsx';
 
 function App() {
   return (
@@ -19,6 +19,8 @@ function App() {
     <Steps />
 
     <Testimonials />
+
+    <Pricing />
 
     <FeedbackForm />
 
