@@ -17,11 +17,11 @@ function Header() {
 
       <nav className={styles.menuDesktop}>
 
-          <a href="#" className={styles.linkDesktop}>Funcionalidades</a>
-          <a href="#" className={`${styles.linkDesktop} ${styles.ativo}`}>Como Funciona</a>
-          <a href="#" className={styles.linkDesktop}>Testemunhos</a>
-          <a href="#" className={styles.linkDesktop}>Preços</a>
-          <a href="#" className={styles.linkDesktop}>FAQ</a>
+          <a href="#funcionalidades" className={styles.linkDesktop}>Funcionalidades</a>
+          <a href="#como-funciona" className={`${styles.linkDesktop} ${styles.ativo}`}>Como Funciona</a>
+          <a href="#testemunhos" className={styles.linkDesktop}>Testemunhos</a>
+          <a href="#precos" className={styles.linkDesktop}>Preços</a>
+          <a href="#faq" className={styles.linkDesktop}>FAQ</a>
           <a href="#" className={styles.linkDesktop}>Login</a>
         </nav>
 
@@ -40,12 +40,12 @@ function Header() {
          >
          x
     </div>
-    
-    <a href="#" className={styles.linkMenuMobile}>Funcionalidades</a>
-    <a href="#" className={styles.linkMenuMobile}>Como Funciona</a>
-    <a href="#" className={styles.linkMenuMobile}>Testemunhos</a>
-    <a href="#" className={styles.linkMenuMobile}>Preços</a>
-    <a href="#" className={styles.linkMenuMobile}>FAQ</a>
+
+    <a href="#funcionalidades" className={styles.linkMenuMobile}>Funcionalidades</a>
+    <a href="#como-funciona" className={styles.linkMenuMobile}>Como Funciona</a>
+    <a href="#testemunhos" className={styles.linkMenuMobile}>Testemunhos</a>
+    <a href="#precos" className={styles.linkMenuMobile}>Preços</a>
+    <a href="#faq" className={styles.linkMenuMobile}>FAQ</a>
     <a href="#" className={styles.linkMenuMobile}>Login</a>
 
      </div>
