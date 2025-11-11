@@ -1,5 +1,10 @@
 .heroSection {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url('../assets/hero-background.jpg.png');
     background-color: #1a202c;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeats;
     color: white;
     display: flex;
     flex-direction: column;
@@ -26,7 +31,7 @@
 }
 
 .subtitulo {
-    font-size: 18px;
+    font-size: 20px;
     line-height: 1.6;
     max-width: 600px;
     margin-bottom: 30px;
