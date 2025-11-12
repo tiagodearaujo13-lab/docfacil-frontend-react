@@ -1,0 +1,63 @@
+.formCard {
+    background-color: #2d3748;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 40px;
+    border-radius: 10px;
+    border: 1px solid #4a5568;
+}
+
+.formCard h2 {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.formCard p {
+    text-align: center;
+    font-size: 18px;
+    color: #a0aec0;
+    margin-bottom: 30px;
+}
+
+.form {
+   display: flex;
+   flex-direction: column;
+   gap: 15px; 
+}
+
+.form label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #a0aec0;
+    margin-bottom: -5px;
+}
+
+.form input {
+    background-color: #1a202c;
+    border: 1px solid #4a5568;
+    color: white;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+}
+
+.botaoLaranja {
+    background-color: #ff8c00;
+    color: #1a202c;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.botaoLaranja:hover {
+    background-color: #dd9b4c;
+}

@@ -20,7 +20,7 @@ function Footer() {
                     <a href="#funcionalidades">Funcionalidades</a>
                     <a href="#como-funciona">Como Funciona</a>
                     <a href="#precos">Preços</a>
-                    <a href="#">Login</a>
+                    
                 </div>
 
                 <div className={styles.footerColuna}>
