@@ -12,9 +12,9 @@ function Header() {
     <>
     <header className={styles.navBar}>
       
-      <a href="#" className={styles.logo}>
+      <Link to="/" className={styles.logo}>
         DocFacil.pt
-      </a>
+      </Link>
 
       <nav className={styles.menuDesktop}>
 
@@ -37,17 +37,20 @@ function Header() {
 
     {menuAberto && (
      <div className={styles.menuMobileAberto}>
-        <div className={styles.menuIcon} onClick={() => setMenuAberto(false)}
+        <div 
+         className={styles.menuIcon}
+         onClick={() => setMenuAberto(false)}
          >
          x
     </div>
 
-    <a href="#funcionalidades" className={styles.linkMenuMobile}>Funcionalidades</a>
-    <a href="#como-funciona" className={styles.linkMenuMobile}>Como Funciona</a>
-    <a href="#testemunhos" className={styles.linkMenuMobile}>Testemunhos</a>
-    <a href="#precos" className={styles.linkMenuMobile}>Preços</a>
-    <a href="#faq" className={styles.linkMenuMobile}>FAQ</a>
-    <Link to="/login" className={styles.linkMenuMobile}>Login</Link>
+    <a href="#funcionalidades" className={styles.linkMenuMobile} onClick={() => setMenuAberto(false)}>Funcionalidades</a>
+    <a href="#como-funciona" className={styles.linkMenuMobile} onClick={() => setMenuAberto(false)}>Como Funciona</a>
+    <a href="#testemunhos" className={styles.linkMenuMobile} onClick={() => setMenuAberto(false)}>Testemunhos</a>
+    <a href="#precos" className={styles.linkMenuMobile} onClick={() => setMenuAberto(false)}>Preços</a>
+    <a href="#faq" className={styles.linkMenuMobile} onClick={() => setMenuAberto(false)}>FAQ</a>
+   
+    <Link to="/login" className={styles.linkMenuMobile} onClick={() => setMenuAberto(false)}>Login</Link>
 
      </div>
     )}

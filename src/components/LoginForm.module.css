@@ -5,6 +5,7 @@
     padding: 40px;
     border-radius: 10px;
     border: 1px solid #4a5568;
+    scroll-behavior: smooth;
 }
 
 .formCard h2 {
