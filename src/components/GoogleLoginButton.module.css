@@ -1,0 +1,25 @@
+.googleButton {
+  background-color: #ffffff; /* Fundo branco (padrão do Google) */
+  color: #333; /* Texto escuro */
+  border: 1px solid #ddd; /* Borda cinzenta clara */
+  border-radius: 8px;
+  padding: 12px 15px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+
+  width: 100%; /* Ocupa 100% da largura do formulário */
+
+  /* Magia de Flexbox para pôr o ícone e o texto lado a lado */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Espaço entre o ícone e o texto */
+
+  transition: background-color 0.2s;
+}
+
+.googleButton:hover {
+  background-color: #f9f9f9; /* Um cinzento muito claro ao passar o rato */
+}

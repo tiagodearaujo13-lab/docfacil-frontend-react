@@ -1,0 +1,33 @@
+.authlayoutWrapper {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    min-height: calc(100vh - 80px - 60px);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.authContent {
+    background-color: rgb(45, 55, 72, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    max-width: 450px;
+    width: 100%;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .authContent {
+        padding: 30px 20px;
+        max-width: 90%;
+    }
+    .authLayoutWrapper {
+        padding: 15px;
+    }
+}

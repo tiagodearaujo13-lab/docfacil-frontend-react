@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import styles from './LoginForm.module.css';
+import GoogleLoginButton from './GoogleLoginButton.jsx';
 
 
 function LoginForm () {
@@ -50,7 +51,15 @@ function LoginForm () {
                     Entrar
                   </button>
 
+                
+
             </form>
+
+            <div className={styles.divisor}>
+                <h4 className={styles.Ou}>Ou</h4>
+            </div>
+
+            <GoogleLoginButton />
 
             <div className={styles.linkRegisto}>
                 Não tem uma conta?

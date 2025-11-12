@@ -1,13 +1,13 @@
 import LoginForm from '../components/LoginForm.jsx';
-
-import styles from './Page.module.css';
+import AuthLayout from '../components/AuthLayout.jsx';
 
 function LoginPage() {
     return (
 
-        <div className={styles.pageContainer}>
-    <LoginForm />
-    </div>
+    <AuthLayout>
+      <LoginForm />
+    </AuthLayout>
+
     );
 }
 
