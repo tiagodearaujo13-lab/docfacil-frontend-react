@@ -1,24 +1,30 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styles from './Header.module.css';
 
 function Header() {
   
   const [menuAberto, setMenuAberto] = useState(false);
-  
   const iconeMenu = '☰';
-
-  const handleScrollClick = (evento, targetId) => {
-
-    evento.preventDefalt();
-
-    const targetElement = document.querySelector(targetId);
-  
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth'});
-    }
-    setMenuAberto(false)
+  const { pathname } = useLocation();
+  const isHomePage = (pathname === '/');
+  const fecharMenu = () => {
+    setMenuAberto(false);
   };
+  const handleScrollClick = (evento, targetId) => {
+    evento.preventDefault();
+    if (!isHomePage) {
+      console.log("Precisa de estar na Home Page para rolar!");
+      fecharMenu();
+      return;
+    }
+    const targetElemet = document.querySelector(targetId);
+    if (targetElemet) {
+      targetElemet.scrollIntoView({ behavior: 'smooth'});
+    }
+    fecharMenu();
+  };
+  
 
 
   return (
@@ -52,7 +58,7 @@ function Header() {
      <div className={styles.menuMobileAberto}>
         <div 
          className={styles.menuIcon}
-         onClick={() => handleScrollClick(e, '#')}
+         onClick={fecharMenu}
          >
          x
     </div>
@@ -62,7 +68,7 @@ function Header() {
         <a href="#testemunhos" onClick={(e) => handleScrollClick(e, '#testemunhos')} className={styles.linkMenuMobile}>Testemunhos</a>
         <a href="#precos" onClick={(e) => handleScrollClick(e, '#precos')} className={styles.linkMenuMobile}>Preços</a>
         <a href="#faq" onClick={(e) => handleScrollClick(e, '#faq')} className={styles.linkMenuMobile}>FAQ</a>
-        <Link to="/login" onClick={() => setMenuAberto(false)} className={styles.linkMenuMobile}>Login</Link>
+        <Link to="/login" onClick={fecharMenu} className={styles.linkMenuMobile}>Login</Link>
 
      </div>
     )}
