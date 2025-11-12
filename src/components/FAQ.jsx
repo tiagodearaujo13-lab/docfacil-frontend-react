@@ -14,7 +14,7 @@ function FAQ () {
 
                 <FAQItem
                 pergunta="O DocFacil é legamente válido em Portugal?"
-                resposta="Sim! Todos od nossos modelos são baseados na legislação portuguesa e desenhados para serem jurudicamente sólidos, mas recomendamos sempre a revisão por um advogado."
+                resposta="Sim! Todos os nossos modelos são baseados na legislação portuguesa e desenhados para serem jurudicamente sólidos, mas recomendamos sempre a revisão por um advogado."
                 />
 
                 <FAQItem

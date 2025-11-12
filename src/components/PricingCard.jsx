@@ -1,4 +1,5 @@
-import styles from "./Pricing.module.css";
+import { Link } from 'react-router-dom';
+import styles from './Pricing.module.css';
 
 function PricingCard(props) {
 
@@ -25,8 +26,17 @@ function PricingCard(props) {
                 ))}
             </ul>
 
-            <a href="#" className={styles.botaoPlano}>{props.botaoTexto}</a>
+            {props.linkPara ? (
+            <Link to={props.linkPara} className={styles.botaoPlano}>{props.botaoTexto}</Link>
+            ) : (
+              
+                <a href="#" className={styles.botaoPlano}>
+                    {props.botaoTexto}
+                </a>
+            )}
         </div>
+
+
     );
 }
 

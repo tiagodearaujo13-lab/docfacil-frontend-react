@@ -43,7 +43,7 @@ function Pricing() {
                 plano="Grátis"
                 descricao="Para quem está a começar."
                 preco={planoAnual ? "0€" : "0€"}
-                precoDetalhe="/ para sempre"
+                precoDetalhe="/ mês "
                 features={[
                     "Até 3 documentos por mês",
                     "Acesso a todos od modelos",
@@ -51,6 +51,7 @@ function Pricing() {
                 ]}
                 botaoTexto="Começar Gratuitamente"
                 isPopular={false}
+                linkPara="/registo"
                 />
 
                 <PricingCard
