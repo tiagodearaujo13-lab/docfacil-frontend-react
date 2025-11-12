@@ -1,5 +1,6 @@
 .pageContainer {
+    background-color: #ffffff;
+    color: #1a202c;
     padding: 60px 30px;
-    max-width: 1200px;
-    margin: 0 auto;
+    min-height: 70vh;
 }

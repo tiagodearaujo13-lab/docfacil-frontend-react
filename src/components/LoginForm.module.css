@@ -13,6 +13,7 @@
     font-weight: bold;
     margin-top: 0;
     margin-bottom: 10px;
+    color: white;
 }
 
 .formCard p {
@@ -46,18 +47,19 @@
 }
 
 .botaoLaranja {
-    background-color: #ff8c00;
+    background-color: #dd9b4c;
     color: #1a202c;
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
     padding: 15px 30px;
     border-radius: 8px;
-    border: none;
+    border: 1x solid #4a5568;
     cursor: pointer;
     margin-top: 15px;
 }
 
 .botaoLaranja:hover {
-    background-color: #dd9b4c;
+    background-color: #ff8c00;
+    border-color: #ff8c00;
 }

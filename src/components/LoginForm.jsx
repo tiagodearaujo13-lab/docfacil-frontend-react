@@ -1,5 +1,7 @@
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import styles from './LoginForm.module.css';
+
 
 function LoginForm () {
 
@@ -47,8 +49,14 @@ function LoginForm () {
                   <button type="submit" className={styles.botaoLaranja}>
                     Entrar
                   </button>
-                  
+
             </form>
+
+            <div className={styles.linkRegisto}>
+                Não tem uma conta?
+                <Link to="/registo">Cadastre-se gratuitamente</Link>
+            </div>
+
         </div>
     );
 }
