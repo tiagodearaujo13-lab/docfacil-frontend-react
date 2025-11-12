@@ -17,15 +17,26 @@ function Pricing() {
             </p>
 
             <div className={styles.toggleContainer}>
-                 <span className={!planoAnual ? styles.toggleAtivo : ''} onClick={() => setPlanoAnual(false)}
-                    >
+                 <span 
+                  className={!planoAnual ? styles.toggleAtivo : styles.toggleInativo}
+                  onClick={() => setPlanoAnual(false)}
+                 >
                      Mensal   
-                  </span>
-                <span className={planoAnual ? styles.toggleAtivo : ''} onClick={() => setPlanoAnual(true)}
-                    >
-                    Anual <span className={styles.desconto}>-20%</span>
-                </span>
+                 </span>
+
+                 <div className={styles.anualWrapper} onClick={() => setPlanoAnual(true)}>
+                   <span 
+                     className={planoAnual ? styles.toggleAtivo : styles.toggleInativo}
+                   >
+                     Anual
+                     </span>
+                    <span className={styles.descontoBadge}>-20%</span>
+                   
+                 </div>
+            
             </div>
+
+
 
             <div className={styles.gridCards}>
                 <PricingCard
