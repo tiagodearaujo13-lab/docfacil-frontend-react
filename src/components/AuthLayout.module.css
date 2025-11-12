@@ -6,8 +6,8 @@
     justify-content: center;
     align-items: center;
     flex-grow: 1;
-    min-height: calc(100vh - 80px - 60px);
-    padding: 20px;
+    min-height: calc(100vh - 150px);
+    padding: 30px;
     box-sizing: border-box;
 }
 
@@ -20,6 +20,7 @@
     max-width: 450px;
     width: 100%;
     color: white;
+    animation: fadeInUp 0.9s ease-out;
 }
 
 @media (max-width: 768px) {
@@ -29,5 +30,16 @@
     }
     .authLayoutWrapper {
         padding: 15px;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

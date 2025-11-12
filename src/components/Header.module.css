@@ -34,7 +34,7 @@
 }
 
 .linkMenuMobile {
-    color: #f6ad55;;
+    color: #ff8c00;
     text-decoration: none;
     font-size: 28px;
     font-weight: bold;
@@ -53,18 +53,22 @@
     font-size: 16px;
 }
 
+.linkDesktop:hover{
+    color: #ff8c00;
+}
+
 .linkDesktop.ativo {
-    color: #f6ad55;
+    color: #ff8c00;
     font-weight: bold;
 }
 
 @media (min-width: 768px) {
     
-.menuIcon {
+ .menuIcon {
         display: none;
-}
+    }   
 
-.menuDesktop{
+ .menuDesktop{
         display: block;
-}
+    }
 }
