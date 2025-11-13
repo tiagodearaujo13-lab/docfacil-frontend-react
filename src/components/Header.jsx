@@ -35,6 +35,7 @@ function Header() {
         DocFacil.pt
       </Link>
 
+    {isHomePage && (
       <nav className={styles.menuDesktop}>
 
           <a href="#funcionalidades" onClick={(e) => handleScrollClick(e, '#funcionalidades')} className={styles.linkDesktop}>Funcionalidades</a>
@@ -44,14 +45,17 @@ function Header() {
           <a href="#faq" onClick={(e) => handleScrollClick(e, '#faq')} className={styles.linkDesktop}>FAQ</a>
           <Link to="/login" className={styles.linkDesktop}>Login</Link>
         </nav>
+    )}
 
+    {isHomePage && (
       <div 
         className={styles.menuIcon} 
         onClick={() => setMenuAberto(true)}
       >
         {iconeMenu}
       </div>
-      
+    )}
+
     </header>
 
     {menuAberto && (
