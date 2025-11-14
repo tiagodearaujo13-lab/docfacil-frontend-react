@@ -13,17 +13,17 @@ function App() {
     
     <BrowserRouter>
 
-    <ScrollToTop />
+      <ScrollToTop />
     
-    <Header />
+       <Header />
 
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/registo" element={<RegistoPage />} />
-    </Routes>
+       <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/registo" element={<RegistoPage />} />
+       </Routes>
 
-    <Footer />
+       <Footer />
     
     </BrowserRouter>
   );

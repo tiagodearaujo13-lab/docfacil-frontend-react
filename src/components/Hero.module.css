@@ -4,15 +4,25 @@
     background-color: #1a202c;
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeats;
-    color: white;
+    background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    padding: 60px 30px;
-    max-width: 0 auto;
-    margin: 0 auto;
+    text-align: center;
+    color: white;
+    padding: 100px 30px; /* Um padding generoso */
+    box-sizing: border-box; /* Importante para o padding não 'partir' o tamanho */
+
+  /* --- A NOSSA CORREÇÃO ESTÁ AQUI --- */
+    min-height: calc(100vh - var(--header-height, 80px)); 
+  /* "Ocupa a altura total da janela (100vh) menos a altura do Header" */
+  /* Usei 'var(--header-height, 80px)' para ser dinâmico (se o header tiver 80px, subtrai 80px) */
+  /* SE VOCÊ NÃO DEFINIU UMA VARIAVEL '--header-height' PODE USAR:
+     min-height: calc(100vh - 80px); 
+     (Assumindo que o seu Header tem cerca de 80px de altura) */
 }
+
 
 .titulo {
     font-size: 42px;

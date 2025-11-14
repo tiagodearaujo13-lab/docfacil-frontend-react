@@ -1,24 +1,43 @@
-html, body, #root {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  overflow-x: hidden;
-}
+/* --- src/index.css (VERSÃO DEFINITIVA CORRIGIDA) --- */
 
-body {
-  font-family: 'Inter', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #1a202c;
-  display: flex;
-  flex-direction: column;
+:root {
+  --header-height: 80px;
 }
 
 html {
+  /* A "magia" para o clique do menu deslizar suavemente */
   scroll-behavior: smooth;
+
+  /* O 'html' NÃO PODE ter height: 100% */
 }
 
+body {
+  /* 1. Zerar a margem (obrigatório) */
+  margin: 0; 
+
+  /* 2. A sua fonte universal (perfeito!) */
+  font-family: 'Inter', sans-serif;
+
+  /* 3. A cor do "chão" */
+  background-color: #1a202c;
+  color: white; /* Cor de texto padrão */
+
+  /* 4. A "Magia" do Rodapé Fixo (Sticky Footer) */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* O 'body' tem PELO MENOS a altura do ecrã */
+}
+
+/* Esta "regra" diz ao React para "crescer" e ocupar
+   o espaço entre o Header e o Footer */
+#root {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* O "Mestre Construtor" (React) "estica" */
+}
+
+/* Regras globais que apagámos por engano */
 a {
   text-decoration: none;
+  color: inherit; /* Os links herdam a cor do "pai" */
 }
