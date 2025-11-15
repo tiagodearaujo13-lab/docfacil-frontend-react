@@ -8,18 +8,49 @@ function RegistoForm () {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
-    const handleSubmit = (evento) => {
-
+      // A Função para o clique em "Criar Conta"
+    const handleSubmit = async (evento) => {
+      // Verificação logica if/else
         evento.preventDefault();
         if (password !== confirmPassword) {
-            alert("As password não são iguis!");
+            alert("As password não são iguais!");
             return;
         }
 
-        console.log("--- TENTATIVA DE REGISTO ---");
-        console.log("Email:", email);
-        console.log("Password:", password);
+        // O Telefonema
+        console.log("A 'telefonar' para o Backend para registar:", email);
+        // O Telefonema (Fetch)
+        try {
+            const response = await fetch('http://localhost:3000/registo', {
+                method: 'Post', // O Telefonema de Enviar DADOS
+                headers: {'Content-Type': 'application/json',}, // O Idioma a falar JSON
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                }),
+            });
+
+            // Ouvir a resposta do Backend
+            if (response. status === 201) {
+                // Sucesso!! 201 = criado com Sucesso
+                alert("Conta criada com sucesso! Por favor, faça o login.");
+
+                // Proxima parte, mandar o usuario para a página de Login automaticamente!
+
+            
+            } else {
+                // Erro! ex: 400 = "Email já existe"
+                const data = await response.json(); // Ver se o Backend mandou uma mensagem de erro
+                alert("Erro ao criar conta: " + (data.message || "Tente novamente."));
+            }
+        } catch (erro) {
+        // ERRO DE REDE! ex: O Backend está "desligado"
+        console.error("Erro de rede:", erro);
+        alert("Não foi possivel ligar ao servidor. O Backend está ligado?");  
+        
+         }
+
+      
 
     };
 

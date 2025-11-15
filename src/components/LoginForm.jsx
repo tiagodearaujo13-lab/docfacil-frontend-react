@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import styles from './LoginForm.module.css';
 import GoogleLoginButton from './GoogleLoginButton.jsx';
@@ -8,14 +8,49 @@ function LoginForm () {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
-    const handleSubmit = (evento) => {
+    const handleSubmit = async (evento) => {
+      evento.preventDefault();
+       
+        console.log("A 'telefonar' para o Backend para fazer LOGIN:", email);
+        // Ligar o Login
+        try {
+            const response = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json',},
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+         
+            // Ouvir o Backend
+            const data = await response.json(); // <- ler resposta Json
+            if (response. status === 200) {
+                // SUCESSO! (200 = OK)
+                // O Backend enviou a Chave Mestra
+                console.log("Login com sucesso!", data.token);
 
-        evento.preventDefalt();
+                // Guarda a Chave Mestra na Gaveta Secreta
+                localStorage.setItem('token', data.token);
+                alert("Login com sucesso! Bem-vindo!");
+                // Ler o Usuario Cliente para o Dashboard
+                 navigate('/dashboard');
+            
+               
+                } else {
+                    // ERRO! (ex: 400 = Email ou password incorretos)
+                    console.log("Erro de login:", data.message);
+                    alert("Erro ao fazer login: " + (data || "Email ou password incorretos."));
+                } 
+        
+        }   catch (error) {
+            // ERRO DE REDE! ex: o Backend esta desligado
+            console.error("Erro de rede:", error);
+            alert("Não foi possivel ligar ao servidor. O Backend esta ligado?")
+        }
 
-        console.log("--- Tentativa De Login ---");
-        console.log("Email:", email);
-        console.log("Password:", password);
     
     };
 
