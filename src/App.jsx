@@ -6,6 +6,7 @@ import LandingPage from './pages/LandingPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegistoPage from './pages/RegistoPage.jsx';
 import DashboardPage from './pages/DashboradPage.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
 
 function App() {
@@ -22,7 +23,14 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/registo" element={<RegistoPage />} />
-       <Route path="/dashboard" element={<DashboardPage />} />
+       <Route 
+       path="/dashboard"  // Isto "diz" ao "Porteiro": "Quando alguém tentar ir para /dashboard, primeiro 'chame' o <ProtectedRoute />. Só 'desenhe' o <DashboardPage /> SE o 'Segurança' o 'devolver' (o return children)."
+       element={
+      <ProtectedRoute>  
+        <DashboardPage />
+      </ProtectedRoute>
+        } 
+        />
        </Routes>
 
        <Footer />
