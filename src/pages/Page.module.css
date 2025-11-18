@@ -5,19 +5,3 @@
     min-height: 70vh;
 }
 
-.botaoLaranja {
-    background-color: #ff8c00;
-    color: #1a202c;
-    font-size: 16px;
-    font-weight: bold;
-    text-decoration: none;
-    padding: 12px 25px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-.botaoLaranja:hover {
-    background-color: #dd9b4c;
-}

@@ -5,7 +5,7 @@ import Footer from './components/Footer.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegistoPage from './pages/RegistoPage.jsx';
-import DashboardPage from './pages/DashboradPage.jsx';
+import DashboardLayout from './components/DashboardLayout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
 
@@ -27,7 +27,11 @@ function App() {
        path="/dashboard"  // Isto "diz" ao "Porteiro": "Quando alguém tentar ir para /dashboard, primeiro 'chame' o <ProtectedRoute />. Só 'desenhe' o <DashboardPage /> SE o 'Segurança' o 'devolver' (o return children)."
        element={
       <ProtectedRoute>  
-        <DashboardPage />
+        <DashboardLayout>
+          <h1 style={{ color: 'white', padding: '30px' }}>
+          "Sala" da Direita (Main Content) - Bem-vindo!
+        </h1>
+        </DashboardLayout>
       </ProtectedRoute>
         } 
         />

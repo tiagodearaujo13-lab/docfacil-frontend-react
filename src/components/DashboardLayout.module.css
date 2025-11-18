@@ -1,0 +1,10 @@
+.layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    height: 100vh;
+}
+
+.mainContent {
+    background-color: #2d3748;
+    overflow-y: auto;
+}
