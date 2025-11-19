@@ -1,0 +1,80 @@
+/* O "container" de toda a "Sala da Direita" */
+.mainContainer {
+    padding: 40px;
+    color: white;
+}
+
+/* O TOPO Titulo + Botao*/
+.mainHeader {
+    display: flex;
+    justify-content: space-between; /* Titulo á esquerda, Botão á direita*/
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.mainHeader h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.mainHeader p {
+    font-size: 16px;
+    color: #a0aec0;
+    margin: 5px 0 0 0;
+}
+
+/* O botão laranja "+ Novo Documento" */
+.botaoNovoDoc {
+    background-color: #ff8c00;
+    color: #1a202c;
+    font-weight: bold;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* A Barra de Filtros*/
+.filtros {
+    margin-bottom: 30px;
+}
+
+.barraPesquisa {
+    background-color: #1a202c;
+    border: 1px solid #4a5568;
+    color: white;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 300px;
+}
+
+/* Grid de Cartões*/
+.gridDocs {
+    display: grid;
+   /* Magia de Grid crie colunas que tenham no mínimo 250px */
+   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+   gap: 30px; 
+}
+
+/* O "Cartão" do Documento */
+.docCard {
+    background-color: #1a202c;
+    border-radius: 10px;
+    border: 1px solid #4a5568;
+    overflow: hidden; /* Para a imagem ficar "cortada" */
+}
+
+.docCard h4 {
+    font-size: 14px;
+    color: #a0aec0;
+    margin: 0 20px 20px 20px;
+}
+
+/* A Imagem cinzenta do Cartão*/
+.cardImagem {
+    height: 150px;
+    background-color: #4a5568;
+}

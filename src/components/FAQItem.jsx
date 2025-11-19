@@ -1,33 +1,28 @@
-import { useState } from 'react';
-import styles from './FAQ.module.css';
+import { useState } from "react";
+import styles from "./FAQ.module.css";
 
-function FAQItem (props) {
+function FAQItem(props) {
+  const [isOpen, setIsOpen] = useState(false);
 
-    const [isOpen, setIsOpen] = useState(false);
+  const toggleOpen = () => {
+    setIsOpen(!isOpen);
+  };
 
-    const toggleOpen = () => {
+  return (
+    <div className={styles.faqItem}>
+      <div className={styles.pergunta} onClick={toggleOpen}>
+        {props.pergunta}
 
-        setIsOpen (!isOpen);
-    };
+        <span className={styles.iconeToggle}>{isOpen ? "X" : "+"}</span>
+      </div>
 
-    return (
-        <div className={styles.faqItem}>
-
-            <div className={styles.pergunta} onClick={toggleOpen}>
-                {props.pergunta}
-
-                <span className={styles.iconeToggle}>
-                    {isOpen ? 'X' : '+'}
-                </span>
-            </div>
-
-            {isOpen && (
-                <div className={styles.resposta}>
-                    <p>{props.resposta}</p>
-                </div>
-            )}
+      {isOpen && (
+        <div className={styles.resposta}>
+          <p>{props.resposta}</p>
         </div>
-    );
+      )}
+    </div>
+  );
 }
 
 export default FAQItem;
