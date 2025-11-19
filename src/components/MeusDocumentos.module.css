@@ -68,6 +68,12 @@
 }
 
 .docCard h4 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 15px 20px 5px 20px;
+}
+
+.docCard p {
     font-size: 14px;
     color: #a0aec0;
     margin: 0 20px 20px 20px;
