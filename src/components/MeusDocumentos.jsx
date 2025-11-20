@@ -1,32 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import styles from "./Biblioteca.module.css"; // Vamos reaproveitar o estilo da Biblioteca por enquanto!
+import styles from "./Biblioteca.module.css";
 
 function MeusDocumentos() {
-  // Simulação de documentos que o utilizador já criou
-  // O 'useState' vai permitir-nos apagar documentos da lista visualmente depois
-  const [documentos, setDocumentos] = useState([
-    {
-      id: 101,
-      titulo: "Contrato João da Silva",
-      modeloOriginal: "Contrato de Prestação de Serviços",
-      dataCriacao: "20/11/2023",
-      status: "Rascunho",
-    },
-    {
-      id: 102,
-      titulo: "Orçamento Obras Cozinha",
-      modeloOriginal: "Orçamento de Obras",
-      dataCriacao: "18/11/2023",
-      status: "Finalizado",
-    },
-  ]);
+  // Começamos com uma lista vazia
+  const [documentos, setDocumentos] = useState([]);
+
+  // O useEffect corre assim que a página é carregada
+  useEffect(() => {
+    // 1. Vai buscar o texto guardado no navegador
+    const dadosSalvos = localStorage.getItem("meus_docs_db");
+
+    // 2. Se existir, converte de volta para Lista. Se não, fica vazio.
+    if (dadosSalvos) {
+      setDocumentos(JSON.parse(dadosSalvos));
+    }
+  }, []); // Os [] vazios significam: "Executa isto apenas 1 vez, quando a página nascer"
 
   const apagarDocumento = (id) => {
     if (window.confirm("Tem a certeza que deseja apagar este documento?")) {
-      // Filtra a lista mantendo apenas os documentos que NÃO têm esse id
+      // 1. Filtra a lista visualmente
       const novaLista = documentos.filter((doc) => doc.id !== id);
       setDocumentos(novaLista);
+
+      // 2. ATUALIZA O BANCO DE DADOS DO NAVEGADOR
+      localStorage.setItem("meus_docs_db", JSON.stringify(novaLista));
     }
   };
 
@@ -37,10 +35,12 @@ function MeusDocumentos() {
         <p>Gerencie os seus contratos e propostas criados.</p>
       </div>
 
-      {/* Se não houver documentos, mostra um aviso amigável */}
       {documentos.length === 0 ? (
         <div style={{ textAlign: "center", padding: "50px" }}>
-          <p>Ainda não tem documentos criados.</p>
+          <h3>Ainda não tem documentos criados.</h3>
+          <p style={{ marginBottom: "20px", color: "#666" }}>
+            Vá à biblioteca para começar um novo projeto.
+          </p>
           <Link to="/dashboard/biblioteca" className={styles.botaoUsar}>
             Criar Novo Documento
           </Link>
@@ -50,7 +50,6 @@ function MeusDocumentos() {
           {documentos.map((doc) => (
             <div key={doc.id} className={styles.cardModelo}>
               <div className={styles.previewDocumento}>
-                {/* Ícone diferente para diferenciar de modelos virgens */}
                 <span style={{ fontSize: "40px" }}>📝</span>
               </div>
 
@@ -82,7 +81,7 @@ function MeusDocumentos() {
                 <button
                   className={styles.botaoUsar}
                   style={{ flex: 1 }}
-                  onClick={() => alert("Vai abrir o editor para editar!")}
+                  onClick={() => alert("Em breve: Editor de Documentos!")}
                 >
                   Editar
                 </button>
