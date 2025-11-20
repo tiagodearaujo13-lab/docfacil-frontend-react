@@ -1,96 +1,110 @@
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import styles from "./MeusDocumentos.module.css";
-
-// Sub-peça para cada cartão de documento
-function DocumentoCard(props) {
-  return (
-    <div className={styles.docCard}>
-      <div className={styles.cardImagen}>
-        {/* Aqui onde vai as imagens dos documentos*/}
-      </div>
-      <h4>{props.titulo}</h4>
-      <p>{props.tipo_documento}</p>
-    </div>
-  );
-}
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import styles from "./Biblioteca.module.css"; // Vamos reaproveitar o estilo da Biblioteca por enquanto!
 
 function MeusDocumentos() {
-  // 1. "Memória" para guardar a lista de documentos que vem do Backend
-  const [listaDocs, setListDocs] = useState([]);
+  // Simulação de documentos que o utilizador já criou
+  // O 'useState' vai permitir-nos apagar documentos da lista visualmente depois
+  const [documentos, setDocumentos] = useState([
+    {
+      id: 101,
+      titulo: "Contrato João da Silva",
+      modeloOriginal: "Contrato de Prestação de Serviços",
+      dataCriacao: "20/11/2023",
+      status: "Rascunho",
+    },
+    {
+      id: 102,
+      titulo: "Orçamento Obras Cozinha",
+      modeloOriginal: "Orçamento de Obras",
+      dataCriacao: "18/11/2023",
+      status: "Finalizado",
+    },
+  ]);
 
-  const navigate = useNavigate();
-
-  // 2. "Receita" para BUSCAR documentos (GET)
-  // Executa assim que a página carrega (useEffect)
-  useEffect(() => {
-    carregarDocumentos();
-  }, []);
-
-  const carregarDocumentos = async () => {
-    const token = localStorage.getItem("token"); //Pegar o Chachá
-
-    try {
-      const response = await fetch("http://localhost:3000/meus-documentos", {
-        method: "GET",
-        headers: {
-          //MOSTRAR O CRACHÁ AO SEGURANÇA
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const dados = await response.json();
-        setListDocs(dados); //Guardar na memória para o React desenhar
-        console.log("Documentos carregados:", dados);
-      }
-    } catch (error) {
-      console.error("Erro ao buscar documento:", error);
+  const apagarDocumento = (id) => {
+    if (window.confirm("Tem a certeza que deseja apagar este documento?")) {
+      // Filtra a lista mantendo apenas os documentos que NÃO têm esse id
+      const novaLista = documentos.filter((doc) => doc.id !== id);
+      setDocumentos(novaLista);
     }
   };
 
-  // 3. "Receita" para CRIAR um novo documento (POST)
-  const handleNovoDocumento = () => {
-    navigate("/dashboard/biblioteca");
-  };
-
   return (
-    <div className={styles.mainContainer}>
-      <div className={styles.mainHeader}>
-        <div>
-          <h2>Meus Documentos</h2>
-          <p>Todos os seus documentos criados e guardados.</p>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h2>Meus Documentos</h2>
+        <p>Gerencie os seus contratos e propostas criados.</p>
+      </div>
+
+      {/* Se não houver documentos, mostra um aviso amigável */}
+      {documentos.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "50px" }}>
+          <p>Ainda não tem documentos criados.</p>
+          <Link to="/dashboard/biblioteca" className={styles.botaoUsar}>
+            Criar Novo Documento
+          </Link>
         </div>
-        <button className={styles.botaoNovoDoc} onClick={handleNovoDocumento}>
-          + Novo Documento
-        </button>
-      </div>
+      ) : (
+        <div className={styles.gridModelos}>
+          {documentos.map((doc) => (
+            <div key={doc.id} className={styles.cardModelo}>
+              <div className={styles.previewDocumento}>
+                {/* Ícone diferente para diferenciar de modelos virgens */}
+                <span style={{ fontSize: "40px" }}>📝</span>
+              </div>
 
-      <div className={styles.filtros}>
-        <input
-          type="text"
-          placeholder="Pesquisar nos seus documentos..."
-          className={styles.barraPesquisa}
-        />
-      </div>
+              <div className={styles.cardContent}>
+                <h3>{doc.titulo}</h3>
+                <p style={{ fontSize: "0.9rem", color: "#666" }}>
+                  Modelo: {doc.modeloOriginal}
+                </p>
+                <div style={{ marginTop: "10px", fontSize: "0.8rem" }}>
+                  <span
+                    style={{
+                      background:
+                        doc.status === "Finalizado" ? "#e6fffa" : "#fffaf0",
+                      color:
+                        doc.status === "Finalizado" ? "#047857" : "#9c4221",
+                      padding: "4px 8px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    {doc.status}
+                  </span>
+                  <span style={{ marginLeft: "10px", color: "#888" }}>
+                    {doc.dataCriacao}
+                  </span>
+                </div>
+              </div>
 
-      <div className={styles.gridDocs}>
-        {/* Se a lista estiver vazia, mostre uma mensagem */}
-        {listaDocs.length === 0 && (
-          <p style={{ color: "#a0aec0" }}>
-            Ainda não tem documentos. Crie o primeiro!{" "}
-          </p>
-        )}
+              <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+                <button
+                  className={styles.botaoUsar}
+                  style={{ flex: 1 }}
+                  onClick={() => alert("Vai abrir o editor para editar!")}
+                >
+                  Editar
+                </button>
 
-        {/* Loop (Map) para desenhar cada documento real da lista */}
-        {listaDocs.map((doc) => (
-          <DocumentoCard
-            key={doc.id}
-            titulo={doc.titulo}
-            tipo_documento={doc.tipo_documento}
-          />
-        ))}
-      </div>
+                <button
+                  onClick={() => apagarDocumento(doc.id)}
+                  style={{
+                    padding: "10px",
+                    border: "1px solid #fee2e2",
+                    background: "#fff",
+                    color: "#ef4444",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                  }}
+                >
+                  🗑️
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
