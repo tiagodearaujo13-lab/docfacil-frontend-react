@@ -1,31 +1,47 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Biblioteca.module.css";
 
 function MeusDocumentos() {
-  // Começamos com uma lista vazia
   const [documentos, setDocumentos] = useState([]);
+  const [carregando, setCarregando] = useState(true); // Para mostrar "A carregar..."
+  const navigate = useNavigate();
 
-  // O useEffect corre assim que a página é carregada
+  // Função para buscar dados do Servidor
+  const buscarDocumentos = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return; // Se não tiver token, não busca nada
+
+      const resposta = await fetch("http://localhost:3000/meus-documentos", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (resposta.ok) {
+        const lista = await resposta.json();
+        setDocumentos(lista); // Guarda a lista que veio do SQLite!
+      } else {
+        console.error("Erro ao buscar documentos");
+      }
+    } catch (erro) {
+      console.error("O servidor está desligado?", erro);
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  // O useEffect chama a função assim que a página abre
   useEffect(() => {
-    // 1. Vai buscar o texto guardado no navegador
-    const dadosSalvos = localStorage.getItem("meus_docs_db");
+    buscarDocumentos();
+  }, []);
 
-    // 2. Se existir, converte de volta para Lista. Se não, fica vazio.
-    if (dadosSalvos) {
-      setDocumentos(JSON.parse(dadosSalvos));
-    }
-  }, []); // Os [] vazios significam: "Executa isto apenas 1 vez, quando a página nascer"
-
+  // Nota: A função de Apagar vamos deixar comentada por enquanto
+  // porque precisamos criar a rota DELETE no servidor depois.
   const apagarDocumento = (id) => {
-    if (window.confirm("Tem a certeza que deseja apagar este documento?")) {
-      // 1. Filtra a lista visualmente
-      const novaLista = documentos.filter((doc) => doc.id !== id);
-      setDocumentos(novaLista);
-
-      // 2. ATUALIZA O BANCO DE DADOS DO NAVEGADOR
-      localStorage.setItem("meus_docs_db", JSON.stringify(novaLista));
-    }
+    alert("Na próxima aula vamos criar a rota DELETE no servidor!");
   };
 
   return (
@@ -35,12 +51,11 @@ function MeusDocumentos() {
         <p>Gerencie os seus contratos e propostas criados.</p>
       </div>
 
-      {documentos.length === 0 ? (
+      {carregando ? (
+        <p style={{ textAlign: "center" }}>A conectar ao servidor...</p>
+      ) : documentos.length === 0 ? (
         <div style={{ textAlign: "center", padding: "50px" }}>
-          <h3>Ainda não tem documentos criados.</h3>
-          <p style={{ marginBottom: "20px", color: "#666" }}>
-            Vá à biblioteca para começar um novo projeto.
-          </p>
+          <h3>Ainda não tem documentos na nuvem.</h3>
           <Link to="/dashboard/biblioteca" className={styles.botaoUsar}>
             Criar Novo Documento
           </Link>
@@ -56,23 +71,20 @@ function MeusDocumentos() {
               <div className={styles.cardContent}>
                 <h3>{doc.titulo}</h3>
                 <p style={{ fontSize: "0.9rem", color: "#666" }}>
-                  Modelo: {doc.modeloOriginal}
+                  {/* O banco de dados chama 'tipo_documento', o front chamava 'modeloOriginal' */}
+                  Tipo: {doc.tipo_documento || "Documento"}
                 </p>
                 <div style={{ marginTop: "10px", fontSize: "0.8rem" }}>
+                  {/* Status fixo por enquanto, pois não temos status no banco ainda */}
                   <span
                     style={{
-                      background:
-                        doc.status === "Finalizado" ? "#e6fffa" : "#fffaf0",
-                      color:
-                        doc.status === "Finalizado" ? "#047857" : "#9c4221",
+                      background: "#fffaf0",
+                      color: "#9c4221",
                       padding: "4px 8px",
                       borderRadius: "4px",
                     }}
                   >
-                    {doc.status}
-                  </span>
-                  <span style={{ marginLeft: "10px", color: "#888" }}>
-                    {doc.dataCriacao}
+                    Rascunho
                   </span>
                 </div>
               </div>
@@ -81,7 +93,8 @@ function MeusDocumentos() {
                 <button
                   className={styles.botaoUsar}
                   style={{ flex: 1 }}
-                  onClick={() => alert("Em breve: Editor de Documentos!")}
+                  // Agora usamos o ID real do banco de dados!
+                  onClick={() => navigate(`/dashboard/editor/${doc.id}`)}
                 >
                   Editar
                 </button>

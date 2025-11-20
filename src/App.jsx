@@ -8,6 +8,7 @@ import ScrollToTop from "./components/ScrollToTop.jsx";
 import MeusDocumentos from "./components/MeusDocumentos.jsx";
 import Biblioteca from "./components/Biblioteca.jsx";
 import Configuracao from "./components/Configuracao.jsx";
+import Editor from "./pages/Editor.jsx";
 import PublicLayout from "./components/PublicLayout.jsx";
 
 function App() {
@@ -56,6 +57,18 @@ function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <Configuracao />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Rota Dinâmica do Editor */}
+        <Route
+          path="/dashboard/editor/:id"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Editor />
               </DashboardLayout>
             </ProtectedRoute>
           }

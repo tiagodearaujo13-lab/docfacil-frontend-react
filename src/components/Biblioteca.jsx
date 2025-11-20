@@ -4,12 +4,11 @@ import styles from "./Biblioteca.module.css";
 function Biblioteca() {
   const navigate = useNavigate();
 
-  // Lista de Modelos (A nossa "Loja")
   const modelos = [
     {
       id: 1,
       titulo: "Contrato de Prestação de Serviços",
-      descricao: "Ideal para freelancers e agências. Proteja o seu trabalho.",
+      descricao: "Ideal para freelancers e agências.",
       tipo: "contrato",
     },
     {
@@ -21,13 +20,13 @@ function Biblioteca() {
     {
       id: 3,
       titulo: "Acordo de Confidencialidade (NDA)",
-      descricao: "Proteja as suas ideias e segredos comerciais.",
+      descricao: "Proteja as suas ideias.",
       tipo: "juridico",
     },
     {
       id: 4,
       titulo: "Proposta Comercial Simples",
-      descricao: "Apresente os seus serviços de forma limpa e direta.",
+      descricao: "Apresente os seus serviços.",
       tipo: "proposta",
     },
     {
@@ -38,33 +37,47 @@ function Biblioteca() {
     },
   ];
 
-  // --- A MÁGICA ACONTECE AQUI ---
-  const criarDocumento = (modelo) => {
-    // 1. Criar o objeto do novo documento
-    const novoDoc = {
-      id: Date.now(), // Gera um ID único baseado na hora atual (ex: 17005839202)
-      titulo: modelo.titulo, // Copia o nome do modelo
-      modeloOriginal: modelo.titulo,
-      dataCriacao: new Date().toLocaleDateString("pt-PT"), // Data de hoje
-      status: "Rascunho",
-    };
+  // --- FUNÇÃO ATUALIZADA: AGORA FALA COM O SERVIDOR ---
+  const criarDocumento = async (modelo) => {
+    try {
+      // 1. Buscar o Token (o crachá de acesso)
+      const token = localStorage.getItem("token");
 
-    // 2. Buscar o que já existe na memória do navegador ("banco de dados")
-    const dadosSalvos = localStorage.getItem("meus_docs_db");
+      if (!token) {
+        alert("Sessão expirada. Faça login novamente.");
+        navigate("/login");
+        return;
+      }
 
-    // Se existir algo, converte de Texto para Array. Se não, cria um Array vazio.
-    const listaAtual = dadosSalvos ? JSON.parse(dadosSalvos) : [];
+      console.log("A criar documento no servidor...");
 
-    // 3. Adicionar o novo documento à lista
-    listaAtual.push(novoDoc);
+      // 2. Enviar pedido ao Backend
+      const resposta = await fetch("http://localhost:3000/criar-documento", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Aqui vai o crachá!
+        },
+        body: JSON.stringify({
+          titulo: modelo.titulo,
+          tipo_documento: modelo.tipo,
+        }),
+      });
 
-    // 4. Salvar a lista atualizada de volta no navegador
-    // O localStorage só aceita Texto (String), por isso usamos JSON.stringify
-    localStorage.setItem("meus_docs_db", JSON.stringify(listaAtual));
+      // 3. Verificar se correu bem
+      if (resposta.ok) {
+        const dados = await resposta.json(); // O servidor devolve o ID novo (ex: 1, 2, 3...)
+        console.log("Sucesso! ID criado:", dados.id);
 
-    // 5. Redirecionar o utilizador para a lista de documentos
-    alert("Documento criado com sucesso!"); // Um feedback rápido
-    navigate("/dashboard");
+        // 4. Redirecionar para o Editor com o ID REAL do banco de dados
+        navigate(`/dashboard/editor/${dados.id}`);
+      } else {
+        alert("Erro ao criar documento. O servidor reclamou.");
+      }
+    } catch (erro) {
+      console.error("Erro de conexão:", erro);
+      alert("Não foi possível conectar ao servidor. Ele está ligado?");
+    }
   };
 
   return (
@@ -86,7 +99,6 @@ function Biblioteca() {
             </div>
             <button
               className={styles.botaoUsar}
-              // Agora chamamos a função real passando o modelo inteiro
               onClick={() => criarDocumento(modelo)}
             >
               Usar este Modelo
