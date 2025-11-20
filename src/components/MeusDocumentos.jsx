@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import styles from "./MeusDocumentos.module.css";
 
@@ -18,6 +19,8 @@ function MeusDocumentos() {
   // 1. "Memória" para guardar a lista de documentos que vem do Backend
   const [listaDocs, setListDocs] = useState([]);
 
+  const navigate = useNavigate();
+
   // 2. "Receita" para BUSCAR documentos (GET)
   // Executa assim que a página carrega (useEffect)
   useEffect(() => {
@@ -32,7 +35,7 @@ function MeusDocumentos() {
         method: "GET",
         headers: {
           //MOSTRAR O CRACHÁ AO SEGURANÇA
-          Authorizatin: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -47,37 +50,8 @@ function MeusDocumentos() {
   };
 
   // 3. "Receita" para CRIAR um novo documento (POST)
-  const handleNovoDocumento = async () => {
-    // Por agora, usamos um "prompt" simples para pedir o nome
-    const tituloDoDoc = prompt("Qual o nome do novo documento?");
-
-    if (!tituloDoDoc) return; // Se cancelou, não faz nada
-
-    const token = localStorage.getItem("token"); // Pegar o Crachá
-
-    try {
-      const response = await fetch("http://localhost:300/criar-documento", {
-        method: "Post",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Mostrar o Crachá
-        },
-        body: JSON.stringify({
-          titulo: tituloDoDoc,
-          tipo_documento: "Contrato Genérico",
-        }),
-      });
-
-      if (response.status === 201) {
-        alert("Documento criado com sucesso!");
-        // Recarregar a lista para mostrar o novo documento imediatamente!
-        carregarDocumentos();
-      } else {
-        alert("Erro ao criar.");
-      }
-    } catch (error) {
-      console.error("Erro de rede:", error);
-    }
+  const handleNovoDocumento = () => {
+    navigate("/dashboard/biblioteca");
   };
 
   return (

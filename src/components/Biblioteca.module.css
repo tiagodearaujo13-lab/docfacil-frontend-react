@@ -1,0 +1,79 @@
+.container {
+    padding: 40px;
+    color: white;
+}
+
+.header h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.header p {
+    color: #a0aec0;
+    margin-top: 5px;
+    margin-bottom: 40px;
+}
+
+.gridModelos {
+    display: grid;
+    /* Grelha responsiva aitomática */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.cardModelo {
+    background-color: #1a202c;
+    border: 1px solid #4a5568;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0,2s;
+}
+
+.cardModelo:hover {
+    transform: translateY(-5px); /* Efeito de levantar ao passar o rato */
+    border-color: #ff8c00;
+}
+
+.previewDocumento {
+    background-color: #e2e8f0;
+    height: 150px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin-bottom: 15px;
+    color: #2d3748;
+}
+
+.cardModelo h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+}
+
+.cardModelo p {
+    font-size: 14px;
+    color: #a0aec0;
+    flex-grow: 1; /* Empurra o botão para o fundo */
+    margin-bottom: 20px;
+}
+
+.botaoUsar {
+    background-color: transparent;
+    border: 1px solid #ff8c00;
+    color: #ff8c00;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.botaoUsar:hover {
+    background-color: #ff8c00;
+    color: #1a202c;
+}
