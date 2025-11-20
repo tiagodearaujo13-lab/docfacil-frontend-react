@@ -38,10 +38,34 @@ function MeusDocumentos() {
     buscarDocumentos();
   }, []);
 
-  // Nota: A função de Apagar vamos deixar comentada por enquanto
-  // porque precisamos criar a rota DELETE no servidor depois.
-  const apagarDocumento = (id) => {
-    alert("Na próxima aula vamos criar a rota DELETE no servidor!");
+  // Função apagar
+  const apagarDocumento = async (id) => {
+    if (window.confirm("Tem a certeza? Esta ação não pode ser desfeita.")) {
+      try {
+        const token = localStorage.getItem("token");
+
+        // 1. Enviar ordem para o servidor destruir o ficheiro
+        const resposta = await fetch(`http://localhost:3000/documento/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (resposta.ok) {
+          // 2. Se o servidor confirmou, atualizamos a lista visualmente
+          // (Removemos o item da lista sem precisar recarregar a página)
+          const novaLista = documentos.filter((doc) => doc.id !== id);
+          setDocumentos(novaLista);
+          alert("Documento apagado!");
+        } else {
+          alert("Erro ao apagar. Tente novamente.");
+        }
+      } catch (erro) {
+        console.error("Erro:", erro);
+        alert("Erro de conexão.");
+      }
+    }
   };
 
   return (
