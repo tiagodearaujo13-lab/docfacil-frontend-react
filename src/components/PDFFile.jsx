@@ -13,7 +13,7 @@ const estiloNormal = StyleSheet.create({
   page: {
     paddingTop: 50,
     paddingBottom: 80,
-    paddingHorizontal: 50, // Margens largas
+    paddingHorizontal: 50,
     fontFamily: "Helvetica",
     fontSize: 12, // Letra grande
     lineHeight: 1.5,
@@ -27,14 +27,14 @@ const estiloNormal = StyleSheet.create({
     objectFit: "contain",
   },
   title: {
-    fontSize: 16, // Título grande
+    fontSize: 16,
     textAlign: "center",
     marginBottom: 30,
     marginTop: 10,
     textTransform: "uppercase",
     fontWeight: "bold",
   },
-  clausulaContainer: { marginBottom: 15 }, // Espaço arejado
+  clausulaContainer: { marginBottom: 15 },
   clausulaTitulo: {
     fontSize: 12,
     fontWeight: "bold",
@@ -43,7 +43,7 @@ const estiloNormal = StyleSheet.create({
   },
   clausulaTexto: { textAlign: "justify", fontSize: 12 },
   assinaturas: {
-    marginTop: 60, // Bastante espaço antes de assinar
+    marginTop: 60, // Bastante espaço
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -65,12 +65,12 @@ const estiloNormal = StyleSheet.create({
   },
 });
 
-// 2. ESTILO "COMPACTO" (Para contratos longos - Cabe tudo em 1 página)
+// 2. ESTILO "COMPACTO" (Para contratos longos)
 const estiloCompacto = StyleSheet.create({
   page: {
     paddingTop: 35,
     paddingBottom: 65,
-    paddingHorizontal: 35, // Margens apertadas
+    paddingHorizontal: 35,
     fontFamily: "Helvetica",
     fontSize: 10, // Letra menor
     lineHeight: 1.5,
@@ -79,19 +79,19 @@ const estiloCompacto = StyleSheet.create({
     position: "absolute",
     top: 20,
     right: 35,
-    width: 50, // Logo um pouco menor
+    width: 50,
     height: 50,
     objectFit: "contain",
   },
   title: {
-    fontSize: 14, // Título menor
+    fontSize: 14,
     textAlign: "center",
     marginBottom: 20,
     marginTop: 15,
     textTransform: "uppercase",
     fontWeight: "bold",
   },
-  clausulaContainer: { marginBottom: 10 }, // Espaço apertado
+  clausulaContainer: { marginBottom: 10 },
   clausulaTitulo: {
     fontSize: 10,
     fontWeight: "bold",
@@ -100,7 +100,7 @@ const estiloCompacto = StyleSheet.create({
   },
   clausulaTexto: { textAlign: "justify", fontSize: 10 },
   assinaturas: {
-    marginTop: 30, // Pouco espaço antes de assinar
+    marginTop: 30,
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -123,13 +123,17 @@ const estiloCompacto = StyleSheet.create({
 });
 
 const PDFFile = ({ contrato, plano, logo }) => {
-  // LÓGICA INTELIGENTE:
-  // Um contrato base tem 6 itens (Partes, Objeto, Preço, Vigência, Foro, Assinaturas).
-  // Se tiver mais de 6, significa que tem cláusulas extras, então usamos o modo COMPACTO.
+  // LÓGICA INTELIGENTE: Se tiver muitas cláusulas, usa o modo compacto
   const usarModoCompacto = contrato.clausulas.length > 6;
-
-  // Escolhe o estilo certo
   const styles = usarModoCompacto ? estiloCompacto : estiloNormal;
+
+  // Proteção para nomes das assinaturas
+  const nomeParte1 = contrato.assinantes
+    ? contrato.assinantes.parte1
+    : "Primeira Parte";
+  const nomeParte2 = contrato.assinantes
+    ? contrato.assinantes.parte2
+    : "Segunda Parte";
 
   return (
     <Document>
@@ -150,10 +154,10 @@ const PDFFile = ({ contrato, plano, logo }) => {
 
         <View style={styles.assinaturas} wrap={false}>
           <View style={styles.linhaAssinatura}>
-            <Text>O Prestador</Text>
+            <Text>{nomeParte1}</Text>
           </View>
           <View style={styles.linhaAssinatura}>
-            <Text>O Cliente</Text>
+            <Text>{nomeParte2}</Text>
           </View>
         </View>
 

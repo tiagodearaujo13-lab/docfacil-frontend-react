@@ -35,6 +35,18 @@ function Biblioteca() {
       descricao: "Discriminativo de materiais e mão de obra.",
       tipo: "orcamento",
     },
+    {
+      id: 6,
+      titulo: "Contrato de Trabalho (Termo Certo)",
+      descricao: "Conforme o Código do Trabalho. Inclui motivo justificativo.",
+      tipo: "trabalho", // Importante bater com o Gerenciador
+    },
+    {
+      id: 7,
+      titulo: "Política de Privacidade (RGPD)",
+      descricao: "Obrigatório para empresas e sites na UE.",
+      tipo: "rgpd", // Importante bater com o Gerenciador
+    },
   ];
 
   // --- FUNÇÃO ATUALIZADA: AGORA FALA COM O SERVIDOR ---

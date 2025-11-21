@@ -55,8 +55,14 @@ export const gerarTextoContrato = (dados) => {
     texto: `Feito em duplicado, em ${comarca}, no dia ${dataHoje}.`
   });
 
+ // ...
   return {
     titulo: "CONTRATO DE PRESTAÇÃO DE SERVIÇOS",
-    clausulas: clausulas
+    clausulas: clausulas,
+    // ADICIONA ISTO:
+    assinantes: {
+      parte1: "O Prestador",
+      parte2: "O Cliente"
+    }
   };
 };
