@@ -1,12 +1,13 @@
 /* --- ESTILO GERAL (Desktop e Base) --- */
 .sidebar {
-  background-color: #1e293b; /* Azul Escuro Profissional */
+  background-color: #1a202c; /* O MESMO FUNDO ESCURO DO SITE */
   color: white;
   display: flex;
   flex-direction: column;
   height: 100%;
   padding: 20px;
   transition: all 0.3s ease;
+  border-right: 1px solid #2d3748; /* Uma linha subtil para separar do conteúdo */
 }
 
 .logo {
@@ -39,48 +40,62 @@
   padding: 12px 15px;
   border-radius: 8px;
   text-decoration: none;
-  color: #94a3b8; /* Cinza claro */
+  color: #a0aec0; /* Cinza claro (igual aos textos secundários do site) */
   transition: all 0.2s;
   font-weight: 500;
+  border: 1px solid transparent; /* Para não pular quando tiver borda */
 }
 
 .navLink:hover {
-  background-color: #334155;
-  color: white;
+  background-color: #2d3748; /* Cinza dos cartões */
+  color: #ff8c00; /* Texto laranja ao passar o rato */
 }
 
 .navLinkAtivo {
-  background-color: #334155;
+  background-color: #2d3748; /* Fundo ativo igual aos cartões */
   color: white;
-  border-left: 4px solid #ff8c00; /* Laranja DocFacil */
+  border-left: 4px solid #ff8c00; /* A barra laranja da esquerda */
+  font-weight: bold;
 }
 
 .sidebarFooter {
   margin-top: auto;
   padding-top: 20px;
-  border-top: 1px solid #334155;
+  border-top: 1px solid #2d3748; /* Divisória sutil */
 }
 
 .botaoPlanos {
   width: 100%;
   background-color: #ff8c00;
-  color: black;
+  color: #1a202c; /* Texto escuro para contraste */
   font-weight: bold;
   border: none;
   padding: 10px;
   border-radius: 6px;
   cursor: pointer;
   margin-bottom: 10px;
+  transition: background 0.2s;
+}
+
+.botaoPlanos:hover {
+  background-color: #e07b00;
 }
 
 .botaoSair {
   width: 100%;
   background: transparent;
-  border: 1px solid #334155;
+  border: 1px solid #4a5568; /* Borda cinza mais visível */
   color: #cbd5e1;
   padding: 10px;
   border-radius: 6px;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.botaoSair:hover {
+  background-color: #2d3748;
+  color: #fc8181; /* Vermelho claro ao passar o rato */
+  border-color: #fc8181;
 }
 
 /* Botão do Menu (Escondido no PC) */
@@ -97,33 +112,36 @@
   width: 100%;
 }
 
-/* --- MODO MOBILE (Telemóvel) --- */
+/* --- MODO MOBILE (Telemóvel) - RESPONSIVIDADE MANTIDA --- */
 @media (max-width: 768px) {
   .sidebar {
     height: auto; /* Altura automática */
     padding: 15px;
-    position: relative; /* Para posicionar o menu */
+    position: relative;
+    border-right: none; /* Sem borda lateral no mobile */
+    border-bottom: 1px solid #2d3748; /* Borda em baixo */
   }
 
   .mobileHeader {
     display: flex;
-    justify-content: space-between; /* Logo à esquerda, Botão à direita */
+    justify-content: space-between; 
     align-items: center;
   }
 
   .logo {
-    margin-bottom: 0; /* Remove margem no mobile */
+    margin-bottom: 0; 
   }
 
   .hamburger {
-    display: block; /* Mostra o botão no telemóvel */
+    display: block; 
+    color: #ff8c00; /* Hamburguer laranja */
   }
 
   /* Esconder o menu por padrão no telemóvel */
   .menuContainer {
     display: none; 
     margin-top: 20px;
-    border-top: 1px solid #334155;
+    border-top: 1px solid #2d3748;
     padding-top: 20px;
   }
 
@@ -134,7 +152,7 @@
   }
 
   .sidebarFooter {
-    margin-top: 20px; /* Espaço no mobile */
+    margin-top: 20px; 
   }
 }
 

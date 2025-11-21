@@ -1,12 +1,13 @@
-import { useState } from "react"; // <--- Importar useState
+import { useState } from "react";
 import { useNavigate, Link, NavLink } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 
 function Sidebar() {
   const navigate = useNavigate();
-  const [menuAberto, setMenuAberto] = useState(false); // Estado para controlar o menu no telemóvel
+  const [menuAberto, setMenuAberto] = useState(false);
 
   const handleLogout = () => {
+    // Lógica de logout
     localStorage.removeItem("token");
     navigate("/login");
   };
@@ -31,11 +32,11 @@ function Sidebar() {
           className={styles.hamburger}
           onClick={() => setMenuAberto(!menuAberto)}
         >
-          {menuAberto ? "✖" : "☰"} {/* Troca entre X e Menu */}
+          {menuAberto ? "✖" : "☰"}
         </button>
       </div>
 
-      {/* --- A LISTA DE LINKS (Escondida no mobile se menuAberto for false) --- */}
+      {/* --- A LISTA DE LINKS --- */}
       <div
         className={`${styles.menuContainer} ${
           menuAberto ? styles.mostrarMenu : ""
@@ -55,7 +56,7 @@ function Sidebar() {
           <li>
             <NavLink
               to="/dashboard"
-              end
+              end // 'end' garante que este link só fica ativo na raiz exata
               className={getLinkClass}
               onClick={fecharMenu}
             >

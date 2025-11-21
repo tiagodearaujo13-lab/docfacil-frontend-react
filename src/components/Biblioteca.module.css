@@ -1,56 +1,129 @@
-/* --- LAYOUT GERAL DA BIBLIOTECA --- */
-.container {
-  padding: 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-  color: #1f2937; /* Texto escuro por padrão */
+/* =========================================
+   --- ESTILO GERAL DA PÁGINA --- 
+   ========================================= */
+.pageBackground {
+  background-color: #1a202c; /* Fundo escuro global para combinar com o tema */
+  min-height: 100vh;
+  padding-bottom: 50px;
 }
 
+.container {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+/* --- HEADER DA BIBLIOTECA --- */
 .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .header h2 {
   font-size: 2rem;
-  color: #1f2937; /* Título escuro */
-  margin-bottom: 10px;
+  color: #ffffff;
+  margin-bottom: 5px;
 }
 
 .header p {
-  color: #6b7280; /* Cinza para descrição */
+  color: #a0aec0; /* Cinza claro */
+  font-size: 1.1rem;
 }
 
-/* --- GRID DOS CARTÕES (Modelos) --- */
+/* Barra de Pesquisa */
+.searchBox input {
+  padding: 12px 20px;
+  border-radius: 50px;
+  border: 1px solid #4a5568;
+  background-color: #2d3748;
+  color: white;
+  width: 300px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.searchBox input:focus {
+  border-color: #ff8c00;
+}
+
+/* --- FILTROS (Categorias) --- */
+.filtros {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  overflow-x: auto;
+  padding-bottom: 5px;
+}
+
+.filtros button {
+  background-color: #2d3748;
+  color: #cbd5e0;
+  border: 1px solid transparent;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.filtros button:hover {
+  background-color: #4a5568;
+}
+
+.filtros button.ativo {
+  background-color: #ff8c00;
+  color: #1a202c; /* Texto escuro no laranja */
+  font-weight: bold;
+}
+
+/* --- GRID DE CARTÕES --- */
 .gridModelos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
 }
 
 .cardModelo {
-  background: white;
+  background-color: #2d3748; /* Cinza escuro dos cards */
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #4a5568;
   display: flex;
   flex-direction: column;
+  position: relative;
+  transition: transform 0.2s, border-color 0.2s;
 }
 
 .cardModelo:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  border-color: #ff8c00;
+  border-color: #ff8c00; /* Borda laranja ao passar o mouse */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
 }
 
-.previewDocumento {
-  height: 150px;
-  background-color: #f3f4f6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid #e5e7eb;
+.badgePopular {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff8c00;
+  color: white;
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.cardIcon {
+  font-size: 40px;
+  padding: 20px 20px 0 20px;
 }
 
 .cardContent {
@@ -59,22 +132,29 @@
 }
 
 .cardContent h3 {
-  font-size: 1.2rem;
-  color: #111827;
-  margin-bottom: 10px;
+  font-size: 1.25rem;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.cardContent p {
+  color: #a0aec0;
+  font-size: 0.95rem;
+  line-height: 1.4;
 }
 
 .botaoUsar {
-  width: 100%;
-  background-color: white;
+  margin: 20px;
+  margin-top: auto;
+  background-color: transparent;
   color: #ff8c00;
   border: 1px solid #ff8c00;
-  padding: 12px;
+  padding: 10px;
+  border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s;
-  margin-top: auto;
-  border-radius: 0 0 12px 12px;
+  text-align: center;
 }
 
 .botaoUsar:hover {
@@ -82,119 +162,115 @@
   color: white;
 }
 
+.semResultados {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #a0aec0;
+  padding: 40px;
+  background: #2d3748;
+  border-radius: 8px;
+  border: 1px dashed #4a5568;
+}
+
 /* =========================================
-   --- ESTILOS DO EDITOR (A CORREÇÃO) --- 
+   --- ESTILOS DO EDITOR (Mantidos e Ajustados) --- 
    ========================================= */
 
-/* O Contentor Principal (Pai) */
 .editorContainer {
   display: flex;
+  flex-direction: row;
   height: 100vh;
-  background-color: #f3f4f6; /* Fundo Cinza Claro para a página */
+  background-color: #1a202c; /* Ajustado para combinar */
   overflow: hidden;
 }
 
-/* --- LADO ESQUERDO (FORMULÁRIO) --- */
 .formArea {
   width: 40%;
   padding: 30px;
   overflow-y: auto;
-  border-right: 1px solid #ddd;
-  background-color: white; /* OBRIGATÓRIO: Fundo Branco */
+  border-right: 1px solid #2d3748;
+  background-color: #ffffff; /* O formulário mantém-se branco para legibilidade */
+  color: #1f2937;
+  box-shadow: 4px 0 10px rgba(0,0,0,0.2);
+  z-index: 10;
   display: flex;
   flex-direction: column;
-  color: #1f2937; /* Texto Escuro */
+  box-sizing: border-box;
 }
 
-/* Estilos dos Inputs e Labels */
+/* Estilos dos Inputs (Dentro do FormArea Branco) */
 .label {
   display: block;
-  margin-bottom: 8px;
+  margin-top: 15px;
+  margin-bottom: 5px;
   font-weight: 600;
-  color: #374151; /* Cinza Escuro */
+  color: #374151;
   font-size: 0.9rem;
 }
 
-.input {
+.input, 
+section.input, 
+textarea.input {
   width: 100%;
-  padding: 12px;
-  background-color: #fff; /* Fundo Branco */
-  color: #000; /* Texto Preto (Crucial!) */
-  border: 1px solid #d1d5db; /* Borda cinza visível */
+  padding: 10px;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 1rem;
-  transition: border-color 0.2s;
-}
-
-.input::placeholder {
-  color: #9ca3af; /* Placeholder cinza claro */
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .input:focus {
   outline: none;
-  border-color: #ff8c00; /* Laranja DocFacil */
+  border-color: #ff8c00;
   box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.1);
 }
 
-/* --- LADO DIREITO (PREVIEW/PAPEL) --- */
+.formArea .botaoUsar {
+    margin: 30px 0 0 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .previewArea {
   width: 60%;
-  padding: 40px;
-  overflow-y: auto;
+  background-color: #2d3748; /* Fundo cinza escuro suave */
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  background-color: #525659; /* Cinza Escuro (Estilo Adobe Reader) para destacar o papel */
+  align-items: center;
 }
 
-/* A Folha de Papel A4 */
-.folhaA4 {
-  width: 210mm;
-  min-height: 297mm;
-  background-color: white; /* O PAPEL TEM DE SER BRANCO */
-  color: black; /* O TEXTO DO CONTRATO TEM DE SER PRETO */
-  padding: 25mm;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5); /* Sombra para dar efeito 3D */
-  font-family: "Times New Roman", serif;
-  font-size: 12pt;
-  line-height: 1.5;
-  margin-bottom: 40px;
-}
-
-/* --- RESPONSIVIDADE (MOBILE) --- */
+/* --- RESPONSIVIDADE --- */
 @media (max-width: 768px) {
-  .container {
-    padding: 20px;
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
   }
-
-  .gridModelos {
-    grid-template-columns: 1fr;
+  .searchBox input {
+    width: 100%;
+    box-sizing: border-box;
   }
-
+  
+  /* Editor Mobile */
   .editorContainer {
     flex-direction: column;
     height: auto;
-    overflow: auto;
+    overflow-y: auto;
   }
-
   .formArea {
     width: 100%;
     height: auto;
-    border-right: none;
-    border-bottom: 1px solid #ddd;
     padding: 20px;
+    border-right: none;
+    border-bottom: 2px solid #ff8c00;
+    order: 1;
   }
-
   .previewArea {
     width: 100%;
-    height: auto;
-    padding: 20px;
-    background-color: #e5e7eb;
-  }
-
-  .folhaA4 {
-    width: 100%;
-    min-height: auto;
-    padding: 15mm;
-    font-size: 10pt;
+    height: 60vh;
+    order: 2;
   }
 }

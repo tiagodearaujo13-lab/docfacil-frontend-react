@@ -8,126 +8,130 @@ import {
   Image,
 } from "@react-pdf/renderer";
 
-// 1. ESTILO "NORMAL" (Para contratos curtos - Preenche bem a folha)
-const estiloNormal = StyleSheet.create({
+// --- CORES DO TEMA ---
+const COR_DESTAQUE = "#ff8c00"; // Laranja
+const COR_TEXTO = "#1a202c"; // Azul Escuro
+
+const styles = StyleSheet.create({
   page: {
-    paddingTop: 50,
+    paddingTop: 130, // Espaço generoso para o Header não tapar texto
     paddingBottom: 80,
     paddingHorizontal: 50,
-    fontFamily: "Helvetica",
-    fontSize: 12, // Letra grande
+    fontFamily: "Times-Roman",
+    fontSize: 11,
     lineHeight: 1.5,
+    color: "#000",
+    backgroundColor: "#fff",
   },
-  headerLogo: {
+
+  // --- CABEÇALHO FIXO ---
+  headerBar: {
     position: "absolute",
-    top: 30,
-    right: 50,
-    width: 60,
-    height: 60,
-    objectFit: "contain",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 90,
+    backgroundColor: COR_DESTAQUE,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 40,
   },
-  title: {
+
+  // Áreas do Header (30% Logo | 70% Título)
+  headerLeft: {
+    width: "35%",
+    justifyContent: "center",
+  },
+  headerRight: {
+    width: "65%",
+    alignItems: "flex-end",
+    justifyContent: "center",
+  },
+
+  logoImage: { width: 100, height: 50, objectFit: "contain" },
+  logoText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontFamily: "Helvetica-Bold",
+    textTransform: "uppercase",
+  },
+  headerTitle: {
+    color: "#ffffff",
+    fontSize: 11, // Um pouco menor para não quebrar linha em títulos longos
+    fontFamily: "Helvetica-Bold",
+    textTransform: "uppercase",
+    textAlign: "right",
+  },
+
+  // --- RODAPÉ FIXO ---
+  footerBar: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 40,
+    backgroundColor: COR_DESTAQUE,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 50,
+  },
+  footerText: {
+    color: "#ffffff",
+    fontSize: 9,
+    fontFamily: "Helvetica",
+    fontWeight: "bold",
+  },
+
+  // --- CONTEÚDO ---
+  mainTitle: {
     fontSize: 16,
     textAlign: "center",
     marginBottom: 30,
-    marginTop: 10,
+    fontFamily: "Times-Bold",
     textTransform: "uppercase",
-    fontWeight: "bold",
+    color: COR_TEXTO,
+    textDecoration: "underline",
   },
-  clausulaContainer: { marginBottom: 15 },
-  clausulaTitulo: {
-    fontSize: 12,
-    fontWeight: "bold",
-    marginBottom: 5,
-    fontFamily: "Helvetica-Bold",
+  clausulaBox: {
+    marginBottom: 12,
   },
-  clausulaTexto: { textAlign: "justify", fontSize: 12 },
-  assinaturas: {
-    marginTop: 60, // Bastante espaço
-    flexDirection: "row",
-    justifyContent: "space-between",
+  clausulaTitle: {
+    fontSize: 11,
+    fontFamily: "Times-Bold",
+    marginBottom: 4,
+    color: COR_TEXTO,
+    textTransform: "uppercase",
   },
-  linhaAssinatura: {
-    borderTopWidth: 1,
-    borderTopColor: "#000",
-    width: "40%",
-    textAlign: "center",
-    paddingTop: 5,
-    fontSize: 10,
+  clausulaBody: {
+    textAlign: "justify",
+    fontSize: 11,
+    color: "#000",
   },
-  logoMarca: {
-    position: "absolute",
-    bottom: 30,
-    right: 50,
-    fontSize: 10,
-    color: "#ff8c00",
-    opacity: 0.6,
-  },
-});
 
-// 2. ESTILO "COMPACTO" (Para contratos longos)
-const estiloCompacto = StyleSheet.create({
-  page: {
-    paddingTop: 35,
-    paddingBottom: 65,
-    paddingHorizontal: 35,
-    fontFamily: "Helvetica",
-    fontSize: 10, // Letra menor
-    lineHeight: 1.5,
-  },
-  headerLogo: {
-    position: "absolute",
-    top: 20,
-    right: 35,
-    width: 50,
-    height: 50,
-    objectFit: "contain",
-  },
-  title: {
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 20,
-    marginTop: 15,
-    textTransform: "uppercase",
-    fontWeight: "bold",
-  },
-  clausulaContainer: { marginBottom: 10 },
-  clausulaTitulo: {
-    fontSize: 10,
-    fontWeight: "bold",
-    marginBottom: 3,
-    fontFamily: "Helvetica-Bold",
-  },
-  clausulaTexto: { textAlign: "justify", fontSize: 10 },
-  assinaturas: {
-    marginTop: 30,
+  // --- ASSINATURAS ---
+  signaturesRow: {
+    marginTop: 50,
     flexDirection: "row",
     justifyContent: "space-between",
+    breakInside: "avoid",
   },
-  linhaAssinatura: {
+  signatureBox: { width: "45%", alignItems: "center" },
+  signatureLine: {
     borderTopWidth: 1,
     borderTopColor: "#000",
-    width: "40%",
+    width: "100%",
+    marginBottom: 5,
+  },
+  signatureName: {
+    fontSize: 10,
+    fontFamily: "Times-Bold",
     textAlign: "center",
-    paddingTop: 5,
-    fontSize: 9,
   },
-  logoMarca: {
-    position: "absolute",
-    bottom: 30,
-    right: 35,
-    fontSize: 9,
-    color: "#ff8c00",
-    opacity: 0.6,
-  },
+  signatureLabel: { fontSize: 9, color: "#666", textAlign: "center" },
 });
 
 const PDFFile = ({ contrato, plano, logo }) => {
-  // LÓGICA INTELIGENTE: Se tiver muitas cláusulas, usa o modo compacto
-  const usarModoCompacto = contrato.clausulas.length > 6;
-  const styles = usarModoCompacto ? estiloCompacto : estiloNormal;
-
-  // Proteção para nomes das assinaturas
   const nomeParte1 = contrato.assinantes
     ? contrato.assinantes.parte1
     : "Primeira Parte";
@@ -138,33 +142,56 @@ const PDFFile = ({ contrato, plano, logo }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Logo do Usuário (Se for PRO) */}
-        {plano === "pro" && logo && (
-          <Image style={styles.headerLogo} src={logo} />
-        )}
-
-        <Text style={styles.title}>{contrato.titulo}</Text>
-
-        {contrato.clausulas.map((clausula, index) => (
-          <View key={index} style={styles.clausulaContainer} wrap={false}>
-            <Text style={styles.clausulaTitulo}>{clausula.titulo}</Text>
-            <Text style={styles.clausulaTexto}>{clausula.texto}</Text>
+        {/* === CABEÇALHO FIXO === */}
+        <View style={styles.headerBar} fixed>
+          <View style={styles.headerLeft}>
+            {plano === "pro" && logo ? (
+              <Image src={logo} style={styles.logoImage} />
+            ) : (
+              <Text style={styles.logoText}>DOCFACIL.PT</Text>
+            )}
           </View>
-        ))}
-
-        <View style={styles.assinaturas} wrap={false}>
-          <View style={styles.linhaAssinatura}>
-            <Text>{nomeParte1}</Text>
-          </View>
-          <View style={styles.linhaAssinatura}>
-            <Text>{nomeParte2}</Text>
+          <View style={styles.headerRight}>
+            <Text style={styles.headerTitle}>{contrato.titulo}</Text>
           </View>
         </View>
 
-        {/* Marca d'água (Se for FREE) */}
-        {plano !== "pro" && (
-          <Text style={styles.logoMarca}>Documento criado em DocFacil.pt</Text>
-        )}
+        {/* === TÍTULO PRINCIPAL === */}
+        <Text style={styles.mainTitle}>{contrato.titulo}</Text>
+
+        {/* === CLÁUSULAS === */}
+        {/* REMOVI 'wrap={false}' para o texto fluir naturalmente entre páginas */}
+        {contrato.clausulas.map((clausula, index) => (
+          <View key={index} style={styles.clausulaBox}>
+            <Text style={styles.clausulaTitle}>{clausula.titulo}</Text>
+            <Text style={styles.clausulaBody}>{clausula.texto}</Text>
+          </View>
+        ))}
+
+        {/* === ASSINATURAS === */}
+        <View style={styles.signaturesRow}>
+          <View style={styles.signatureBox}>
+            <View style={styles.signatureLine} />
+            <Text style={styles.signatureName}>{nomeParte1}</Text>
+            <Text style={styles.signatureLabel}>(Assinatura)</Text>
+          </View>
+          <View style={styles.signatureBox}>
+            <View style={styles.signatureLine} />
+            <Text style={styles.signatureName}>{nomeParte2}</Text>
+            <Text style={styles.signatureLabel}>(Assinatura)</Text>
+          </View>
+        </View>
+
+        {/* === RODAPÉ FIXO === */}
+        <View style={styles.footerBar} fixed>
+          <Text style={styles.footerText}>Processado por DocFacil.pt</Text>
+          <Text
+            style={styles.footerText}
+            render={({ pageNumber, totalPages }) =>
+              `Página ${pageNumber} de ${totalPages}`
+            }
+          />
+        </View>
       </Page>
     </Document>
   );

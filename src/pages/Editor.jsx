@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { obterModeloPorTipo } from "../modelos/GerenciadorModelos.js";
-import { pdf } from "@react-pdf/renderer";
+import { pdf, PDFViewer } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
 import PDFFile from "../components/PDFFile.jsx";
 import styles from "../components/Biblioteca.module.css";
@@ -14,40 +14,96 @@ function Editor() {
 
   const [tipoDocAtual, setTipoDocAtual] = useState("");
 
+  // Estado Gigante para cobrir todos os modelos
   const [respostas, setRespostas] = useState({
+    // --- CAMPOS GERAIS ---
     comarca: "Lisboa",
+
+    // --- PRESTAÇÃO DE SERVIÇOS / GERAL ---
     prestador: "",
+    prestadorNIF: "",
+    prestadorMorada: "",
+    prestadorCC: "", // Usado em procurações
     cliente: "",
-    descricaoServico: "",
-    valor: "",
-    prazo: "",
+    clienteNIF: "",
+    clienteMorada: "",
+    clienteCC: "", // Usado em procurações
+    descricaoServico: "", // Usado também como 'Lista de Sócios' na Ata ou 'Poderes' na Procuração
+    valor: "", // Usado também como 'Capital Social' na Ata
+    prazo: "", // Usado como 'Data Fim', 'Hora da Ata', ou 'Dias de Aviso Prévio'
+
+    // --- IMOBILIÁRIO ---
     senhorio: "",
+    senhorioNIF: "",
+    senhorioCC: "",
+    senhorioMorada: "",
     inquilino: "",
+    inquilinoNIF: "",
+    inquilinoCC: "",
+    inquilinoMorada: "",
     moradaImovel: "",
-    valorRenda: "",
+    valorRenda: "", // Usado também como 'Resultado do Exercício' na Ata
     dataInicio: "",
     prazoMeses: "12",
     temFiador: false,
     nomeFiador: "",
+    fiadorNIF: "",
+
+    // --- CPCV ---
+    valorSinal: "",
+    artigoMatricial: "",
+    conservatoria: "",
+    numeroPredial: "",
+
+    // --- RH / TRABALHO / DOMÉSTICO (PREMIUM) ---
+    empregador: "",
+    nifEmpregador: "",
+    moradaEmpregador: "",
+    trabalho: "", // Usado para 'Trabalhador'
+    trabalhador: "",
+    nifTrabalhador: "",
+    nissTrabalhador: "", // Segurança Social
+    moradaTrabalhador: "",
+    funcao: "",
+    salario: "",
+    dataFim: "",
+    motivoTermo: "",
+    clausulasExtras: "", // <--- NOVO: Campo para cláusulas livres
+
+    // --- EXTRAS / JURÍDICO ---
     parteReveladora: "",
     parteReceptora: "",
     objetivo: "",
     multa: "10.000",
     temConfidencialidade: false,
     temExclusividade: false,
-    // Novos campos
-    empregador: "",
-    trabalhador: "",
-    funcao: "",
-    salario: "",
-    dataFim: "",
-    motivoTermo: "",
-    empresa: "",
+    empresa: "", // Usado na Ata e RGPD
     site: "",
     emailDPO: "",
     validadeProposta: "",
     condicoesPagamento: "",
-    materiais: "",
+    credor: "",
+    devedor: "",
+    dataPagamento: "",
+    metodoPagamento: "",
+
+    // --- VEÍCULOS ---
+    vendedor: "",
+    vendedorNIF: "",
+    vendedorMorada: "",
+    vendedorCC: "",
+    comprador: "",
+    compradorNIF: "",
+    compradorMorada: "",
+    compradorCC: "",
+    marca: "",
+    modelo: "",
+    matricula: "",
+    chassis: "",
+    km: "",
+
+    // --- CARTAS ---
+    role: "senhorio", // Para saber quem envia a carta (senhorio/inquilino)
   });
 
   const planoDoUsuario = "pro";
@@ -74,8 +130,8 @@ function Editor() {
           }
           setStatusMsg("");
         } else {
-          alert("Documento não encontrado");
-          navigate("/dashboard");
+          console.warn("Documento não encontrado ou backend offline");
+          setStatusMsg("");
         }
       } catch (erro) {
         console.error(erro);
@@ -87,9 +143,8 @@ function Editor() {
 
   const contratoGerado = obterModeloPorTipo(tipoDocAtual, respostas);
 
-  const handleChange = (campo, valor) => {
+  const handleChange = (campo, valor) =>
     setRespostas((prev) => ({ ...prev, [campo]: valor }));
-  };
 
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
@@ -129,292 +184,65 @@ function Editor() {
       setStatusMsg("✅ Sucesso!");
       setTimeout(() => setStatusMsg(""), 3000);
     } catch (erro) {
+      console.error(erro);
       setStatusMsg("❌ Erro PDF");
     }
   };
 
+  // ===============================================
+  // --- SEÇÃO DE RENDERIZAÇÃO DE FORMULÁRIOS ---
+  // ===============================================
+
   const renderFormServicos = () => (
     <>
-      <label className={styles.label}>Prestador (Você)</label>
+      <h4 style={{ marginTop: "10px", color: "#4b5563" }}>Prestador (Você)</h4>
+      <label className={styles.label}>Nome / Empresa</label>
       <input
         className={styles.input}
         type="text"
-        placeholder="Seu Nome/Empresa"
         value={respostas.prestador}
         onChange={(e) => handleChange("prestador", e.target.value)}
       />
-      <label className={styles.label}>Cliente</label>
+      <label className={styles.label}>NIF</label>
       <input
         className={styles.input}
         type="text"
-        placeholder="Nome do Cliente"
+        value={respostas.prestadorNIF}
+        onChange={(e) => handleChange("prestadorNIF", e.target.value)}
+      />
+      <label className={styles.label}>Morada / Sede</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={respostas.prestadorMorada}
+        onChange={(e) => handleChange("prestadorMorada", e.target.value)}
+      />
+
+      <h4 style={{ marginTop: "15px", color: "#4b5563" }}>Cliente</h4>
+      <label className={styles.label}>Nome / Empresa</label>
+      <input
+        className={styles.input}
+        type="text"
         value={respostas.cliente}
         onChange={(e) => handleChange("cliente", e.target.value)}
       />
+      <label className={styles.label}>NIF</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={respostas.clienteNIF}
+        onChange={(e) => handleChange("clienteNIF", e.target.value)}
+      />
+      <label className={styles.label}>Morada / Sede</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={respostas.clienteMorada}
+        onChange={(e) => handleChange("clienteMorada", e.target.value)}
+      />
+
+      <h4 style={{ marginTop: "15px", color: "#4b5563" }}>Detalhes</h4>
       <label className={styles.label}>Descrição do Serviço</label>
-      <textarea
-        className={styles.input}
-        rows="3"
-        value={respostas.descricaoServico}
-        onChange={(e) => handleChange("descricaoServico", e.target.value)}
-      />
-      <div style={{ display: "flex", gap: "10px" }}>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>Valor (€)</label>
-          <input
-            className={styles.input}
-            type="number"
-            value={respostas.valor}
-            onChange={(e) => handleChange("valor", e.target.value)}
-          />
-        </div>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>Data Fim</label>
-          <input
-            className={styles.input}
-            type="date"
-            value={respostas.prazo}
-            onChange={(e) => handleChange("prazo", e.target.value)}
-          />
-        </div>
-      </div>
-
-      <div
-        style={{
-          marginTop: "20px",
-          padding: "15px",
-          background: "#fff7ed",
-          borderRadius: "6px",
-          border: "1px solid #ffedd5",
-        }}
-      >
-        <h4
-          style={{ margin: "0 0 10px 0", color: "#9c4221", fontSize: "0.9rem" }}
-        >
-          Opções Pro
-        </h4>
-        <div style={{ display: "flex", gap: "10px", flexDirection: "column" }}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <input
-              type="checkbox"
-              checked={respostas.temConfidencialidade}
-              onChange={(e) =>
-                handleChange("temConfidencialidade", e.target.checked)
-              }
-              style={{
-                width: "20px",
-                height: "20px",
-                marginRight: "10px",
-                cursor: "pointer",
-              }}
-            />
-            <label
-              style={{ fontSize: "0.9rem", color: "#333", cursor: "pointer" }}
-            >
-              Adicionar Sigilo
-            </label>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <input
-              type="checkbox"
-              checked={respostas.temExclusividade}
-              onChange={(e) =>
-                handleChange("temExclusividade", e.target.checked)
-              }
-              style={{
-                width: "20px",
-                height: "20px",
-                marginRight: "10px",
-                cursor: "pointer",
-              }}
-            />
-            <label
-              style={{ fontSize: "0.9rem", color: "#333", cursor: "pointer" }}
-            >
-              Adicionar Exclusividade
-            </label>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-
-  const renderFormArrendamento = () => (
-    <>
-      <div
-        style={{
-          padding: "10px",
-          background: "#e0f2fe",
-          borderRadius: "6px",
-          marginBottom: "15px",
-          color: "#0369a1",
-          fontSize: "0.9rem",
-        }}
-      >
-        🏠 <strong>Modo Arrendamento Ativo</strong>
-      </div>
-      <label className={styles.label}>Senhorio (Proprietário)</label>
-      <input
-        className={styles.input}
-        type="text"
-        placeholder="Nome do Senhorio"
-        value={respostas.senhorio}
-        onChange={(e) => handleChange("senhorio", e.target.value)}
-      />
-      <label className={styles.label}>Inquilino</label>
-      <input
-        className={styles.input}
-        type="text"
-        placeholder="Nome do Inquilino"
-        value={respostas.inquilino}
-        onChange={(e) => handleChange("inquilino", e.target.value)}
-      />
-      <label className={styles.label}>Morada do Imóvel</label>
-      <input
-        className={styles.input}
-        type="text"
-        placeholder="Rua, Nº, Andar, Cidade"
-        value={respostas.moradaImovel}
-        onChange={(e) => handleChange("moradaImovel", e.target.value)}
-      />
-      <div style={{ display: "flex", gap: "10px" }}>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>Renda (€)</label>
-          <input
-            className={styles.input}
-            type="number"
-            value={respostas.valorRenda}
-            onChange={(e) => handleChange("valorRenda", e.target.value)}
-          />
-        </div>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>Duração (Meses)</label>
-          <input
-            className={styles.input}
-            type="number"
-            value={respostas.prazoMeses}
-            onChange={(e) => handleChange("prazoMeses", e.target.value)}
-          />
-        </div>
-      </div>
-      <label className={styles.label}>Data Início</label>
-      <input
-        className={styles.input}
-        type="date"
-        value={respostas.dataInicio}
-        onChange={(e) => handleChange("dataInicio", e.target.value)}
-      />
-
-      <div
-        style={{
-          marginTop: "20px",
-          padding: "15px",
-          background: "#fff7ed",
-          borderRadius: "6px",
-          border: "1px solid #ffedd5",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <input
-            type="checkbox"
-            checked={respostas.temFiador}
-            onChange={(e) => handleChange("temFiador", e.target.checked)}
-            style={{
-              width: "20px",
-              height: "20px",
-              marginRight: "10px",
-              cursor: "pointer",
-            }}
-          />
-          <label
-            style={{
-              fontSize: "0.9rem",
-              color: "#333",
-              fontWeight: "bold",
-              cursor: "pointer",
-            }}
-          >
-            Tem Fiador?
-          </label>
-        </div>
-        {respostas.temFiador && (
-          <input
-            className={styles.input}
-            style={{ marginTop: "10px" }}
-            type="text"
-            placeholder="Nome do Fiador"
-            value={respostas.nomeFiador}
-            onChange={(e) => handleChange("nomeFiador", e.target.value)}
-          />
-        )}
-      </div>
-    </>
-  );
-
-  const renderFormNDA = () => (
-    <>
-      <label className={styles.label}>Parte Reveladora</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.parteReveladora}
-        onChange={(e) => handleChange("parteReveladora", e.target.value)}
-      />
-      <label className={styles.label}>Parte Receptora</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.parteReceptora}
-        onChange={(e) => handleChange("parteReceptora", e.target.value)}
-      />
-      <label className={styles.label}>Objetivo</label>
-      <textarea
-        className={styles.input}
-        rows="2"
-        value={respostas.objetivo}
-        onChange={(e) => handleChange("objetivo", e.target.value)}
-      />
-      <label className={styles.label}>Multa (€)</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.multa}
-        onChange={(e) => handleChange("multa", e.target.value)}
-      />
-    </>
-  );
-
-  // --- NOVO: Formulário para Proposta Comercial ---
-  const renderFormProposta = () => (
-    <>
-      <div
-        style={{
-          padding: "10px",
-          background: "#f0fdf4",
-          color: "#166534",
-          marginBottom: "15px",
-          borderRadius: "6px",
-        }}
-      >
-        💼 <strong>Modo Proposta Comercial</strong>
-      </div>
-      <label className={styles.label}>Sua Empresa (Fornecedor)</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.prestador}
-        onChange={(e) => handleChange("prestador", e.target.value)}
-      />
-
-      <label className={styles.label}>Cliente (Destinatário)</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.cliente}
-        onChange={(e) => handleChange("cliente", e.target.value)}
-      />
-
-      <label className={styles.label}>O que será entregue? (Escopo)</label>
       <textarea
         className={styles.input}
         rows="3"
@@ -427,65 +255,90 @@ function Editor() {
           <label className={styles.label}>Valor Total (€)</label>
           <input
             className={styles.input}
-            type="text"
+            type="number"
             value={respostas.valor}
             onChange={(e) => handleChange("valor", e.target.value)}
           />
         </div>
         <div style={{ flex: 1 }}>
-          <label className={styles.label}>Validade (Ex: 15 dias)</label>
+          <label className={styles.label}>Data Fim (Opcional)</label>
           <input
             className={styles.input}
-            type="text"
-            placeholder="15 dias"
-            value={respostas.validadeProposta}
-            onChange={(e) => handleChange("validadeProposta", e.target.value)}
+            type="date"
+            value={respostas.prazo}
+            onChange={(e) => handleChange("prazo", e.target.value)}
           />
         </div>
       </div>
 
-      <label className={styles.label}>Condições de Pagamento</label>
-      <input
-        className={styles.input}
-        type="text"
-        placeholder="Ex: 50% entrada, 50% final"
-        value={respostas.condicoesPagamento}
-        onChange={(e) => handleChange("condicoesPagamento", e.target.value)}
-      />
+      <div style={{ marginTop: "15px" }}>
+        <label>
+          <input
+            type="checkbox"
+            checked={respostas.temConfidencialidade}
+            onChange={(e) =>
+              handleChange("temConfidencialidade", e.target.checked)
+            }
+          />{" "}
+          Incluir Confidencialidade?
+        </label>
+        <br />
+        <label>
+          <input
+            type="checkbox"
+            checked={respostas.temExclusividade}
+            onChange={(e) => handleChange("temExclusividade", e.target.checked)}
+          />{" "}
+          Incluir Exclusividade?
+        </label>
+      </div>
     </>
   );
 
-  // --- NOVO: Formulário para Orçamento de Obras ---
-  const renderFormOrcamento = () => (
+  const renderFormAta = () => (
     <>
       <div
         style={{
           padding: "10px",
-          background: "#fffBEB",
-          color: "#B45309",
-          marginBottom: "15px",
+          background: "#f3e8ff",
           borderRadius: "6px",
+          marginBottom: "15px",
+          color: "#6b21a8",
         }}
       >
-        🔨 <strong>Modo Orçamento de Obras</strong>
+        📜 <strong>Ata de Assembleia Geral</strong>
       </div>
-      <label className={styles.label}>Empreiteiro / Profissional</label>
+
+      <label className={styles.label}>Nome da Empresa</label>
       <input
         className={styles.input}
         type="text"
-        value={respostas.prestador}
-        onChange={(e) => handleChange("prestador", e.target.value)}
+        value={respostas.empresa}
+        onChange={(e) => handleChange("empresa", e.target.value)}
       />
 
-      <label className={styles.label}>Cliente</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.cliente}
-        onChange={(e) => handleChange("cliente", e.target.value)}
-      />
+      <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ flex: 1 }}>
+          <label className={styles.label}>NIPC (NIF)</label>
+          <input
+            className={styles.input}
+            type="text"
+            value={respostas.nifEmpregador}
+            onChange={(e) => handleChange("nifEmpregador", e.target.value)}
+          />
+        </div>
+        <div style={{ flex: 1 }}>
+          <label className={styles.label}>Capital Social (€)</label>
+          <input
+            className={styles.input}
+            type="text"
+            value={respostas.valor}
+            onChange={(e) => handleChange("valor", e.target.value)}
+          />
+        </div>
+      </div>
 
-      <label className={styles.label}>Local da Obra</label>
+      <label className={styles.label}>Sede Social</label>
       <input
         className={styles.input}
         type="text"
@@ -493,89 +346,405 @@ function Editor() {
         onChange={(e) => handleChange("moradaImovel", e.target.value)}
       />
 
-      <label className={styles.label}>Descrição dos Serviços</label>
+      <label className={styles.label}>Hora da Reunião</label>
+      <input
+        className={styles.input}
+        type="time"
+        value={respostas.prazo}
+        onChange={(e) => handleChange("prazo", e.target.value)}
+      />
+
+      <label className={styles.label}>Presidente da Mesa</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={respostas.prestador}
+        onChange={(e) => handleChange("prestador", e.target.value)}
+      />
+
+      <label className={styles.label}>
+        Lista de Sócios e Quotas (Separar por ponto e vírgula)
+      </label>
       <textarea
         className={styles.input}
         rows="3"
+        placeholder="Ex: João Silva (50%); Maria Santos (50%)."
         value={respostas.descricaoServico}
         onChange={(e) => handleChange("descricaoServico", e.target.value)}
       />
 
-      <label className={styles.label}>Materiais (Quem compra?)</label>
+      <label className={styles.label}>Resultado do Exercício (Texto)</label>
       <input
         className={styles.input}
         type="text"
-        placeholder="Ex: Cliente fornece tintas..."
-        value={respostas.materiais}
-        onChange={(e) => handleChange("materiais", e.target.value)}
+        placeholder="Ex: lucro de 10.000€ ou prejuízo de 500€"
+        value={respostas.valorRenda}
+        onChange={(e) => handleChange("valorRenda", e.target.value)}
       />
-
-      <div style={{ display: "flex", gap: "10px" }}>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>Valor Mão de Obra (€)</label>
-          <input
-            className={styles.input}
-            type="text"
-            value={respostas.valor}
-            onChange={(e) => handleChange("valor", e.target.value)}
-          />
-        </div>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>Prazo Estimado</label>
-          <input
-            className={styles.input}
-            type="text"
-            placeholder="Ex: 2 semanas"
-            value={respostas.prazo}
-            onChange={(e) => handleChange("prazo", e.target.value)}
-          />
-        </div>
-      </div>
     </>
   );
 
-  // --- NOVO: Formulário para Contrato de Trabalho ---
-  const renderFormTrabalho = () => (
+  const renderFormProcuracao = () => (
+    <>
+      <div
+        style={{
+          padding: "10px",
+          background: "#fae8ff",
+          borderRadius: "6px",
+          marginBottom: "15px",
+          color: "#86198f",
+        }}
+      >
+        ⚖️ <strong>Procuração Forense/Geral</strong>
+      </div>
+
+      <h4 style={{ marginTop: "10px" }}>Mandante (Quem passa poderes)</h4>
+      <label className={styles.label}>Nome Completo</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={respostas.prestador}
+        onChange={(e) => handleChange("prestador", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ flex: 1 }}>
+          <label className={styles.label}>NIF</label>
+          <input
+            className={styles.input}
+            type="text"
+            value={respostas.prestadorNIF}
+            onChange={(e) => handleChange("prestadorNIF", e.target.value)}
+          />
+        </div>
+        <div style={{ flex: 1 }}>
+          <label className={styles.label}>CC/BI</label>
+          <input
+            className={styles.input}
+            type="text"
+            value={respostas.prestadorCC}
+            onChange={(e) => handleChange("prestadorCC", e.target.value)}
+          />
+        </div>
+      </div>
+      <label className={styles.label}>Morada</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={respostas.prestadorMorada}
+        onChange={(e) => handleChange("prestadorMorada", e.target.value)}
+      />
+
+      <h4 style={{ marginTop: "10px" }}>Mandatário (Quem recebe)</h4>
+      <label className={styles.label}>Nome Completo</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={respostas.cliente}
+        onChange={(e) => handleChange("cliente", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ flex: 1 }}>
+          <label className={styles.label}>NIF</label>
+          <input
+            className={styles.input}
+            type="text"
+            value={respostas.clienteNIF}
+            onChange={(e) => handleChange("clienteNIF", e.target.value)}
+          />
+        </div>
+        <div style={{ flex: 1 }}>
+          <label className={styles.label}>CC/BI</label>
+          <input
+            className={styles.input}
+            type="text"
+            value={respostas.clienteCC}
+            onChange={(e) => handleChange("clienteCC", e.target.value)}
+          />
+        </div>
+      </div>
+      <label className={styles.label}>Morada</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={respostas.clienteMorada}
+        onChange={(e) => handleChange("clienteMorada", e.target.value)}
+      />
+
+      <label className={styles.label}>Descrição dos Poderes</label>
+      <textarea
+        className={styles.input}
+        rows="4"
+        placeholder="Ex: Poderes para vender o imóvel X, movimentar contas bancárias, etc."
+        value={respostas.descricaoServico}
+        onChange={(e) => handleChange("descricaoServico", e.target.value)}
+      />
+
+      <label style={{ marginTop: "10px", display: "block" }}>
+        <input
+          type="checkbox"
+          checked={respostas.temConfidencialidade}
+          onChange={(e) =>
+            handleChange("temConfidencialidade", e.target.checked)
+          }
+        />
+        Permite substabelecimento? (Passar poderes a outro)
+      </label>
+    </>
+  );
+
+  const renderFormCartas = () => (
+    <>
+      <div
+        style={{
+          padding: "10px",
+          background: "#fee2e2",
+          borderRadius: "6px",
+          marginBottom: "15px",
+          color: "#991b1b",
+        }}
+      >
+        📬 <strong>Modo Carta Registada</strong>
+      </div>
+
+      {tipoDocAtual === "oposicao" && (
+        <div style={{ marginBottom: "15px" }}>
+          <label className={styles.label}>Quem está a escrever?</label>
+          <select
+            className={styles.input}
+            value={respostas.role}
+            onChange={(e) => handleChange("role", e.target.value)}
+          >
+            <option value="senhorio">Sou o Senhorio</option>
+            <option value="inquilino">Sou o Inquilino</option>
+          </select>
+        </div>
+      )}
+
+      <h4 style={{ marginTop: "10px" }}>Remetente (Você)</h4>
+      <label className={styles.label}>Nome</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={
+          tipoDocAtual === "rescisao_trabalho"
+            ? respostas.trabalhador
+            : respostas.role === "senhorio"
+            ? respostas.senhorio
+            : respostas.inquilino
+        }
+        onChange={(e) => {
+          if (tipoDocAtual === "rescisao_trabalho")
+            handleChange("trabalhador", e.target.value);
+          else if (respostas.role === "senhorio")
+            handleChange("senhorio", e.target.value);
+          else handleChange("inquilino", e.target.value);
+        }}
+      />
+
+      <label className={styles.label}>Morada</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={
+          tipoDocAtual === "rescisao_trabalho"
+            ? respostas.moradaTrabalhador
+            : respostas.role === "senhorio"
+            ? respostas.senhorioMorada
+            : respostas.inquilinoMorada
+        }
+        onChange={(e) => {
+          if (tipoDocAtual === "rescisao_trabalho")
+            handleChange("moradaTrabalhador", e.target.value);
+          else if (respostas.role === "senhorio")
+            handleChange("senhorioMorada", e.target.value);
+          else handleChange("inquilinoMorada", e.target.value);
+        }}
+      />
+
+      <h4 style={{ marginTop: "15px" }}>Destinatário</h4>
+      <label className={styles.label}>Nome / Entidade</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={
+          tipoDocAtual === "rescisao_trabalho"
+            ? respostas.empregador
+            : respostas.role === "senhorio"
+            ? respostas.inquilino
+            : respostas.senhorio
+        }
+        onChange={(e) => {
+          if (tipoDocAtual === "rescisao_trabalho")
+            handleChange("empregador", e.target.value);
+          else if (respostas.role === "senhorio")
+            handleChange("inquilino", e.target.value);
+          else handleChange("senhorio", e.target.value);
+        }}
+      />
+
+      <label className={styles.label}>Morada</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={
+          tipoDocAtual === "rescisao_trabalho"
+            ? respostas.moradaEmpregador
+            : respostas.role === "senhorio"
+            ? respostas.inquilinoMorada
+            : respostas.senhorioMorada
+        }
+        onChange={(e) => {
+          if (tipoDocAtual === "rescisao_trabalho")
+            handleChange("moradaEmpregador", e.target.value);
+          else if (respostas.role === "senhorio")
+            handleChange("inquilinoMorada", e.target.value);
+          else handleChange("senhorioMorada", e.target.value);
+        }}
+      />
+
+      <label className={styles.label}>
+        {tipoDocAtual === "oposicao"
+          ? "Morada do Imóvel"
+          : "Data Fim do Contrato"}
+      </label>
+      <input
+        className={styles.input}
+        type="text"
+        value={
+          tipoDocAtual === "oposicao"
+            ? respostas.moradaImovel
+            : respostas.dataFim
+        }
+        onChange={(e) =>
+          handleChange(
+            tipoDocAtual === "oposicao" ? "moradaImovel" : "dataFim",
+            e.target.value
+          )
+        }
+      />
+
+      <label className={styles.label}>
+        {tipoDocAtual === "oposicao"
+          ? "Data Fim do Contrato"
+          : "Dias de Aviso Prévio (30 ou 60)"}
+      </label>
+      <input
+        className={styles.input}
+        type="text"
+        value={respostas.prazo}
+        onChange={(e) => handleChange("prazo", e.target.value)}
+      />
+    </>
+  );
+
+  const renderFormTrabalho = (isDomestico = false) => (
     <>
       <div
         style={{
           padding: "10px",
           background: "#eef2ff",
-          color: "#3730a3",
-          marginBottom: "15px",
           borderRadius: "6px",
+          marginBottom: "15px",
+          color: "#3730a3",
         }}
       >
-        👔 <strong>Modo Recursos Humanos</strong>
+        👔{" "}
+        <strong>
+          {isDomestico ? "Contrato Serviço Doméstico" : "Contrato de Trabalho"}
+        </strong>
       </div>
-      <label className={styles.label}>Empregador (Empresa)</label>
+
+      <h4 style={{ marginTop: "10px" }}>Empregador</h4>
+      <label className={styles.label}>Nome / Empresa</label>
       <input
         className={styles.input}
         type="text"
         value={respostas.empregador}
         onChange={(e) => handleChange("empregador", e.target.value)}
       />
+      <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ flex: 1 }}>
+          <label className={styles.label}>NIF</label>
+          <input
+            className={styles.input}
+            type="text"
+            value={respostas.nifEmpregador}
+            onChange={(e) => handleChange("nifEmpregador", e.target.value)}
+          />
+        </div>
+      </div>
+      <label className={styles.label}>Morada / Sede</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={respostas.moradaEmpregador}
+        onChange={(e) => handleChange("moradaEmpregador", e.target.value)}
+      />
 
-      <label className={styles.label}>Trabalhador</label>
+      <h4 style={{ marginTop: "15px" }}>Trabalhador</h4>
+      <label className={styles.label}>Nome Completo</label>
       <input
         className={styles.input}
         type="text"
         value={respostas.trabalhador}
         onChange={(e) => handleChange("trabalhador", e.target.value)}
       />
-
-      <label className={styles.label}>Função / Cargo</label>
+      <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ flex: 1 }}>
+          <label className={styles.label}>NIF</label>
+          <input
+            className={styles.input}
+            type="text"
+            value={respostas.nifTrabalhador}
+            onChange={(e) => handleChange("nifTrabalhador", e.target.value)}
+          />
+        </div>
+        <div style={{ flex: 1 }}>
+          <label className={styles.label}>NISS (Seg. Social)</label>
+          <input
+            className={styles.input}
+            type="text"
+            value={respostas.nissTrabalhador}
+            onChange={(e) => handleChange("nissTrabalhador", e.target.value)}
+          />
+        </div>
+      </div>
+      <label className={styles.label}>Morada</label>
       <input
         className={styles.input}
         type="text"
-        placeholder="Ex: Administrativo de 1ª"
-        value={respostas.funcao}
-        onChange={(e) => handleChange("funcao", e.target.value)}
+        value={respostas.moradaTrabalhador}
+        onChange={(e) => handleChange("moradaTrabalhador", e.target.value)}
+      />
+
+      <h4 style={{ marginTop: "15px" }}>Condições</h4>
+      <label className={styles.label}>
+        {isDomestico ? "Funções / Tarefas" : "Categoria Profissional"}
+      </label>
+      <input
+        className={styles.input}
+        type="text"
+        value={isDomestico ? respostas.descricaoServico : respostas.funcao}
+        onChange={(e) =>
+          handleChange(
+            isDomestico ? "descricaoServico" : "funcao",
+            e.target.value
+          )
+        }
+      />
+
+      {/* Se for doméstico, pede local, senão usa o 'moradaImovel' como sede */}
+      <label className={styles.label}>Local de Trabalho</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={respostas.moradaImovel}
+        onChange={(e) => handleChange("moradaImovel", e.target.value)}
       />
 
       <div style={{ display: "flex", gap: "10px" }}>
         <div style={{ flex: 1 }}>
-          <label className={styles.label}>Salário Base (€)</label>
+          <label className={styles.label}>Salário (€)</label>
           <input
             className={styles.input}
             type="number"
@@ -594,68 +763,386 @@ function Editor() {
         </div>
       </div>
 
-      <label className={styles.label}>Data de Fim (Termo)</label>
-      <input
-        className={styles.input}
-        type="date"
-        value={respostas.dataFim}
-        onChange={(e) => handleChange("dataFim", e.target.value)}
-      />
+      {tipoDocAtual === "trabalho" && (
+        <>
+          <label className={styles.label}>Data Fim (Termo)</label>
+          <input
+            className={styles.input}
+            type="date"
+            value={respostas.dataFim}
+            onChange={(e) => handleChange("dataFim", e.target.value)}
+          />
+          <label className={styles.label}>Motivo do Termo</label>
+          <textarea
+            className={styles.input}
+            rows="2"
+            placeholder="Ex: Acréscimo de trabalho..."
+            value={respostas.motivoTermo}
+            onChange={(e) => handleChange("motivoTermo", e.target.value)}
+          />
+        </>
+      )}
 
-      <label className={styles.label}>
-        Motivo do Termo (Obrigatório por Lei)
-      </label>
-      <textarea
-        className={styles.input}
-        rows="3"
-        placeholder="Ex: Substituição temporária de trabalhador em licença de maternidade..."
-        value={respostas.motivoTermo}
-        onChange={(e) => handleChange("motivoTermo", e.target.value)}
-      />
-      <small style={{ color: "#666" }}>
-        A falta de motivo válido converte o contrato em efetivo (sem termo).
-      </small>
+      {/* --- OPÇÕES PREMIUM --- */}
+      <div
+        style={{
+          marginTop: "15px",
+          padding: "10px",
+          background: "#f9fafb",
+          border: "1px solid #e5e7eb",
+          borderRadius: "6px",
+        }}
+      >
+        <h5 style={{ margin: "0 0 10px 0", color: "#4b5563" }}>
+          Opções Avançadas
+        </h5>
+        <label style={{ display: "block", marginBottom: "5px" }}>
+          <input
+            type="checkbox"
+            checked={respostas.temConfidencialidade}
+            onChange={(e) =>
+              handleChange("temConfidencialidade", e.target.checked)
+            }
+          />{" "}
+          Incluir Cláusula de Confidencialidade?
+        </label>
+        <label style={{ display: "block", marginBottom: "10px" }}>
+          <input
+            type="checkbox"
+            checked={respostas.temExclusividade}
+            onChange={(e) => handleChange("temExclusividade", e.target.checked)}
+          />{" "}
+          Incluir Cláusula de Exclusividade?
+        </label>
+
+        <label className={styles.label}>
+          Cláusulas Adicionais (Texto Livre)
+        </label>
+        <textarea
+          className={styles.input}
+          rows="3"
+          placeholder="Escreva aqui regras específicas da empresa (ex: uso de viatura, fardamento, etc). Aparecerá no contrato como 'Cláusula de Disposições Específicas'."
+          value={respostas.clausulasExtras}
+          onChange={(e) => handleChange("clausulasExtras", e.target.value)}
+        />
+      </div>
     </>
   );
 
-  // --- NOVO: Formulário para RGPD ---
-  const renderFormRGPD = () => (
+  const renderFormVeiculo = () => (
     <>
       <div
         style={{
           padding: "10px",
-          background: "#fdf2f8",
-          color: "#831843",
+          background: "#d1fae5",
+          color: "#065f46",
           marginBottom: "15px",
           borderRadius: "6px",
         }}
       >
-        🔒 <strong>Modo Compliance / RGPD</strong>
+        🚗 <strong>Venda de Veículo</strong>
       </div>
-      <label className={styles.label}>Nome da Empresa/Entidade</label>
+      <label className={styles.label}>Marca e Modelo</label>
+      <div style={{ display: "flex", gap: "10px" }}>
+        <input
+          className={styles.input}
+          placeholder="Marca"
+          value={respostas.marca}
+          onChange={(e) => handleChange("marca", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          placeholder="Modelo"
+          value={respostas.modelo}
+          onChange={(e) => handleChange("modelo", e.target.value)}
+        />
+      </div>
+      <label className={styles.label}>Matrícula e VIN</label>
+      <div style={{ display: "flex", gap: "10px" }}>
+        <input
+          className={styles.input}
+          placeholder="Matrícula"
+          value={respostas.matricula}
+          onChange={(e) => handleChange("matricula", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          placeholder="VIN / Chassis"
+          value={respostas.chassis}
+          onChange={(e) => handleChange("chassis", e.target.value)}
+        />
+      </div>
+      <label className={styles.label}>Quilómetros</label>
       <input
         className={styles.input}
         type="text"
-        value={respostas.empresa}
-        onChange={(e) => handleChange("empresa", e.target.value)}
+        value={respostas.km}
+        onChange={(e) => handleChange("km", e.target.value)}
       />
-
-      <label className={styles.label}>Website (URL)</label>
+      <label className={styles.label}>Valor (€)</label>
       <input
         className={styles.input}
-        type="text"
-        placeholder="www.minhaempresa.pt"
-        value={respostas.site}
-        onChange={(e) => handleChange("site", e.target.value)}
+        type="number"
+        value={respostas.valor}
+        onChange={(e) => handleChange("valor", e.target.value)}
       />
 
-      <label className={styles.label}>Email para Proteção de Dados (DPO)</label>
+      <h4 style={{ marginTop: 10 }}>Vendedor</h4>
       <input
         className={styles.input}
-        type="email"
-        placeholder="dados@minhaempresa.pt"
-        value={respostas.emailDPO}
-        onChange={(e) => handleChange("emailDPO", e.target.value)}
+        placeholder="Nome"
+        value={respostas.vendedor}
+        onChange={(e) => handleChange("vendedor", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: 10 }}>
+        <input
+          className={styles.input}
+          placeholder="NIF"
+          value={respostas.vendedorNIF}
+          onChange={(e) => handleChange("vendedorNIF", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          placeholder="CC"
+          value={respostas.vendedorCC}
+          onChange={(e) => handleChange("vendedorCC", e.target.value)}
+        />
+      </div>
+      <input
+        className={styles.input}
+        placeholder="Morada"
+        value={respostas.vendedorMorada}
+        onChange={(e) => handleChange("vendedorMorada", e.target.value)}
+      />
+
+      <h4 style={{ marginTop: 10 }}>Comprador</h4>
+      <input
+        className={styles.input}
+        placeholder="Nome"
+        value={respostas.comprador}
+        onChange={(e) => handleChange("comprador", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: 10 }}>
+        <input
+          className={styles.input}
+          placeholder="NIF"
+          value={respostas.compradorNIF}
+          onChange={(e) => handleChange("compradorNIF", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          placeholder="CC"
+          value={respostas.compradorCC}
+          onChange={(e) => handleChange("compradorCC", e.target.value)}
+        />
+      </div>
+      <input
+        className={styles.input}
+        placeholder="Morada"
+        value={respostas.compradorMorada}
+        onChange={(e) => handleChange("compradorMorada", e.target.value)}
+      />
+    </>
+  );
+
+  const renderFormArrendamento = () => (
+    <>
+      <div
+        style={{
+          padding: "10px",
+          background: "#e0f2fe",
+          borderRadius: "6px",
+          marginBottom: "15px",
+          color: "#0369a1",
+        }}
+      >
+        🏠 <strong>Arrendamento</strong>
+      </div>
+      <h4 style={{ marginTop: 10 }}>Senhorio</h4>
+      <input
+        className={styles.input}
+        placeholder="Nome"
+        value={respostas.senhorio}
+        onChange={(e) => handleChange("senhorio", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: 10 }}>
+        <input
+          className={styles.input}
+          placeholder="NIF"
+          value={respostas.senhorioNIF}
+          onChange={(e) => handleChange("senhorioNIF", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          placeholder="CC"
+          value={respostas.senhorioCC}
+          onChange={(e) => handleChange("senhorioCC", e.target.value)}
+        />
+      </div>
+      <input
+        className={styles.input}
+        placeholder="Morada"
+        value={respostas.senhorioMorada}
+        onChange={(e) => handleChange("senhorioMorada", e.target.value)}
+      />
+
+      <h4 style={{ marginTop: 10 }}>Inquilino</h4>
+      <input
+        className={styles.input}
+        placeholder="Nome"
+        value={respostas.inquilino}
+        onChange={(e) => handleChange("inquilino", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: 10 }}>
+        <input
+          className={styles.input}
+          placeholder="NIF"
+          value={respostas.inquilinoNIF}
+          onChange={(e) => handleChange("inquilinoNIF", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          placeholder="CC"
+          value={respostas.inquilinoCC}
+          onChange={(e) => handleChange("inquilinoCC", e.target.value)}
+        />
+      </div>
+      <input
+        className={styles.input}
+        placeholder="Morada"
+        value={respostas.inquilinoMorada}
+        onChange={(e) => handleChange("inquilinoMorada", e.target.value)}
+      />
+
+      <h4 style={{ marginTop: 10 }}>Imóvel</h4>
+      <input
+        className={styles.input}
+        placeholder="Morada Imóvel"
+        value={respostas.moradaImovel}
+        onChange={(e) => handleChange("moradaImovel", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: 10 }}>
+        <input
+          className={styles.input}
+          type="number"
+          placeholder="Renda €"
+          value={respostas.valorRenda}
+          onChange={(e) => handleChange("valorRenda", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          type="number"
+          placeholder="Meses"
+          value={respostas.prazoMeses}
+          onChange={(e) => handleChange("prazoMeses", e.target.value)}
+        />
+      </div>
+      <label className={styles.label}>Data Início</label>
+      <input
+        className={styles.input}
+        type="date"
+        value={respostas.dataInicio}
+        onChange={(e) => handleChange("dataInicio", e.target.value)}
+      />
+    </>
+  );
+
+  const renderFormCPCV = () => (
+    <>
+      <div
+        style={{
+          padding: "10px",
+          background: "#fef3c7",
+          color: "#92400e",
+          marginBottom: "15px",
+          borderRadius: "6px",
+        }}
+      >
+        🏠 <strong>CPCV (Promessa)</strong>
+      </div>
+      <h4 style={{ marginTop: 10 }}>Vendedor</h4>
+      <input
+        className={styles.input}
+        placeholder="Nome"
+        value={respostas.vendedor}
+        onChange={(e) => handleChange("vendedor", e.target.value)}
+      />
+      <input
+        className={styles.input}
+        placeholder="NIF"
+        value={respostas.vendedorNIF}
+        onChange={(e) => handleChange("vendedorNIF", e.target.value)}
+      />
+      <input
+        className={styles.input}
+        placeholder="Morada"
+        value={respostas.vendedorMorada}
+        onChange={(e) => handleChange("vendedorMorada", e.target.value)}
+      />
+
+      <h4 style={{ marginTop: 10 }}>Comprador</h4>
+      <input
+        className={styles.input}
+        placeholder="Nome"
+        value={respostas.comprador}
+        onChange={(e) => handleChange("comprador", e.target.value)}
+      />
+      <input
+        className={styles.input}
+        placeholder="NIF"
+        value={respostas.compradorNIF}
+        onChange={(e) => handleChange("compradorNIF", e.target.value)}
+      />
+      <input
+        className={styles.input}
+        placeholder="Morada"
+        value={respostas.compradorMorada}
+        onChange={(e) => handleChange("compradorMorada", e.target.value)}
+      />
+
+      <h4 style={{ marginTop: 10 }}>Dados</h4>
+      <input
+        className={styles.input}
+        placeholder="Morada Imóvel"
+        value={respostas.moradaImovel}
+        onChange={(e) => handleChange("moradaImovel", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: 10 }}>
+        <input
+          className={styles.input}
+          placeholder="Artigo"
+          value={respostas.artigoMatricial}
+          onChange={(e) => handleChange("artigoMatricial", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          placeholder="Registo Predial"
+          value={respostas.numeroPredial}
+          onChange={(e) => handleChange("numeroPredial", e.target.value)}
+        />
+      </div>
+      <div style={{ display: "flex", gap: 10 }}>
+        <input
+          className={styles.input}
+          type="number"
+          placeholder="Valor Total"
+          value={respostas.valor}
+          onChange={(e) => handleChange("valor", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          type="number"
+          placeholder="Sinal"
+          value={respostas.valorSinal}
+          onChange={(e) => handleChange("valorSinal", e.target.value)}
+        />
+      </div>
+      <label className={styles.label}>Prazo Escritura (Dias)</label>
+      <input
+        className={styles.input}
+        type="number"
+        value={respostas.prazo}
+        onChange={(e) => handleChange("prazo", e.target.value)}
       />
     </>
   );
@@ -697,23 +1184,28 @@ function Editor() {
         </div>
 
         <h2>Dados do Documento</h2>
-        <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "20px" }}>
-          Preencha os campos abaixo.
-        </p>
-
         <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-          {(tipoDocAtual === "contrato" || tipoDocAtual === "servicos") &&
+          {(tipoDocAtual === "contrato" ||
+            tipoDocAtual === "servicos" ||
+            tipoDocAtual === "proposta" ||
+            tipoDocAtual === "orcamento") &&
             renderFormServicos()}
           {tipoDocAtual === "imobiliario" && renderFormArrendamento()}
-          {(tipoDocAtual === "nda" || tipoDocAtual === "juridico") &&
-            renderFormNDA()}
-          {tipoDocAtual === "proposta" && renderFormProposta()}
-          {tipoDocAtual === "orcamento" && renderFormOrcamento()}
-          {/* CORRIGIDO AQUI: As linhas abaixo estavam no lugar errado antes */}
-          {tipoDocAtual === "trabalho" && renderFormTrabalho()}
-          {tipoDocAtual === "rgpd" && renderFormRGPD()}
+          {tipoDocAtual === "cpcv" && renderFormCPCV()}
+          {tipoDocAtual === "veiculo" && renderFormVeiculo()}
 
-          <label className={styles.label}>Comarca (Tribunal)</label>
+          {/* AQUI ESTÃO OS NOVOS: */}
+          {(tipoDocAtual === "trabalho" ||
+            tipoDocAtual === "trabalho_efetivo") &&
+            renderFormTrabalho(false)}
+          {tipoDocAtual === "domestico" && renderFormTrabalho(true)}
+          {(tipoDocAtual === "oposicao" ||
+            tipoDocAtual === "rescisao_trabalho") &&
+            renderFormCartas()}
+          {tipoDocAtual === "ata_assembleia" && renderFormAta()}
+          {tipoDocAtual === "procuracao" && renderFormProcuracao()}
+
+          <label className={styles.label}>Comarca / Local da Assinatura</label>
           <select
             className={styles.input}
             value={respostas.comarca}
@@ -722,6 +1214,8 @@ function Editor() {
             <option value="Lisboa">Lisboa</option>
             <option value="Porto">Porto</option>
             <option value="Faro">Faro</option>
+            <option value="Coimbra">Coimbra</option>
+            <option value="Braga">Braga</option>
           </select>
 
           {planoDoUsuario === "pro" && (
@@ -737,8 +1231,6 @@ function Editor() {
                   fontSize: "0.9rem",
                   color: "#9c4221",
                   fontWeight: "bold",
-                  display: "block",
-                  marginBottom: "5px",
                 }}
               >
                 Seu Logótipo (Pro)
@@ -755,7 +1247,7 @@ function Editor() {
 
         <button
           className={styles.botaoUsar}
-          style={{ marginTop: "30px", width: "100%" }}
+          style={{ marginTop: "30px" }}
           onClick={handleSalvarEBaixar}
         >
           💾 Salvar e Gerar PDF
@@ -763,76 +1255,16 @@ function Editor() {
       </div>
 
       <div className={styles.previewArea}>
-        <div className={styles.folhaA4}>
-          {planoDoUsuario === "pro" && logoUsuario && (
-            <img
-              src={logoUsuario}
-              alt="Logo"
-              style={{
-                position: "absolute",
-                top: "30px",
-                right: "30px",
-                width: "60px",
-                height: "60px",
-                objectFit: "contain",
-              }}
-            />
-          )}
-          <h1
-            style={{
-              textAlign: "center",
-              fontSize: "1.4em",
-              marginBottom: "30px",
-              marginTop: "20px",
-              textTransform: "uppercase",
-            }}
-          >
-            {contratoGerado.titulo}
-          </h1>
-          {contratoGerado.clausulas.map((clausula, index) => (
-            <div key={index} style={{ marginBottom: "15px" }}>
-              <strong style={{ display: "block", marginBottom: "5px" }}>
-                {clausula.titulo}
-              </strong>
-              <div style={{ whiteSpace: "pre-wrap", textAlign: "justify" }}>
-                {clausula.texto}
-              </div>
-            </div>
-          ))}
-          <div
-            style={{
-              marginTop: "60px",
-              display: "flex",
-              justifyContent: "space-between",
-              gap: "20px",
-            }}
-          >
-            <div
-              style={{
-                borderTop: "1px solid #000",
-                width: "45%",
-                textAlign: "center",
-                paddingTop: "5px",
-              }}
-            >
-              {contratoGerado.assinantes
-                ? contratoGerado.assinantes.parte1
-                : "Primeira Parte"}
-            </div>
-            <div
-              style={{
-                borderTop: "1px solid #000",
-                width: "45%",
-                textAlign: "center",
-                paddingTop: "5px",
-              }}
-            >
-              {contratoGerado.assinantes
-                ? contratoGerado.assinantes.parte2
-                : "Segunda Parte"}
-            </div>
-          </div>
-        </div>
+        <PDFViewer
+          style={{ width: "100%", height: "100%", border: "none" }}
+          showToolbar={true}
+        >
+          <PDFFile
+            contrato={contratoGerado}
+            plano={planoDoUsuario}
+            logo={logoUsuario}
+          />
+        </PDFViewer>
       </div>
     </div>
   );
