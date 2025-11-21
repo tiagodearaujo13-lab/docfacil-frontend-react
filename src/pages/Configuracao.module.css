@@ -1,0 +1,161 @@
+/* Container Principal (Padrão Dark) */
+.pageBackground {
+  background-color: #1a202c;
+  min-height: 100vh;
+  padding-bottom: 50px;
+  color: #ffffff;
+  display: flex;
+  justify-content: center; /* Centraliza o conteúdo */
+}
+
+.container {
+  padding: 40px 20px;
+  width: 100%;
+  max-width: 800px; /* Largura máxima para não ficar esticado */
+  box-sizing: border-box;
+}
+
+/* Header */
+.header {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #2d3748;
+  padding-bottom: 20px;
+}
+
+.header h2 {
+  font-size: 2rem;
+  color: #ffffff;
+  margin-bottom: 5px;
+}
+
+.header p {
+  color: #a0aec0;
+  font-size: 1.1rem;
+}
+
+/* Cartão do Formulário */
+.cardConfig {
+  background-color: #2d3748;
+  border-radius: 12px;
+  padding: 40px;
+  border: 1px solid #4a5568;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.subTitulo {
+  font-size: 1.2rem;
+  color: #ff8c00; /* Laranja */
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.divisor {
+  border: 0;
+  border-top: 1px solid #4a5568;
+  margin: 30px 0;
+}
+
+.avisoPequeno {
+  font-size: 0.85rem;
+  color: #a0aec0;
+  margin-bottom: 15px;
+  margin-top: -15px;
+}
+
+/* Inputs e Labels */
+.grupoInput {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.grupoInput label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #e2e8f0;
+}
+
+.input, .inputDisabled {
+  width: 100%;
+  padding: 12px;
+  background-color: #1a202c; /* Fundo mais escuro que o cartão */
+  border: 1px solid #4a5568;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+  box-sizing: border-box; /* Evita estouros */
+}
+
+.input:focus {
+  border-color: #ff8c00;
+}
+
+.inputDisabled {
+  background-color: #171923; /* Quase preto para indicar desativado */
+  color: #718096;
+  border-color: #2d3748;
+  cursor: not-allowed;
+}
+
+/* Layout em Linha (para passwords) */
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+.row .grupoInput {
+  flex: 1;
+}
+
+/* Rodapé com Botão */
+.footerAcoes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.botaoSalvar {
+  background-color: #ff8c00;
+  color: #1a202c;
+  font-weight: bold;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.botaoSalvar:hover {
+  background-color: #e07b00;
+}
+
+.status {
+  font-weight: bold;
+  color: #68d391; /* Verde suave */
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .footerAcoes {
+    flex-direction: column-reverse;
+    gap: 20px;
+  }
+  
+  .botaoSalvar {
+    width: 100%;
+  }
+  
+  .cardConfig {
+    padding: 20px;
+  }
+}

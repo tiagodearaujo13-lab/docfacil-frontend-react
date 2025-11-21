@@ -43,16 +43,7 @@ function Sidebar() {
         }`}
       >
         <ul className={styles.navList}>
-          <li>
-            <NavLink
-              to="/dashboard/biblioteca"
-              className={getLinkClass}
-              onClick={fecharMenu}
-            >
-              <span>Biblioteca de Documentos</span>
-            </NavLink>
-          </li>
-
+          {/* NOVO LINK: INÍCIO */}
           <li>
             <NavLink
               to="/dashboard"
@@ -60,7 +51,28 @@ function Sidebar() {
               className={getLinkClass}
               onClick={fecharMenu}
             >
-              <span>Meus Documentos</span>
+              <span>🏠 Início</span>
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/dashboard/biblioteca"
+              className={getLinkClass}
+              onClick={fecharMenu}
+            >
+              <span>📚 Biblioteca</span>
+            </NavLink>
+          </li>
+
+          {/* LINK ATUALIZADO: MEUS DOCUMENTOS */}
+          <li>
+            <NavLink
+              to="/dashboard/meus-documentos"
+              className={getLinkClass}
+              onClick={fecharMenu}
+            >
+              <span>📂 Meus Documentos</span>
             </NavLink>
           </li>
 
@@ -70,7 +82,7 @@ function Sidebar() {
               className={getLinkClass}
               onClick={fecharMenu}
             >
-              <span>Configuração</span>
+              <span>⚙️ Configuração</span>
             </NavLink>
           </li>
         </ul>

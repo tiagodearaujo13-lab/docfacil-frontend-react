@@ -6,54 +6,66 @@ import GoogleLoginButton from "./GoogleLoginButton.jsx";
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // Estados visuais
+  const [mostrarSenha, setMostrarSenha] = useState(false); // O Olhinho
+  const [mensagem, setMensagem] = useState(""); // Mensagem na tela
+  const [tipoMensagem, setTipoMensagem] = useState(""); // 'sucesso' ou 'erro'
+
   const navigate = useNavigate();
 
   const handleSubmit = async (evento) => {
     evento.preventDefault();
+    setMensagem(""); // Limpa mensagens antigas
 
-    console.log("A 'telefonar' para o Backend para fazer LOGIN:", email);
-    // Ligar o Login
     try {
       const response = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
 
-      // Ouvir o Backend
-      const data = await response.json(); // <- ler resposta Json
-      if (response.status === 200) {
-        // SUCESSO! (200 = OK)
-        // O Backend enviou a Chave Mestra
-        console.log("Login com sucesso!", data.token);
+      const data = await response.json();
 
-        // Guarda a Chave Mestra na Gaveta Secreta
+      if (response.status === 200) {
+        // SUCESSO!
+        console.log("Login com sucesso!", data.token);
         localStorage.setItem("token", data.token);
-        alert("Login com sucesso! Bem-vindo!");
-        // Ler o Usuario Cliente para o Dashboard
-        navigate("/dashboard");
+
+        setMensagem("Login efetuado com sucesso! A entrar...");
+        setTipoMensagem("sucesso");
+
+        // Redireciona automaticamente após 1.5 segundos
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1500);
       } else {
-        // ERRO! (ex: 400 = Email ou password incorretos)
-        console.log("Erro de login:", data.message);
-        alert(
-          "Erro ao fazer login: " + (data || "Email ou password incorretos.")
-        );
+        // ERRO (Senha errada, etc)
+        setMensagem(data.message || "Email ou password incorretos.");
+        setTipoMensagem("erro");
       }
     } catch (error) {
-      // ERRO DE REDE! ex: o Backend esta desligado
       console.error("Erro de rede:", error);
-      alert("Não foi possivel ligar ao servidor. O Backend esta ligado?");
+      setMensagem("Não foi possível ligar ao servidor.");
+      setTipoMensagem("erro");
     }
   };
 
   return (
     <div className={styles.formCard}>
       <h2>Login</h2>
-
       <p>Bem-vindo de volta! Faça login para aceder aos seus documentos.</p>
+
+      {/* MENSAGEM DE STATUS (Sem Alert) */}
+      {mensagem && (
+        <div
+          className={`${styles.mensagem} ${
+            tipoMensagem === "sucesso" ? styles.sucesso : styles.erro
+          }`}
+        >
+          {mensagem}
+        </div>
+      )}
 
       <form className={styles.form} onSubmit={handleSubmit}>
         <label htmlFor="email">Email</label>
@@ -63,16 +75,29 @@ function LoginForm() {
           placeholder="o.seu.email@exemplo.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
         <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          placeholder="A sua password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+
+        {/* Wrapper para colocar o olhinho junto com o input */}
+        <div className={styles.passwordWrapper}>
+          <input
+            type={mostrarSenha ? "text" : "password"} // A Mágica acontece aqui
+            id="password"
+            placeholder="A sua password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            type="button"
+            className={styles.eyeButton}
+            onClick={() => setMostrarSenha(!mostrarSenha)}
+          >
+            {mostrarSenha ? "🙈" : "👁️"}
+          </button>
+        </div>
 
         <button type="submit" className={styles.botaoLaranja}>
           Entrar

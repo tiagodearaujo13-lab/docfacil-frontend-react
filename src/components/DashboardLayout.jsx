@@ -1,15 +1,19 @@
+import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar.jsx";
 import styles from "./DashboardLayout.module.css";
 
-// children vai ser o menu lateral o menu principal do dashboard
-function DashboardLayout({ children }) {
+function DashboardLayout() {
   return (
-    <div className={styles.layout}>
-      <div className={styles.sidebar}>
+    <div className={styles.layoutContainer}>
+      {/* Lado Esquerdo: Menu Fixo */}
+      <div className={styles.sidebarArea}>
         <Sidebar />
       </div>
 
-      <div className={styles.mainContent}>{children}</div>
+      {/* Lado Direito: Conteúdo Variável (Onde as páginas aparecem) */}
+      <div className={styles.contentArea}>
+        <Outlet />
+      </div>
     </div>
   );
 }

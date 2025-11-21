@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import styles from "./MeusDocumentos.module.css"; // <--- MUDAR PARA O NOVO CSS
+import styles from "./MeusDocumentos.module.css";
 
 function MeusDocumentos() {
   const [documentos, setDocumentos] = useState([]);
   const [carregando, setCarregando] = useState(true);
+
+  // Estado para saber qual documento está a ser apagado (para mostrar confirmação no botão)
+  const [idParaApagar, setIdParaApagar] = useState(null);
+
   const navigate = useNavigate();
 
   const buscarDocumentos = async () => {
@@ -14,18 +18,13 @@ function MeusDocumentos() {
 
       const resposta = await fetch("http://localhost:3000/meus-documentos", {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (resposta.ok) {
         const lista = await resposta.json();
-        // Ordenar por ID decrescente (o mais recente aparece primeiro)
         const listaOrdenada = lista.sort((a, b) => b.id - a.id);
         setDocumentos(listaOrdenada);
-      } else {
-        console.error("Erro ao buscar documentos");
       }
     } catch (erro) {
       console.error("Erro de conexão:", erro);
@@ -38,29 +37,38 @@ function MeusDocumentos() {
     buscarDocumentos();
   }, []);
 
-  const apagarDocumento = async (id) => {
-    if (window.confirm("Tem a certeza que deseja apagar este documento?")) {
-      try {
-        const token = localStorage.getItem("token");
-        const resposta = await fetch(`http://localhost:3000/documento/${id}`, {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (resposta.ok) {
-          const novaLista = documentos.filter((doc) => doc.id !== id);
-          setDocumentos(novaLista);
-        } else {
-          alert("Erro ao apagar.");
-        }
-      } catch (erro) {
-        console.error(erro);
-        alert("Erro de conexão.");
-      }
+  const tentarApagar = (id) => {
+    if (idParaApagar === id) {
+      // Se clicou a segunda vez, apaga mesmo!
+      apagarDefinitivo(id);
+    } else {
+      // Se clicou a primeira vez, pede confirmação
+      setIdParaApagar(id);
+      // Cancela a confirmação se não clicar em 3 segundos
+      setTimeout(() => setIdParaApagar(null), 3000);
     }
   };
 
-  // Ícones baseados no tipo (Cosmética)
+  const apagarDefinitivo = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      const resposta = await fetch(`http://localhost:3000/documento/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (resposta.ok) {
+        const novaLista = documentos.filter((doc) => doc.id !== id);
+        setDocumentos(novaLista);
+        setIdParaApagar(null);
+      } else {
+        console.error("Erro ao apagar.");
+      }
+    } catch (erro) {
+      console.error(erro);
+    }
+  };
+
   const getIcone = (tipo) => {
     if (tipo?.includes("imobiliario") || tipo?.includes("cpcv")) return "🏠";
     if (tipo?.includes("trabalho")) return "👔";
@@ -72,14 +80,11 @@ function MeusDocumentos() {
   return (
     <div className={styles.pageBackground}>
       <div className={styles.container}>
-        {/* Cabeçalho */}
         <div className={styles.header}>
           <div>
             <h2>Os Meus Documentos</h2>
             <p>Gerencie, edite ou descarregue os seus contratos.</p>
           </div>
-
-          {/* Botão Rápido para Criar Novo */}
           <Link to="/dashboard/biblioteca" className={styles.botaoNovo}>
             + Novo Documento
           </Link>
@@ -87,7 +92,7 @@ function MeusDocumentos() {
 
         {carregando ? (
           <div className={styles.loadingArea}>
-            <p>A carregar os seus documentos...</p>
+            <p>A carregar...</p>
           </div>
         ) : documentos.length === 0 ? (
           <div className={styles.emptyState}>
@@ -102,26 +107,20 @@ function MeusDocumentos() {
           <div className={styles.gridDocs}>
             {documentos.map((doc) => (
               <div key={doc.id} className={styles.docCard}>
-                {/* Área do Ícone */}
                 <div className={styles.cardIconArea}>
                   <span>{getIcone(doc.tipo_documento)}</span>
                 </div>
 
-                {/* Conteúdo */}
                 <div className={styles.cardContent}>
                   <h3>{doc.titulo}</h3>
                   <div className={styles.metaInfo}>
                     <span className={styles.tagTipo}>
                       {doc.tipo_documento || "Geral"}
                     </span>
-                    <span className={styles.dataCriacao}>
-                      {/* Se tiver data no futuro, use: new Date(doc.created_at).toLocaleDateString() */}
-                      ID: #{doc.id}
-                    </span>
+                    <span className={styles.dataCriacao}>ID: #{doc.id}</span>
                   </div>
                 </div>
 
-                {/* Ações (Botões) */}
                 <div className={styles.cardActions}>
                   <button
                     className={styles.btnEditar}
@@ -132,10 +131,16 @@ function MeusDocumentos() {
 
                   <button
                     className={styles.btnApagar}
-                    onClick={() => apagarDocumento(doc.id)}
-                    title="Apagar Documento"
+                    onClick={() => tentarApagar(doc.id)}
+                    style={{
+                      color: idParaApagar === doc.id ? "red" : "",
+                      fontWeight: idParaApagar === doc.id ? "bold" : "normal",
+                      fontSize: idParaApagar === doc.id ? "0.8rem" : "1.2rem",
+                      width: idParaApagar === doc.id ? "auto" : "60px",
+                      padding: idParaApagar === doc.id ? "0 10px" : "",
+                    }}
                   >
-                    🗑️
+                    {idParaApagar === doc.id ? "Confirmar?" : "🗑️"}
                   </button>
                 </div>
               </div>

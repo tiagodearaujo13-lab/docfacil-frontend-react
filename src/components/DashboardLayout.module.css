@@ -1,40 +1,40 @@
-.layout {
+.layoutContainer {
   display: flex;
-  min-height: 100vh;
-  background-color: #f3f4f6;
+  min-height: 100vh; /* Ocupa a altura total da tela */
+  width: 100%;
+  background-color: #1a202c; /* Fundo escuro de base */
 }
 
-.sidebar {
-  /* No Computador: Fixo à esquerda */
-  width: 260px;
-  background-color: #1f2937;
-  color: white;
-  flex-shrink: 0; /* Impede que a sidebar seja esmagada */
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+/* Área do Menu (Largura fixa no Desktop) */
+.sidebarArea {
+  width: 250px; /* Largura padrão do menu */
+  flex-shrink: 0; /* Impede o menu de encolher */
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 100;
 }
 
-.mainContent {
-  flex: 1; /* Ocupa o resto do espaço */
-  padding: 0; /* Removemos o padding aqui para controlar nas páginas */
-  overflow-x: hidden; /* Evita barra de rolagem horizontal */
+/* Área do Conteúdo (Cresce para ocupar o resto) */
+.contentArea {
+  flex-grow: 1;
+  overflow-x: hidden; /* Evita scroll horizontal indesejado */
+  width: calc(100% - 250px); /* Segurança extra */
 }
 
-/* --- REGRAS PARA TELEMÓVEL (Até 768px) --- */
+/* --- RESPONSIVIDADE (Mobile) --- */
 @media (max-width: 768px) {
-  .layout {
-    flex-direction: column; /* Empilha um em cima do outro */
+  .layoutContainer {
+    flex-direction: column; /* Empilha: Menu em cima, Conteúdo em baixo */
   }
 
-  .sidebar {
-    width: 100%; /* Ocupa a largura toda */
-    min-height: auto; /* Altura automática (só o necessário) */
-    height: auto;
-    padding-bottom: 10px;
+  .sidebarArea {
+    width: 100%;
+    height: auto; /* Altura automática no mobile */
+    position: relative;
   }
 
-  .mainContent {
+  .contentArea {
     width: 100%;
   }
 }

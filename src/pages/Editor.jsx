@@ -4,7 +4,7 @@ import { obterModeloPorTipo } from "../modelos/GerenciadorModelos.js";
 import { pdf, PDFViewer } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
 import PDFFile from "../components/PDFFile.jsx";
-import styles from "../components/Biblioteca.module.css";
+import styles from "./Biblioteca.module.css";
 
 function Editor() {
   const { id } = useParams();

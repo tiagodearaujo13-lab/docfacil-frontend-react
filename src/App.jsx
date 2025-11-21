@@ -5,11 +5,14 @@ import RegistoPage from "./pages/RegistoPage.jsx";
 import DashboardLayout from "./components/DashboardLayout.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
-import MeusDocumentos from "./components/MeusDocumentos.jsx";
-import Biblioteca from "./components/Biblioteca.jsx";
-import Configuracao from "./components/Configuracao.jsx";
-import Editor from "./pages/Editor.jsx";
 import PublicLayout from "./components/PublicLayout.jsx";
+
+// Páginas do Dashboard
+import DashboardHome from "./pages/DashboardHome.jsx"; // <--- NOVO IMPORT
+import MeusDocumentos from "./pages/MeusDocumentos.jsx"; // Nota: Verifique se moveu para 'pages' ou mantenha 'components'
+import Biblioteca from "./pages/Biblioteca.jsx";
+import Configuracao from "./pages/Configuracao.jsx";
+import Editor from "./pages/Editor.jsx";
 
 function App() {
   return (
@@ -24,55 +27,30 @@ function App() {
           <Route path="/registo" element={<RegistoPage />} />
         </Route>
 
-        {/* GRUPO 2: Rotas do Dashboard (SEM Header e Footer globais, só com Sidebar) */}
-
-        {/* Rota: /dashboard -> Meus Documentos */}
+        {/* GRUPO 2: Rotas do Dashboard (Protegidas) */}
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <DashboardLayout>
-                <MeusDocumentos />
-              </DashboardLayout>
+              <DashboardLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          {/* Rota Padrão: VISÃO GERAL (Dashboard Home) */}
+          <Route index element={<DashboardHome />} />
 
-        {/* Rota: /dashboard/biblioteca -> Biblioteca */}
-        <Route
-          path="/dashboard/biblioteca"
-          element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <Biblioteca />
-              </DashboardLayout>
-            </ProtectedRoute>
-          }
-        />
+          {/* Rota: BIBLIOTECA */}
+          <Route path="biblioteca" element={<Biblioteca />} />
 
-        {/* Rota: /dashboard/config -> Configuração */}
-        <Route
-          path="/dashboard/config"
-          element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <Configuracao />
-              </DashboardLayout>
-            </ProtectedRoute>
-          }
-        />
+          {/* Rota: MEUS DOCUMENTOS (Agora tem o seu próprio caminho) */}
+          <Route path="meus-documentos" element={<MeusDocumentos />} />
 
-        {/* Rota Dinâmica do Editor */}
-        <Route
-          path="/dashboard/editor/:id"
-          element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <Editor />
-              </DashboardLayout>
-            </ProtectedRoute>
-          }
-        />
+          {/* Rota: CONFIGURAÇÃO */}
+          <Route path="config" element={<Configuracao />} />
+
+          {/* Rota: EDITOR */}
+          <Route path="editor/:id" element={<Editor />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
