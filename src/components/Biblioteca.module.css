@@ -1,79 +1,200 @@
+/* --- LAYOUT GERAL DA BIBLIOTECA --- */
 .container {
-    padding: 40px;
-    color: white;
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: #1f2937; /* Texto escuro por padrão */
+}
+
+.header {
+  margin-bottom: 40px;
 }
 
 .header h2 {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 0;
+  font-size: 2rem;
+  color: #1f2937; /* Título escuro */
+  margin-bottom: 10px;
 }
 
 .header p {
-    color: #a0aec0;
-    margin-top: 5px;
-    margin-bottom: 40px;
+  color: #6b7280; /* Cinza para descrição */
 }
 
+/* --- GRID DOS CARTÕES (Modelos) --- */
 .gridModelos {
-    display: grid;
-    /* Grelha responsiva aitomática */
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
 }
 
 .cardModelo {
-    background-color: #1a202c;
-    border: 1px solid #4a5568;
-    border-radius: 10px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0,2s;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
 }
 
 .cardModelo:hover {
-    transform: translateY(-5px); /* Efeito de levantar ao passar o rato */
-    border-color: #ff8c00;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: #ff8c00;
 }
 
 .previewDocumento {
-    background-color: #e2e8f0;
-    height: 150px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    margin-bottom: 15px;
-    color: #2d3748;
+  height: 150px;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.cardModelo h3 {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0 0 10px 0;
+.cardContent {
+  padding: 20px;
+  flex: 1;
 }
 
-.cardModelo p {
-    font-size: 14px;
-    color: #a0aec0;
-    flex-grow: 1; /* Empurra o botão para o fundo */
-    margin-bottom: 20px;
+.cardContent h3 {
+  font-size: 1.2rem;
+  color: #111827;
+  margin-bottom: 10px;
 }
 
 .botaoUsar {
-    background-color: transparent;
-    border: 1px solid #ff8c00;
-    color: #ff8c00;
-    padding: 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.2s;
+  width: 100%;
+  background-color: white;
+  color: #ff8c00;
+  border: 1px solid #ff8c00;
+  padding: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: auto;
+  border-radius: 0 0 12px 12px;
 }
 
 .botaoUsar:hover {
-    background-color: #ff8c00;
-    color: #1a202c;
+  background-color: #ff8c00;
+  color: white;
+}
+
+/* =========================================
+   --- ESTILOS DO EDITOR (A CORREÇÃO) --- 
+   ========================================= */
+
+/* O Contentor Principal (Pai) */
+.editorContainer {
+  display: flex;
+  height: 100vh;
+  background-color: #f3f4f6; /* Fundo Cinza Claro para a página */
+  overflow: hidden;
+}
+
+/* --- LADO ESQUERDO (FORMULÁRIO) --- */
+.formArea {
+  width: 40%;
+  padding: 30px;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+  background-color: white; /* OBRIGATÓRIO: Fundo Branco */
+  display: flex;
+  flex-direction: column;
+  color: #1f2937; /* Texto Escuro */
+}
+
+/* Estilos dos Inputs e Labels */
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151; /* Cinza Escuro */
+  font-size: 0.9rem;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  background-color: #fff; /* Fundo Branco */
+  color: #000; /* Texto Preto (Crucial!) */
+  border: 1px solid #d1d5db; /* Borda cinza visível */
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.input::placeholder {
+  color: #9ca3af; /* Placeholder cinza claro */
+}
+
+.input:focus {
+  outline: none;
+  border-color: #ff8c00; /* Laranja DocFacil */
+  box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.1);
+}
+
+/* --- LADO DIREITO (PREVIEW/PAPEL) --- */
+.previewArea {
+  width: 60%;
+  padding: 40px;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  background-color: #525659; /* Cinza Escuro (Estilo Adobe Reader) para destacar o papel */
+}
+
+/* A Folha de Papel A4 */
+.folhaA4 {
+  width: 210mm;
+  min-height: 297mm;
+  background-color: white; /* O PAPEL TEM DE SER BRANCO */
+  color: black; /* O TEXTO DO CONTRATO TEM DE SER PRETO */
+  padding: 25mm;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5); /* Sombra para dar efeito 3D */
+  font-family: "Times New Roman", serif;
+  font-size: 12pt;
+  line-height: 1.5;
+  margin-bottom: 40px;
+}
+
+/* --- RESPONSIVIDADE (MOBILE) --- */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  .gridModelos {
+    grid-template-columns: 1fr;
+  }
+
+  .editorContainer {
+    flex-direction: column;
+    height: auto;
+    overflow: auto;
+  }
+
+  .formArea {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    padding: 20px;
+  }
+
+  .previewArea {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    background-color: #e5e7eb;
+  }
+
+  .folhaA4 {
+    width: 100%;
+    min-height: auto;
+    padding: 15mm;
+    font-size: 10pt;
+  }
 }

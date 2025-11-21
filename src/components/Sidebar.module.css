@@ -1,79 +1,144 @@
-/* Sidebar a sala de controle o menu do dashboard*/
+/* --- ESTILO GERAL (Desktop e Base) --- */
 .sidebar {
-    background-color: #1a202c;
-    color: white;
-    padding: 30px 20px;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    box-sizing: border-box;
+  background-color: #1e293b; /* Azul Escuro Profissional */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  transition: all 0.3s ease;
 }
 
 .logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: white;
-    text-decoration: none;
-    margin-bottom: 40px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 40px;
+  display: block;
+}
+
+/* O contentor dos links e footer */
+.menuContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .navList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .navLink, .navLinkAtivo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px 10px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: #a0aec0;
-    font-weight: 600;
-}
-
-.navLinkAtivo {
-    background-color: #2d3748;
-    color: white;
+  display: block;
+  padding: 12px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #94a3b8; /* Cinza claro */
+  transition: all 0.2s;
+  font-weight: 500;
 }
 
 .navLink:hover {
-    background-color: #2d3748;
+  background-color: #334155;
+  color: white;
+}
+
+.navLinkAtivo {
+  background-color: #334155;
+  color: white;
+  border-left: 4px solid #ff8c00; /* Laranja DocFacil */
 }
 
 .sidebarFooter {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #334155;
 }
 
 .botaoPlanos {
-    background-color: #ff8c00;
-    color: #1a202c;
-    font-weight: bold;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
+  width: 100%;
+  background-color: #ff8c00;
+  color: black;
+  font-weight: bold;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 10px;
 }
 
 .botaoSair {
-    background-color: transparent;
-    color: #a0aec0;
-    border:  1px solid #4a5568;
-    font-weight: 600;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    text-align: left;
+  width: 100%;
+  background: transparent;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-.botaoSair:hover {
-    background-color: #2d3748;
-    color: white;
+/* Botão do Menu (Escondido no PC) */
+.hamburger {
+  display: none; 
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.mobileHeader {
+  width: 100%;
+}
+
+/* --- MODO MOBILE (Telemóvel) --- */
+@media (max-width: 768px) {
+  .sidebar {
+    height: auto; /* Altura automática */
+    padding: 15px;
+    position: relative; /* Para posicionar o menu */
+  }
+
+  .mobileHeader {
+    display: flex;
+    justify-content: space-between; /* Logo à esquerda, Botão à direita */
+    align-items: center;
+  }
+
+  .logo {
+    margin-bottom: 0; /* Remove margem no mobile */
+  }
+
+  .hamburger {
+    display: block; /* Mostra o botão no telemóvel */
+  }
+
+  /* Esconder o menu por padrão no telemóvel */
+  .menuContainer {
+    display: none; 
+    margin-top: 20px;
+    border-top: 1px solid #334155;
+    padding-top: 20px;
+  }
+
+  /* Classe mágica que mostra o menu quando clicamos */
+  .mostrarMenu {
+    display: flex;
+    animation: slideDown 0.3s ease;
+  }
+
+  .sidebarFooter {
+    margin-top: 20px; /* Espaço no mobile */
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

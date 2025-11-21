@@ -1,7 +1,8 @@
 /* O "container" de toda a "Sala da Direita" */
 .mainContainer {
     padding: 40px;
-    color: white;
+    
+    background-color: #1a202c;
 }
 
 /* O TOPO Titulo + Botao*/

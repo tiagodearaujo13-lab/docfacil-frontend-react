@@ -1,10 +1,40 @@
 .layout {
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    height: 100vh;
+  display: flex;
+  min-height: 100vh;
+  background-color: #f3f4f6;
+}
+
+.sidebar {
+  /* No Computador: Fixo à esquerda */
+  width: 260px;
+  background-color: #1f2937;
+  color: white;
+  flex-shrink: 0; /* Impede que a sidebar seja esmagada */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .mainContent {
-    background-color: #2d3748;
-    overflow-y: auto;
+  flex: 1; /* Ocupa o resto do espaço */
+  padding: 0; /* Removemos o padding aqui para controlar nas páginas */
+  overflow-x: hidden; /* Evita barra de rolagem horizontal */
+}
+
+/* --- REGRAS PARA TELEMÓVEL (Até 768px) --- */
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column; /* Empilha um em cima do outro */
+  }
+
+  .sidebar {
+    width: 100%; /* Ocupa a largura toda */
+    min-height: auto; /* Altura automática (só o necessário) */
+    height: auto;
+    padding-bottom: 10px;
+  }
+
+  .mainContent {
+    width: 100%;
+  }
 }
