@@ -1,73 +1,46 @@
 export const gerarTextoCPCV = (dados) => {
   const dataHoje = new Date().toLocaleDateString("pt-PT");
 
-  // Promitentes
+  // Campos Simples (sem lógica complexa para não quebrar)
   const vendedor = dados.vendedor || "___________________";
-  const vendedorNIF = dados.vendedorNIF || "_________";
-  const vendedorCC = dados.vendedorCC || "_________";
-  const vendedorMorada = dados.vendedorMorada || "___________________";
-
   const comprador = dados.comprador || "___________________";
-  const compradorNIF = dados.compradorNIF || "_________";
-  const compradorCC = dados.compradorCC || "_________";
-  const compradorMorada = dados.compradorMorada || "___________________";
-
-  // Imóvel
-  const moradaImovel = dados.moradaImovel || "___________________";
-  const artigo = dados.artigoMatricial || "____";
-  const conservatória = dados.conservatoria || "____";
-  const predio = dados.numeroPredial || "____";
-
-  // Valores e Prazos (Cálculo Seguro)
-  const valorTotal = dados.valor || "0";
-  const sinal = dados.valorSinal || "0";
+  const morada = dados.moradaImovel || "___________________";
   
-  // Evitar erro "NaN" se estiver vazio
-  const valorNum = parseFloat(valorTotal) || 0;
-  const sinalNum = parseFloat(sinal) || 0;
-  const remanescente = (valorNum - sinalNum).toFixed(2);
-  
-  const prazoEscritura = dados.prazo || "90";
+  const valor = dados.valor || "0,00";
+  const sinal = dados.valorSinal || "0,00";
+  const prazo = dados.prazo || "90";
 
   return {
     titulo: "CONTRATO PROMESSA DE COMPRA E VENDA",
     clausulas: [
       {
-        titulo: "PRIMEIRA (IDENTIFICAÇÃO DAS PARTES)",
-        texto: `ENTRE:\n\nPRIMEIRO OUTORGANTE (PROMITENTE VENDEDOR):\n${vendedor}, NIF ${vendedorNIF}, CC nº ${vendedorCC}, residente em ${vendedorMorada}.\n\nSEGUNDO OUTORGANTE (PROMITENTE COMPRADOR):\n${comprador}, NIF ${compradorNIF}, CC nº ${compradorCC}, residente em ${compradorMorada}.`
+        titulo: "PRIMEIRA (Partes)",
+        texto: `ENTRE:\n\n1. ${vendedor}, na qualidade de PROMITENTE VENDEDOR.\n2. ${comprador}, na qualidade de PROMITENTE COMPRADOR.`
       },
       {
-        titulo: "SEGUNDA (OBJETO)",
-        texto: `O Primeiro Outorgante é dono e legítimo proprietário da fração autónoma/prédio urbano destinado a habitação, sito em ${moradaImovel}, inscrito na matriz predial urbana sob o artigo ${artigo} e descrito na Conservatória do Registo Predial de ${conservatória} sob o número ${predio}.`
+        titulo: "SEGUNDA (Objeto)",
+        texto: `O Vendedor é dono e legítimo possuidor do imóvel sito em: ${morada}. Pelo presente contrato, promete vender ao Comprador, que promete comprar, o referido imóvel, livre de quaisquer ónus ou encargos.`
       },
       {
-        titulo: "TERCEIRA (PROMESSA)",
-        texto: `Pelo presente contrato, o Primeiro Outorgante promete vender ao Segundo Outorgante, que por sua vez promete comprar, o imóvel identificado na cláusula anterior, livre de quaisquer ónus, encargos, hipotecas ou inquilinos.`
+        titulo: "TERCEIRA (Preço e Pagamento)",
+        texto: `1. O preço da venda é de ${valor}€.\n2. A título de sinal e princípio de pagamento, o Comprador entrega agora a quantia de ${sinal}€.\n3. O restante será pago no ato da escritura.`
       },
       {
-        titulo: "QUARTA (PREÇO)",
-        texto: `O preço convencionado para a compra e venda é de ${valorNum}€ (Euros), que será pago da seguinte forma:`
+        titulo: "QUARTA (Escritura)",
+        texto: `A escritura pública de compra e venda será realizada no prazo máximo de ${prazo} dias a contar de hoje.`
       },
       {
-        titulo: "QUINTA (SINAL E PAGAMENTO)",
-        texto: `1. A título de sinal e princípio de pagamento, o Promitente Comprador entrega nesta data ao Promitente Vendedor a quantia de ${sinalNum}€, da qual é dada a respetiva quitação com a assinatura deste contrato.\n\n2. O remanescente do preço, no valor de ${remanescente}€, será pago no ato da Escritura Pública de Compra e Venda, através de cheque visado ou bancário.`
-      },
-      {
-        titulo: "SEXTA (ESCRITURA PÚBLICA)",
-        texto: `A escritura pública de compra e venda será realizada no prazo máximo de ${prazoEscritura} dias a contar da data da assinatura deste contrato.`
-      },
-      {
-        titulo: "SÉTIMA (INCUMPRIMENTO)",
-        texto: `1. Em caso de incumprimento pelo Promitente Comprador, este perde o sinal a favor do Vendedor.\n2. Em caso de incumprimento pelo Promitente Vendedor, este terá de restituir o sinal em dobro.`
+        titulo: "QUINTA (Incumprimento - Sinal)",
+        texto: `Em caso de incumprimento:\na) Se for do Comprador, perde o sinal a favor do Vendedor.\nb) Se for do Vendedor, terá de devolver o sinal em dobro ao Comprador.`
       },
       {
         titulo: "ASSINATURAS",
-        texto: `O presente contrato é feito em duplicado, ficando um exemplar para cada uma das partes.\n\nAssinado em ${dataHoje}.`
+        texto: `Feito em duplicado, em ${dataHoje}.`
       }
     ],
     assinantes: {
-      parte1: "Promitente Vendedor",
-      parte2: "Promitente Comprador"
+      parte1: "Vendedor",
+      parte2: "Comprador"
     }
   };
 };

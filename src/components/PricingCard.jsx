@@ -1,44 +1,56 @@
-import { Link } from 'react-router-dom';
-import styles from './Pricing.module.css';
+import { Link } from "react-router-dom";
+import styles from "./Pricing.module.css";
 
-function PricingCard(props) {
+function PricingCard({
+  plano,
+  descricao,
+  preco,
+  precoDetalhe,
+  features,
+  botaoTexto,
+  isPopular,
+  linkPara,
+}) {
+  return (
+    <div className={`${styles.card} ${isPopular ? styles.popular : ""}`}>
+      {isPopular && <div className={styles.fitaPopular}>MAIS POPULAR</div>}
 
-    const cardClasses = `${styles.card} ${props.isPopular ? styles.popular : ''}`;
+      <h3 className={styles.planoTitulo}>{plano}</h3>
+      <p className={styles.planoDescricao}>{descricao}</p>
 
-    return (
-        <div className={cardClasses}>
+      <div className={styles.planoPreco}>
+        {preco}
+        <span className={styles.precoDetalhe}>{precoDetalhe}</span>
+      </div>
 
-            {props.isPopular && (
-                <div className={StyleSheetList.fitaPopular}>MAIS POPULAR</div>
-            )}
+      <ul className={styles.featuresList}>
+        {features.map((feature, index) => (
+          <li key={index}>
+            {/* Ícone de Check SVG */}
+            <svg
+              className={styles.checkIcon}
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clipRule="evenodd"
+              />
+            </svg>
+            {feature}
+          </li>
+        ))}
+      </ul>
 
-            <h3 className={styles.planoTitulo}>{props.plano}</h3>
-            <p className={styles.planoDescricao}>{props.descricao}</p>
-
-            <div className={styles.planoPreco}>
-                {props.preco}
-                <span className={styles.precoDetalhe}>{props.precoDetalhe}</span>
-            </div>
-
-            <ul className={styles.featuresList}>
-                {props.features.map((feature, index) => (
-                    <li key={index}>✓ {feature}</li>
-                ))}
-            </ul>
-
-            {props.linkPara ? (
-            <Link to={props.linkPara} className={styles.botaoPlano}>{props.botaoTexto}</Link>
-            ) : (
-              
-                <a href="#" className={styles.botaoPlano}>
-                    {props.botaoTexto}
-                </a>
-            )}
-        </div>
-
-
-    );
+      <Link
+        to={linkPara}
+        className={isPopular ? styles.botaoPopular : styles.botaoNormal}
+      >
+        {botaoTexto}
+      </Link>
+    </div>
+  );
 }
-
 
 export default PricingCard;

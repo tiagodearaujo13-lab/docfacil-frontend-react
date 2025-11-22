@@ -11,28 +11,23 @@ function Editor() {
   const navigate = useNavigate();
   const [statusMsg, setStatusMsg] = useState("A carregar...");
   const [logoUsuario, setLogoUsuario] = useState(null);
-
   const [tipoDocAtual, setTipoDocAtual] = useState("");
+  const [planoDoUsuario, setPlanoDoUsuario] = useState("free");
 
   // Estado Gigante para cobrir todos os modelos
   const [respostas, setRespostas] = useState({
-    // --- CAMPOS GERAIS ---
     comarca: "Lisboa",
-
-    // --- PRESTAÇÃO DE SERVIÇOS / GERAL ---
     prestador: "",
     prestadorNIF: "",
     prestadorMorada: "",
-    prestadorCC: "", // Usado em procurações
+    prestadorCC: "",
     cliente: "",
     clienteNIF: "",
     clienteMorada: "",
-    clienteCC: "", // Usado em procurações
-    descricaoServico: "", // Usado também como 'Lista de Sócios' na Ata ou 'Poderes' na Procuração
-    valor: "", // Usado também como 'Capital Social' na Ata
-    prazo: "", // Usado como 'Data Fim', 'Hora da Ata', ou 'Dias de Aviso Prévio'
-
-    // --- IMOBILIÁRIO ---
+    clienteCC: "",
+    descricaoServico: "",
+    valor: "",
+    prazo: "",
     senhorio: "",
     senhorioNIF: "",
     senhorioCC: "",
@@ -42,42 +37,37 @@ function Editor() {
     inquilinoCC: "",
     inquilinoMorada: "",
     moradaImovel: "",
-    valorRenda: "", // Usado também como 'Resultado do Exercício' na Ata
+    valorRenda: "",
     dataInicio: "",
     prazoMeses: "12",
     temFiador: false,
     nomeFiador: "",
     fiadorNIF: "",
-
-    // --- CPCV ---
     valorSinal: "",
     artigoMatricial: "",
     conservatoria: "",
     numeroPredial: "",
-
-    // --- RH / TRABALHO / DOMÉSTICO (PREMIUM) ---
     empregador: "",
     nifEmpregador: "",
     moradaEmpregador: "",
-    trabalho: "", // Usado para 'Trabalhador'
+    trabalho: "",
     trabalhador: "",
     nifTrabalhador: "",
-    nissTrabalhador: "", // Segurança Social
+    nissTrabalhador: "",
+    ibanTrabalhador: "",
     moradaTrabalhador: "",
     funcao: "",
     salario: "",
     dataFim: "",
     motivoTermo: "",
-    clausulasExtras: "", // <--- NOVO: Campo para cláusulas livres
-
-    // --- EXTRAS / JURÍDICO ---
+    clausulasExtras: "",
     parteReveladora: "",
     parteReceptora: "",
     objetivo: "",
     multa: "10.000",
     temConfidencialidade: false,
     temExclusividade: false,
-    empresa: "", // Usado na Ata e RGPD
+    empresa: "",
     site: "",
     emailDPO: "",
     validadeProposta: "",
@@ -86,8 +76,6 @@ function Editor() {
     devedor: "",
     dataPagamento: "",
     metodoPagamento: "",
-
-    // --- VEÍCULOS ---
     vendedor: "",
     vendedorNIF: "",
     vendedorMorada: "",
@@ -101,24 +89,33 @@ function Editor() {
     matricula: "",
     chassis: "",
     km: "",
-
-    // --- CARTAS ---
-    role: "senhorio", // Para saber quem envia a carta (senhorio/inquilino)
+    role: "senhorio",
   });
-
-  const planoDoUsuario = "pro";
 
   useEffect(() => {
     const carregarDados = async () => {
       try {
         const token = localStorage.getItem("token");
-        const resposta = await fetch(`http://localhost:3000/documento/${id}`, {
+
+        const respostaDoc = await fetch(
+          `http://localhost:3000/documento/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const respostaPerfil = await fetch(`http://localhost:3000/perfil`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (resposta.ok) {
-          const doc = await resposta.json();
+        if (respostaDoc.ok) {
+          const doc = await respostaDoc.json();
           setTipoDocAtual(doc.tipo_documento);
+
+          if (respostaPerfil.ok) {
+            const perfil = await respostaPerfil.json();
+            setPlanoDoUsuario(perfil.plano || "free");
+          }
 
           if (doc.conteudo_json && doc.conteudo_json !== "{}") {
             const dadosSalvos = JSON.parse(doc.conteudo_json);
@@ -130,7 +127,6 @@ function Editor() {
           }
           setStatusMsg("");
         } else {
-          console.warn("Documento não encontrado ou backend offline");
           setStatusMsg("");
         }
       } catch (erro) {
@@ -189,89 +185,72 @@ function Editor() {
     }
   };
 
-  // ===============================================
-  // --- SEÇÃO DE RENDERIZAÇÃO DE FORMULÁRIOS ---
-  // ===============================================
+  // --- RENDERIZADORES DE FORMULÁRIOS ---
 
   const renderFormServicos = () => (
     <>
-      <h4 style={{ marginTop: "10px", color: "#4b5563" }}>Prestador (Você)</h4>
-      <label className={styles.label}>Nome / Empresa</label>
+      <h4>Prestador</h4>
       <input
         className={styles.input}
-        type="text"
+        placeholder="Nome"
         value={respostas.prestador}
         onChange={(e) => handleChange("prestador", e.target.value)}
       />
-      <label className={styles.label}>NIF</label>
       <input
         className={styles.input}
-        type="text"
+        placeholder="NIF"
         value={respostas.prestadorNIF}
         onChange={(e) => handleChange("prestadorNIF", e.target.value)}
       />
-      <label className={styles.label}>Morada / Sede</label>
       <input
         className={styles.input}
-        type="text"
+        placeholder="Morada"
         value={respostas.prestadorMorada}
         onChange={(e) => handleChange("prestadorMorada", e.target.value)}
       />
-
-      <h4 style={{ marginTop: "15px", color: "#4b5563" }}>Cliente</h4>
-      <label className={styles.label}>Nome / Empresa</label>
+      <h4>Cliente</h4>
       <input
         className={styles.input}
-        type="text"
+        placeholder="Nome"
         value={respostas.cliente}
         onChange={(e) => handleChange("cliente", e.target.value)}
       />
-      <label className={styles.label}>NIF</label>
       <input
         className={styles.input}
-        type="text"
+        placeholder="NIF"
         value={respostas.clienteNIF}
         onChange={(e) => handleChange("clienteNIF", e.target.value)}
       />
-      <label className={styles.label}>Morada / Sede</label>
       <input
         className={styles.input}
-        type="text"
+        placeholder="Morada"
         value={respostas.clienteMorada}
         onChange={(e) => handleChange("clienteMorada", e.target.value)}
       />
-
-      <h4 style={{ marginTop: "15px", color: "#4b5563" }}>Detalhes</h4>
-      <label className={styles.label}>Descrição do Serviço</label>
+      <h4>Detalhes</h4>
       <textarea
         className={styles.input}
         rows="3"
+        placeholder="Descrição do Serviço"
         value={respostas.descricaoServico}
         onChange={(e) => handleChange("descricaoServico", e.target.value)}
       />
-
       <div style={{ display: "flex", gap: "10px" }}>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>Valor Total (€)</label>
-          <input
-            className={styles.input}
-            type="number"
-            value={respostas.valor}
-            onChange={(e) => handleChange("valor", e.target.value)}
-          />
-        </div>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>Data Fim (Opcional)</label>
-          <input
-            className={styles.input}
-            type="date"
-            value={respostas.prazo}
-            onChange={(e) => handleChange("prazo", e.target.value)}
-          />
-        </div>
+        <input
+          className={styles.input}
+          type="number"
+          placeholder="Valor €"
+          value={respostas.valor}
+          onChange={(e) => handleChange("valor", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          type="date"
+          value={respostas.prazo}
+          onChange={(e) => handleChange("prazo", e.target.value)}
+        />
       </div>
-
-      <div style={{ marginTop: "15px" }}>
+      <div style={{ marginTop: "10px" }}>
         <label>
           <input
             type="checkbox"
@@ -280,7 +259,7 @@ function Editor() {
               handleChange("temConfidencialidade", e.target.checked)
             }
           />{" "}
-          Incluir Confidencialidade?
+          Confidencialidade
         </label>
         <br />
         <label>
@@ -289,676 +268,23 @@ function Editor() {
             checked={respostas.temExclusividade}
             onChange={(e) => handleChange("temExclusividade", e.target.checked)}
           />{" "}
-          Incluir Exclusividade?
+          Exclusividade
         </label>
       </div>
-    </>
-  );
-
-  const renderFormAta = () => (
-    <>
-      <div
-        style={{
-          padding: "10px",
-          background: "#f3e8ff",
-          borderRadius: "6px",
-          marginBottom: "15px",
-          color: "#6b21a8",
-        }}
-      >
-        📜 <strong>Ata de Assembleia Geral</strong>
-      </div>
-
-      <label className={styles.label}>Nome da Empresa</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.empresa}
-        onChange={(e) => handleChange("empresa", e.target.value)}
-      />
-
-      <div style={{ display: "flex", gap: "10px" }}>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>NIPC (NIF)</label>
-          <input
-            className={styles.input}
-            type="text"
-            value={respostas.nifEmpregador}
-            onChange={(e) => handleChange("nifEmpregador", e.target.value)}
-          />
-        </div>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>Capital Social (€)</label>
-          <input
-            className={styles.input}
-            type="text"
-            value={respostas.valor}
-            onChange={(e) => handleChange("valor", e.target.value)}
-          />
-        </div>
-      </div>
-
-      <label className={styles.label}>Sede Social</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.moradaImovel}
-        onChange={(e) => handleChange("moradaImovel", e.target.value)}
-      />
-
-      <label className={styles.label}>Hora da Reunião</label>
-      <input
-        className={styles.input}
-        type="time"
-        value={respostas.prazo}
-        onChange={(e) => handleChange("prazo", e.target.value)}
-      />
-
-      <label className={styles.label}>Presidente da Mesa</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.prestador}
-        onChange={(e) => handleChange("prestador", e.target.value)}
-      />
-
-      <label className={styles.label}>
-        Lista de Sócios e Quotas (Separar por ponto e vírgula)
-      </label>
       <textarea
         className={styles.input}
-        rows="3"
-        placeholder="Ex: João Silva (50%); Maria Santos (50%)."
-        value={respostas.descricaoServico}
-        onChange={(e) => handleChange("descricaoServico", e.target.value)}
-      />
-
-      <label className={styles.label}>Resultado do Exercício (Texto)</label>
-      <input
-        className={styles.input}
-        type="text"
-        placeholder="Ex: lucro de 10.000€ ou prejuízo de 500€"
-        value={respostas.valorRenda}
-        onChange={(e) => handleChange("valorRenda", e.target.value)}
-      />
-    </>
-  );
-
-  const renderFormProcuracao = () => (
-    <>
-      <div
-        style={{
-          padding: "10px",
-          background: "#fae8ff",
-          borderRadius: "6px",
-          marginBottom: "15px",
-          color: "#86198f",
-        }}
-      >
-        ⚖️ <strong>Procuração Forense/Geral</strong>
-      </div>
-
-      <h4 style={{ marginTop: "10px" }}>Mandante (Quem passa poderes)</h4>
-      <label className={styles.label}>Nome Completo</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.prestador}
-        onChange={(e) => handleChange("prestador", e.target.value)}
-      />
-      <div style={{ display: "flex", gap: "10px" }}>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>NIF</label>
-          <input
-            className={styles.input}
-            type="text"
-            value={respostas.prestadorNIF}
-            onChange={(e) => handleChange("prestadorNIF", e.target.value)}
-          />
-        </div>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>CC/BI</label>
-          <input
-            className={styles.input}
-            type="text"
-            value={respostas.prestadorCC}
-            onChange={(e) => handleChange("prestadorCC", e.target.value)}
-          />
-        </div>
-      </div>
-      <label className={styles.label}>Morada</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.prestadorMorada}
-        onChange={(e) => handleChange("prestadorMorada", e.target.value)}
-      />
-
-      <h4 style={{ marginTop: "10px" }}>Mandatário (Quem recebe)</h4>
-      <label className={styles.label}>Nome Completo</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.cliente}
-        onChange={(e) => handleChange("cliente", e.target.value)}
-      />
-      <div style={{ display: "flex", gap: "10px" }}>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>NIF</label>
-          <input
-            className={styles.input}
-            type="text"
-            value={respostas.clienteNIF}
-            onChange={(e) => handleChange("clienteNIF", e.target.value)}
-          />
-        </div>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>CC/BI</label>
-          <input
-            className={styles.input}
-            type="text"
-            value={respostas.clienteCC}
-            onChange={(e) => handleChange("clienteCC", e.target.value)}
-          />
-        </div>
-      </div>
-      <label className={styles.label}>Morada</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.clienteMorada}
-        onChange={(e) => handleChange("clienteMorada", e.target.value)}
-      />
-
-      <label className={styles.label}>Descrição dos Poderes</label>
-      <textarea
-        className={styles.input}
-        rows="4"
-        placeholder="Ex: Poderes para vender o imóvel X, movimentar contas bancárias, etc."
-        value={respostas.descricaoServico}
-        onChange={(e) => handleChange("descricaoServico", e.target.value)}
-      />
-
-      <label style={{ marginTop: "10px", display: "block" }}>
-        <input
-          type="checkbox"
-          checked={respostas.temConfidencialidade}
-          onChange={(e) =>
-            handleChange("temConfidencialidade", e.target.checked)
-          }
-        />
-        Permite substabelecimento? (Passar poderes a outro)
-      </label>
-    </>
-  );
-
-  const renderFormCartas = () => (
-    <>
-      <div
-        style={{
-          padding: "10px",
-          background: "#fee2e2",
-          borderRadius: "6px",
-          marginBottom: "15px",
-          color: "#991b1b",
-        }}
-      >
-        📬 <strong>Modo Carta Registada</strong>
-      </div>
-
-      {tipoDocAtual === "oposicao" && (
-        <div style={{ marginBottom: "15px" }}>
-          <label className={styles.label}>Quem está a escrever?</label>
-          <select
-            className={styles.input}
-            value={respostas.role}
-            onChange={(e) => handleChange("role", e.target.value)}
-          >
-            <option value="senhorio">Sou o Senhorio</option>
-            <option value="inquilino">Sou o Inquilino</option>
-          </select>
-        </div>
-      )}
-
-      <h4 style={{ marginTop: "10px" }}>Remetente (Você)</h4>
-      <label className={styles.label}>Nome</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={
-          tipoDocAtual === "rescisao_trabalho"
-            ? respostas.trabalhador
-            : respostas.role === "senhorio"
-            ? respostas.senhorio
-            : respostas.inquilino
-        }
-        onChange={(e) => {
-          if (tipoDocAtual === "rescisao_trabalho")
-            handleChange("trabalhador", e.target.value);
-          else if (respostas.role === "senhorio")
-            handleChange("senhorio", e.target.value);
-          else handleChange("inquilino", e.target.value);
-        }}
-      />
-
-      <label className={styles.label}>Morada</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={
-          tipoDocAtual === "rescisao_trabalho"
-            ? respostas.moradaTrabalhador
-            : respostas.role === "senhorio"
-            ? respostas.senhorioMorada
-            : respostas.inquilinoMorada
-        }
-        onChange={(e) => {
-          if (tipoDocAtual === "rescisao_trabalho")
-            handleChange("moradaTrabalhador", e.target.value);
-          else if (respostas.role === "senhorio")
-            handleChange("senhorioMorada", e.target.value);
-          else handleChange("inquilinoMorada", e.target.value);
-        }}
-      />
-
-      <h4 style={{ marginTop: "15px" }}>Destinatário</h4>
-      <label className={styles.label}>Nome / Entidade</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={
-          tipoDocAtual === "rescisao_trabalho"
-            ? respostas.empregador
-            : respostas.role === "senhorio"
-            ? respostas.inquilino
-            : respostas.senhorio
-        }
-        onChange={(e) => {
-          if (tipoDocAtual === "rescisao_trabalho")
-            handleChange("empregador", e.target.value);
-          else if (respostas.role === "senhorio")
-            handleChange("inquilino", e.target.value);
-          else handleChange("senhorio", e.target.value);
-        }}
-      />
-
-      <label className={styles.label}>Morada</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={
-          tipoDocAtual === "rescisao_trabalho"
-            ? respostas.moradaEmpregador
-            : respostas.role === "senhorio"
-            ? respostas.inquilinoMorada
-            : respostas.senhorioMorada
-        }
-        onChange={(e) => {
-          if (tipoDocAtual === "rescisao_trabalho")
-            handleChange("moradaEmpregador", e.target.value);
-          else if (respostas.role === "senhorio")
-            handleChange("inquilinoMorada", e.target.value);
-          else handleChange("senhorioMorada", e.target.value);
-        }}
-      />
-
-      <label className={styles.label}>
-        {tipoDocAtual === "oposicao"
-          ? "Morada do Imóvel"
-          : "Data Fim do Contrato"}
-      </label>
-      <input
-        className={styles.input}
-        type="text"
-        value={
-          tipoDocAtual === "oposicao"
-            ? respostas.moradaImovel
-            : respostas.dataFim
-        }
-        onChange={(e) =>
-          handleChange(
-            tipoDocAtual === "oposicao" ? "moradaImovel" : "dataFim",
-            e.target.value
-          )
-        }
-      />
-
-      <label className={styles.label}>
-        {tipoDocAtual === "oposicao"
-          ? "Data Fim do Contrato"
-          : "Dias de Aviso Prévio (30 ou 60)"}
-      </label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.prazo}
-        onChange={(e) => handleChange("prazo", e.target.value)}
-      />
-    </>
-  );
-
-  const renderFormTrabalho = (isDomestico = false) => (
-    <>
-      <div
-        style={{
-          padding: "10px",
-          background: "#eef2ff",
-          borderRadius: "6px",
-          marginBottom: "15px",
-          color: "#3730a3",
-        }}
-      >
-        👔{" "}
-        <strong>
-          {isDomestico ? "Contrato Serviço Doméstico" : "Contrato de Trabalho"}
-        </strong>
-      </div>
-
-      <h4 style={{ marginTop: "10px" }}>Empregador</h4>
-      <label className={styles.label}>Nome / Empresa</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.empregador}
-        onChange={(e) => handleChange("empregador", e.target.value)}
-      />
-      <div style={{ display: "flex", gap: "10px" }}>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>NIF</label>
-          <input
-            className={styles.input}
-            type="text"
-            value={respostas.nifEmpregador}
-            onChange={(e) => handleChange("nifEmpregador", e.target.value)}
-          />
-        </div>
-      </div>
-      <label className={styles.label}>Morada / Sede</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.moradaEmpregador}
-        onChange={(e) => handleChange("moradaEmpregador", e.target.value)}
-      />
-
-      <h4 style={{ marginTop: "15px" }}>Trabalhador</h4>
-      <label className={styles.label}>Nome Completo</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.trabalhador}
-        onChange={(e) => handleChange("trabalhador", e.target.value)}
-      />
-      <div style={{ display: "flex", gap: "10px" }}>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>NIF</label>
-          <input
-            className={styles.input}
-            type="text"
-            value={respostas.nifTrabalhador}
-            onChange={(e) => handleChange("nifTrabalhador", e.target.value)}
-          />
-        </div>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>NISS (Seg. Social)</label>
-          <input
-            className={styles.input}
-            type="text"
-            value={respostas.nissTrabalhador}
-            onChange={(e) => handleChange("nissTrabalhador", e.target.value)}
-          />
-        </div>
-      </div>
-      <label className={styles.label}>Morada</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.moradaTrabalhador}
-        onChange={(e) => handleChange("moradaTrabalhador", e.target.value)}
-      />
-
-      <h4 style={{ marginTop: "15px" }}>Condições</h4>
-      <label className={styles.label}>
-        {isDomestico ? "Funções / Tarefas" : "Categoria Profissional"}
-      </label>
-      <input
-        className={styles.input}
-        type="text"
-        value={isDomestico ? respostas.descricaoServico : respostas.funcao}
-        onChange={(e) =>
-          handleChange(
-            isDomestico ? "descricaoServico" : "funcao",
-            e.target.value
-          )
-        }
-      />
-
-      {/* Se for doméstico, pede local, senão usa o 'moradaImovel' como sede */}
-      <label className={styles.label}>Local de Trabalho</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.moradaImovel}
-        onChange={(e) => handleChange("moradaImovel", e.target.value)}
-      />
-
-      <div style={{ display: "flex", gap: "10px" }}>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>Salário (€)</label>
-          <input
-            className={styles.input}
-            type="number"
-            value={respostas.salario}
-            onChange={(e) => handleChange("salario", e.target.value)}
-          />
-        </div>
-        <div style={{ flex: 1 }}>
-          <label className={styles.label}>Data Início</label>
-          <input
-            className={styles.input}
-            type="date"
-            value={respostas.dataInicio}
-            onChange={(e) => handleChange("dataInicio", e.target.value)}
-          />
-        </div>
-      </div>
-
-      {tipoDocAtual === "trabalho" && (
-        <>
-          <label className={styles.label}>Data Fim (Termo)</label>
-          <input
-            className={styles.input}
-            type="date"
-            value={respostas.dataFim}
-            onChange={(e) => handleChange("dataFim", e.target.value)}
-          />
-          <label className={styles.label}>Motivo do Termo</label>
-          <textarea
-            className={styles.input}
-            rows="2"
-            placeholder="Ex: Acréscimo de trabalho..."
-            value={respostas.motivoTermo}
-            onChange={(e) => handleChange("motivoTermo", e.target.value)}
-          />
-        </>
-      )}
-
-      {/* --- OPÇÕES PREMIUM --- */}
-      <div
-        style={{
-          marginTop: "15px",
-          padding: "10px",
-          background: "#f9fafb",
-          border: "1px solid #e5e7eb",
-          borderRadius: "6px",
-        }}
-      >
-        <h5 style={{ margin: "0 0 10px 0", color: "#4b5563" }}>
-          Opções Avançadas
-        </h5>
-        <label style={{ display: "block", marginBottom: "5px" }}>
-          <input
-            type="checkbox"
-            checked={respostas.temConfidencialidade}
-            onChange={(e) =>
-              handleChange("temConfidencialidade", e.target.checked)
-            }
-          />{" "}
-          Incluir Cláusula de Confidencialidade?
-        </label>
-        <label style={{ display: "block", marginBottom: "10px" }}>
-          <input
-            type="checkbox"
-            checked={respostas.temExclusividade}
-            onChange={(e) => handleChange("temExclusividade", e.target.checked)}
-          />{" "}
-          Incluir Cláusula de Exclusividade?
-        </label>
-
-        <label className={styles.label}>
-          Cláusulas Adicionais (Texto Livre)
-        </label>
-        <textarea
-          className={styles.input}
-          rows="3"
-          placeholder="Escreva aqui regras específicas da empresa (ex: uso de viatura, fardamento, etc). Aparecerá no contrato como 'Cláusula de Disposições Específicas'."
-          value={respostas.clausulasExtras}
-          onChange={(e) => handleChange("clausulasExtras", e.target.value)}
-        />
-      </div>
-    </>
-  );
-
-  const renderFormVeiculo = () => (
-    <>
-      <div
-        style={{
-          padding: "10px",
-          background: "#d1fae5",
-          color: "#065f46",
-          marginBottom: "15px",
-          borderRadius: "6px",
-        }}
-      >
-        🚗 <strong>Venda de Veículo</strong>
-      </div>
-      <label className={styles.label}>Marca e Modelo</label>
-      <div style={{ display: "flex", gap: "10px" }}>
-        <input
-          className={styles.input}
-          placeholder="Marca"
-          value={respostas.marca}
-          onChange={(e) => handleChange("marca", e.target.value)}
-        />
-        <input
-          className={styles.input}
-          placeholder="Modelo"
-          value={respostas.modelo}
-          onChange={(e) => handleChange("modelo", e.target.value)}
-        />
-      </div>
-      <label className={styles.label}>Matrícula e VIN</label>
-      <div style={{ display: "flex", gap: "10px" }}>
-        <input
-          className={styles.input}
-          placeholder="Matrícula"
-          value={respostas.matricula}
-          onChange={(e) => handleChange("matricula", e.target.value)}
-        />
-        <input
-          className={styles.input}
-          placeholder="VIN / Chassis"
-          value={respostas.chassis}
-          onChange={(e) => handleChange("chassis", e.target.value)}
-        />
-      </div>
-      <label className={styles.label}>Quilómetros</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={respostas.km}
-        onChange={(e) => handleChange("km", e.target.value)}
-      />
-      <label className={styles.label}>Valor (€)</label>
-      <input
-        className={styles.input}
-        type="number"
-        value={respostas.valor}
-        onChange={(e) => handleChange("valor", e.target.value)}
-      />
-
-      <h4 style={{ marginTop: 10 }}>Vendedor</h4>
-      <input
-        className={styles.input}
-        placeholder="Nome"
-        value={respostas.vendedor}
-        onChange={(e) => handleChange("vendedor", e.target.value)}
-      />
-      <div style={{ display: "flex", gap: 10 }}>
-        <input
-          className={styles.input}
-          placeholder="NIF"
-          value={respostas.vendedorNIF}
-          onChange={(e) => handleChange("vendedorNIF", e.target.value)}
-        />
-        <input
-          className={styles.input}
-          placeholder="CC"
-          value={respostas.vendedorCC}
-          onChange={(e) => handleChange("vendedorCC", e.target.value)}
-        />
-      </div>
-      <input
-        className={styles.input}
-        placeholder="Morada"
-        value={respostas.vendedorMorada}
-        onChange={(e) => handleChange("vendedorMorada", e.target.value)}
-      />
-
-      <h4 style={{ marginTop: 10 }}>Comprador</h4>
-      <input
-        className={styles.input}
-        placeholder="Nome"
-        value={respostas.comprador}
-        onChange={(e) => handleChange("comprador", e.target.value)}
-      />
-      <div style={{ display: "flex", gap: 10 }}>
-        <input
-          className={styles.input}
-          placeholder="NIF"
-          value={respostas.compradorNIF}
-          onChange={(e) => handleChange("compradorNIF", e.target.value)}
-        />
-        <input
-          className={styles.input}
-          placeholder="CC"
-          value={respostas.compradorCC}
-          onChange={(e) => handleChange("compradorCC", e.target.value)}
-        />
-      </div>
-      <input
-        className={styles.input}
-        placeholder="Morada"
-        value={respostas.compradorMorada}
-        onChange={(e) => handleChange("compradorMorada", e.target.value)}
+        rows="2"
+        placeholder="Cláusulas Extras"
+        value={respostas.clausulasExtras}
+        onChange={(e) => handleChange("clausulasExtras", e.target.value)}
+        style={{ marginTop: 10 }}
       />
     </>
   );
 
   const renderFormArrendamento = () => (
     <>
-      <div
-        style={{
-          padding: "10px",
-          background: "#e0f2fe",
-          borderRadius: "6px",
-          marginBottom: "15px",
-          color: "#0369a1",
-        }}
-      >
-        🏠 <strong>Arrendamento</strong>
-      </div>
-      <h4 style={{ marginTop: 10 }}>Senhorio</h4>
+      <h4>Senhorio</h4>
       <input
         className={styles.input}
         placeholder="Nome"
@@ -985,8 +311,7 @@ function Editor() {
         value={respostas.senhorioMorada}
         onChange={(e) => handleChange("senhorioMorada", e.target.value)}
       />
-
-      <h4 style={{ marginTop: 10 }}>Inquilino</h4>
+      <h4>Inquilino</h4>
       <input
         className={styles.input}
         placeholder="Nome"
@@ -1013,8 +338,7 @@ function Editor() {
         value={respostas.inquilinoMorada}
         onChange={(e) => handleChange("inquilinoMorada", e.target.value)}
       />
-
-      <h4 style={{ marginTop: 10 }}>Imóvel</h4>
+      <h4>Imóvel</h4>
       <input
         className={styles.input}
         placeholder="Morada Imóvel"
@@ -1037,30 +361,190 @@ function Editor() {
           onChange={(e) => handleChange("prazoMeses", e.target.value)}
         />
       </div>
-      <label className={styles.label}>Data Início</label>
       <input
         className={styles.input}
         type="date"
         value={respostas.dataInicio}
         onChange={(e) => handleChange("dataInicio", e.target.value)}
       />
+      <div style={{ marginTop: 10 }}>
+        <label>
+          <input
+            type="checkbox"
+            checked={respostas.temFiador}
+            onChange={(e) => handleChange("temFiador", e.target.checked)}
+          />{" "}
+          Tem Fiador?
+        </label>
+      </div>
+      {respostas.temFiador && (
+        <>
+          <input
+            className={styles.input}
+            placeholder="Nome Fiador"
+            value={respostas.nomeFiador}
+            onChange={(e) => handleChange("nomeFiador", e.target.value)}
+          />
+          <input
+            className={styles.input}
+            placeholder="NIF Fiador"
+            value={respostas.fiadorNIF}
+            onChange={(e) => handleChange("fiadorNIF", e.target.value)}
+          />
+        </>
+      )}
+      <textarea
+        className={styles.input}
+        rows="2"
+        placeholder="Cláusulas Extras"
+        value={respostas.clausulasExtras}
+        onChange={(e) => handleChange("clausulasExtras", e.target.value)}
+        style={{ marginTop: 10 }}
+      />
+    </>
+  );
+
+  const renderFormTrabalho = (isDomestico = false) => (
+    <>
+      <h4>Empregador</h4>
+      <input
+        className={styles.input}
+        placeholder="Nome"
+        value={respostas.empregador}
+        onChange={(e) => handleChange("empregador", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: 10 }}>
+        <input
+          className={styles.input}
+          placeholder="NIF"
+          value={respostas.nifEmpregador}
+          onChange={(e) => handleChange("nifEmpregador", e.target.value)}
+        />
+      </div>
+      <input
+        className={styles.input}
+        placeholder="Morada"
+        value={respostas.moradaEmpregador}
+        onChange={(e) => handleChange("moradaEmpregador", e.target.value)}
+      />
+      <h4>Trabalhador</h4>
+      <input
+        className={styles.input}
+        placeholder="Nome"
+        value={respostas.trabalhador}
+        onChange={(e) => handleChange("trabalhador", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: "10px" }}>
+        <input
+          className={styles.input}
+          placeholder="NIF"
+          value={respostas.nifTrabalhador}
+          onChange={(e) => handleChange("nifTrabalhador", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          placeholder="NISS"
+          value={respostas.nissTrabalhador}
+          onChange={(e) => handleChange("nissTrabalhador", e.target.value)}
+        />
+      </div>
+      <input
+        className={styles.input}
+        placeholder="IBAN"
+        value={respostas.ibanTrabalhador}
+        onChange={(e) => handleChange("ibanTrabalhador", e.target.value)}
+      />
+      <input
+        className={styles.input}
+        placeholder="Morada"
+        value={respostas.moradaTrabalhador}
+        onChange={(e) => handleChange("moradaTrabalhador", e.target.value)}
+      />
+      <h4>Condições</h4>
+      <input
+        className={styles.input}
+        placeholder={isDomestico ? "Tarefas" : "Função"}
+        value={isDomestico ? respostas.descricaoServico : respostas.funcao}
+        onChange={(e) =>
+          handleChange(
+            isDomestico ? "descricaoServico" : "funcao",
+            e.target.value
+          )
+        }
+      />
+      <input
+        className={styles.input}
+        placeholder="Local de Trabalho"
+        value={respostas.moradaImovel}
+        onChange={(e) => handleChange("moradaImovel", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: "10px" }}>
+        <input
+          className={styles.input}
+          type="number"
+          placeholder="Salário"
+          value={respostas.salario}
+          onChange={(e) => handleChange("salario", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          type="date"
+          value={respostas.dataInicio}
+          onChange={(e) => handleChange("dataInicio", e.target.value)}
+        />
+      </div>
+      {tipoDocAtual === "trabalho" && (
+        <>
+          <input
+            className={styles.input}
+            type="date"
+            value={respostas.dataFim}
+            onChange={(e) => handleChange("dataFim", e.target.value)}
+          />
+          <textarea
+            className={styles.input}
+            rows="2"
+            placeholder="Motivo do Termo"
+            value={respostas.motivoTermo}
+            onChange={(e) => handleChange("motivoTermo", e.target.value)}
+          />
+        </>
+      )}
+      <div style={{ marginTop: 10 }}>
+        <label>
+          <input
+            type="checkbox"
+            checked={respostas.temConfidencialidade}
+            onChange={(e) =>
+              handleChange("temConfidencialidade", e.target.checked)
+            }
+          />{" "}
+          Confidencialidade
+        </label>
+        <br />
+        <label>
+          <input
+            type="checkbox"
+            checked={respostas.temExclusividade}
+            onChange={(e) => handleChange("temExclusividade", e.target.checked)}
+          />{" "}
+          Exclusividade
+        </label>
+      </div>
+      <textarea
+        className={styles.input}
+        rows="2"
+        placeholder="Cláusulas Extras"
+        value={respostas.clausulasExtras}
+        onChange={(e) => handleChange("clausulasExtras", e.target.value)}
+        style={{ marginTop: 10 }}
+      />
     </>
   );
 
   const renderFormCPCV = () => (
     <>
-      <div
-        style={{
-          padding: "10px",
-          background: "#fef3c7",
-          color: "#92400e",
-          marginBottom: "15px",
-          borderRadius: "6px",
-        }}
-      >
-        🏠 <strong>CPCV (Promessa)</strong>
-      </div>
-      <h4 style={{ marginTop: 10 }}>Vendedor</h4>
+      <h4>Vendedor</h4>
       <input
         className={styles.input}
         placeholder="Nome"
@@ -1079,8 +563,7 @@ function Editor() {
         value={respostas.vendedorMorada}
         onChange={(e) => handleChange("vendedorMorada", e.target.value)}
       />
-
-      <h4 style={{ marginTop: 10 }}>Comprador</h4>
+      <h4>Comprador</h4>
       <input
         className={styles.input}
         placeholder="Nome"
@@ -1099,8 +582,7 @@ function Editor() {
         value={respostas.compradorMorada}
         onChange={(e) => handleChange("compradorMorada", e.target.value)}
       />
-
-      <h4 style={{ marginTop: 10 }}>Dados</h4>
+      <h4>Dados</h4>
       <input
         className={styles.input}
         placeholder="Morada Imóvel"
@@ -1137,10 +619,279 @@ function Editor() {
           onChange={(e) => handleChange("valorSinal", e.target.value)}
         />
       </div>
-      <label className={styles.label}>Prazo Escritura (Dias)</label>
       <input
         className={styles.input}
         type="number"
+        placeholder="Prazo (Dias)"
+        value={respostas.prazo}
+        onChange={(e) => handleChange("prazo", e.target.value)}
+      />
+      <textarea
+        className={styles.input}
+        rows="2"
+        placeholder="Cláusulas Extras"
+        value={respostas.clausulasExtras}
+        onChange={(e) => handleChange("clausulasExtras", e.target.value)}
+        style={{ marginTop: 10 }}
+      />
+    </>
+  );
+
+  const renderFormVeiculo = () => (
+    <>
+      <h4>Veículo</h4>
+      <div style={{ display: "flex", gap: "10px" }}>
+        <input
+          className={styles.input}
+          placeholder="Marca"
+          value={respostas.marca}
+          onChange={(e) => handleChange("marca", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          placeholder="Modelo"
+          value={respostas.modelo}
+          onChange={(e) => handleChange("modelo", e.target.value)}
+        />
+      </div>
+      <div style={{ display: "flex", gap: "10px" }}>
+        <input
+          className={styles.input}
+          placeholder="Matrícula"
+          value={respostas.matricula}
+          onChange={(e) => handleChange("matricula", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          placeholder="VIN / Chassis"
+          value={respostas.chassis}
+          onChange={(e) => handleChange("chassis", e.target.value)}
+        />
+      </div>
+      <input
+        className={styles.input}
+        placeholder="KM"
+        value={respostas.km}
+        onChange={(e) => handleChange("km", e.target.value)}
+      />
+      <input
+        className={styles.input}
+        type="number"
+        placeholder="Valor €"
+        value={respostas.valor}
+        onChange={(e) => handleChange("valor", e.target.value)}
+      />
+      <h4>Vendedor</h4>
+      <input
+        className={styles.input}
+        placeholder="Nome"
+        value={respostas.vendedor}
+        onChange={(e) => handleChange("vendedor", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: 10 }}>
+        <input
+          className={styles.input}
+          placeholder="NIF"
+          value={respostas.vendedorNIF}
+          onChange={(e) => handleChange("vendedorNIF", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          placeholder="CC"
+          value={respostas.vendedorCC}
+          onChange={(e) => handleChange("vendedorCC", e.target.value)}
+        />
+      </div>
+      <h4>Comprador</h4>
+      <input
+        className={styles.input}
+        placeholder="Nome"
+        value={respostas.comprador}
+        onChange={(e) => handleChange("comprador", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: 10 }}>
+        <input
+          className={styles.input}
+          placeholder="NIF"
+          value={respostas.compradorNIF}
+          onChange={(e) => handleChange("compradorNIF", e.target.value)}
+        />
+        <input
+          className={styles.input}
+          placeholder="CC"
+          value={respostas.compradorCC}
+          onChange={(e) => handleChange("compradorCC", e.target.value)}
+        />
+      </div>
+      <textarea
+        className={styles.input}
+        rows="2"
+        placeholder="Cláusulas Extras"
+        value={respostas.clausulasExtras}
+        onChange={(e) => handleChange("clausulasExtras", e.target.value)}
+        style={{ marginTop: 10 }}
+      />
+    </>
+  );
+
+  const renderFormCartas = () => (
+    <>
+      {tipoDocAtual === "oposicao" && (
+        <select
+          className={styles.input}
+          value={respostas.role}
+          onChange={(e) => handleChange("role", e.target.value)}
+          style={{ marginBottom: 15 }}
+        >
+          <option value="senhorio">Sou o Senhorio</option>
+          <option value="inquilino">Sou o Inquilino</option>
+        </select>
+      )}
+      <h4>Remetente</h4>
+      <input
+        className={styles.input}
+        placeholder="Nome"
+        value={
+          tipoDocAtual === "rescisao_trabalho"
+            ? respostas.trabalhador
+            : respostas.role === "senhorio"
+            ? respostas.senhorio
+            : respostas.inquilino
+        }
+        onChange={(e) => {
+          if (tipoDocAtual === "rescisao_trabalho")
+            handleChange("trabalhador", e.target.value);
+          else if (respostas.role === "senhorio")
+            handleChange("senhorio", e.target.value);
+          else handleChange("inquilino", e.target.value);
+        }}
+      />
+      <input
+        className={styles.input}
+        placeholder="Morada"
+        value={
+          tipoDocAtual === "rescisao_trabalho"
+            ? respostas.moradaTrabalhador
+            : respostas.role === "senhorio"
+            ? respostas.senhorioMorada
+            : respostas.inquilinoMorada
+        }
+        onChange={(e) => {
+          if (tipoDocAtual === "rescisao_trabalho")
+            handleChange("moradaTrabalhador", e.target.value);
+          else if (respostas.role === "senhorio")
+            handleChange("senhorioMorada", e.target.value);
+          else handleChange("inquilinoMorada", e.target.value);
+        }}
+      />
+      <h4>Destinatário</h4>
+      <input
+        className={styles.input}
+        placeholder="Nome"
+        value={
+          tipoDocAtual === "rescisao_trabalho"
+            ? respostas.empregador
+            : respostas.role === "senhorio"
+            ? respostas.inquilino
+            : respostas.senhorio
+        }
+        onChange={(e) => {
+          if (tipoDocAtual === "rescisao_trabalho")
+            handleChange("empregador", e.target.value);
+          else if (respostas.role === "senhorio")
+            handleChange("inquilino", e.target.value);
+          else handleChange("senhorio", e.target.value);
+        }}
+      />
+      <input
+        className={styles.input}
+        placeholder="Morada"
+        value={
+          tipoDocAtual === "rescisao_trabalho"
+            ? respostas.moradaEmpregador
+            : respostas.role === "senhorio"
+            ? respostas.inquilinoMorada
+            : respostas.senhorioMorada
+        }
+        onChange={(e) => {
+          if (tipoDocAtual === "rescisao_trabalho")
+            handleChange("moradaEmpregador", e.target.value);
+          else if (respostas.role === "senhorio")
+            handleChange("inquilinoMorada", e.target.value);
+          else handleChange("senhorioMorada", e.target.value);
+        }}
+      />
+      <h4>Dados</h4>
+      <input
+        className={styles.input}
+        placeholder={
+          tipoDocAtual === "oposicao"
+            ? "Morada do Imóvel"
+            : "Data Fim do Contrato"
+        }
+        value={
+          tipoDocAtual === "oposicao"
+            ? respostas.moradaImovel
+            : respostas.dataFim
+        }
+        onChange={(e) =>
+          handleChange(
+            tipoDocAtual === "oposicao" ? "moradaImovel" : "dataFim",
+            e.target.value
+          )
+        }
+      />
+      <input
+        className={styles.input}
+        placeholder={
+          tipoDocAtual === "oposicao"
+            ? "Data Fim do Contrato"
+            : "Dias Aviso Prévio"
+        }
+        value={respostas.prazo}
+        onChange={(e) => handleChange("prazo", e.target.value)}
+      />
+    </>
+  );
+
+  const renderFormGeral = () => (
+    <>
+      <h4>Dados</h4>
+      <input
+        className={styles.input}
+        placeholder="Nome"
+        value={respostas.empresa}
+        onChange={(e) => handleChange("empresa", e.target.value)}
+      />
+      <textarea
+        className={styles.input}
+        rows="4"
+        placeholder="Descrição / Conteúdo"
+        value={respostas.descricaoServico}
+        onChange={(e) => handleChange("descricaoServico", e.target.value)}
+      />
+      <input
+        className={styles.input}
+        placeholder="Nome 2 / Presidente"
+        value={respostas.prestador}
+        onChange={(e) => handleChange("prestador", e.target.value)}
+      />
+      <input
+        className={styles.input}
+        placeholder="Nome 3 / Secretário"
+        value={respostas.cliente}
+        onChange={(e) => handleChange("cliente", e.target.value)}
+      />
+      <input
+        className={styles.input}
+        type="number"
+        placeholder="Valor / Capital"
+        value={respostas.valor}
+        onChange={(e) => handleChange("valor", e.target.value)}
+      />
+      <input
+        className={styles.input}
+        placeholder="Data / Hora"
         value={respostas.prazo}
         onChange={(e) => handleChange("prazo", e.target.value)}
       />
@@ -1193,8 +944,6 @@ function Editor() {
           {tipoDocAtual === "imobiliario" && renderFormArrendamento()}
           {tipoDocAtual === "cpcv" && renderFormCPCV()}
           {tipoDocAtual === "veiculo" && renderFormVeiculo()}
-
-          {/* AQUI ESTÃO OS NOVOS: */}
           {(tipoDocAtual === "trabalho" ||
             tipoDocAtual === "trabalho_efetivo") &&
             renderFormTrabalho(false)}
@@ -1202,10 +951,15 @@ function Editor() {
           {(tipoDocAtual === "oposicao" ||
             tipoDocAtual === "rescisao_trabalho") &&
             renderFormCartas()}
-          {tipoDocAtual === "ata_assembleia" && renderFormAta()}
-          {tipoDocAtual === "procuracao" && renderFormProcuracao()}
+          {(tipoDocAtual === "ata_assembleia" ||
+            tipoDocAtual === "procuracao" ||
+            tipoDocAtual === "rgpd" ||
+            tipoDocAtual === "divida" ||
+            tipoDocAtual === "nda" ||
+            tipoDocAtual === "juridico") &&
+            renderFormGeral()}
 
-          <label className={styles.label}>Comarca / Local da Assinatura</label>
+          <label className={styles.label}>Comarca / Local</label>
           <select
             className={styles.input}
             value={respostas.comarca}
@@ -1244,7 +998,6 @@ function Editor() {
             </div>
           )}
         </div>
-
         <button
           className={styles.botaoUsar}
           style={{ marginTop: "30px" }}

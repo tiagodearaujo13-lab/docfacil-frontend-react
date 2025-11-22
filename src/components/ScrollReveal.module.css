@@ -1,10 +1,6 @@
-.hidden {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
+/* A lógica de animação agora é controlada via JavaScript (Inline Styles)
+   no arquivo ScrollReveal.jsx para garantir compatibilidade e evitar bugs.
+   
+   Este arquivo fica aqui apenas para manter a estrutura do projeto
+   sem quebrar importações antigas.
+*/

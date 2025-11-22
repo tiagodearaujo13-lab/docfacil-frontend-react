@@ -1,29 +1,60 @@
 import styles from "./FAQ.module.css";
 import FAQItem from "./FAQItem.jsx";
 
+const faqData = [
+  {
+    id: 1,
+    pergunta: "Os documentos têm validade legal em Portugal?",
+    resposta:
+      "Sim. Todos os nossos modelos são redigidos com base na legislação portuguesa em vigor (Código Civil, Código do Trabalho, NRAU, etc.). No entanto, para situações de elevada complexidade ou risco, recomendamos sempre a revisão final por um advogado.",
+  },
+  {
+    id: 2,
+    pergunta: "Posso cancelar a subscrição quando quiser?",
+    resposta:
+      "Absolutamente. Não acreditamos em fidelizações forçadas. Pode cancelar a sua conta Pro a qualquer momento no seu painel de controlo, e manterá o acesso até ao fim do período já pago.",
+  },
+  {
+    id: 3,
+    pergunta: "Os meus dados e documentos estão seguros?",
+    resposta:
+      "A segurança é a nossa prioridade. Utilizamos encriptação de ponta a ponta e os seus dados são armazenados em servidores seguros na Europa, em conformidade com o RGPD.",
+  },
+  {
+    id: 4,
+    pergunta: "Posso usar o DocFacil no telemóvel?",
+    resposta:
+      "Claro! A nossa plataforma web é 100% responsiva e funciona perfeitamente no navegador do seu smartphone. Além disso, estamos a desenvolver a nossa própria Aplicação Móvel (App) para Android e iOS, que estará disponível muito em breve!",
+  },
+  {
+    id: 5,
+    pergunta: "Emitem fatura para a minha empresa?",
+    resposta:
+      "Sim. Após qualquer pagamento, receberá automaticamente a fatura com o NIF que indicou, válida para dedução de despesas no IRS ou IRC.",
+  },
+];
+
 function FAQ() {
   return (
-    <div className={styles.faqSection}>
-      <h2 className={styles.tituloSecao}>Perguntas Frenquentes</h2>
-      <p className={styles.subtituloSecao}>
-        Tudo o que precisa de saber antes de começar.
-      </p>
+    <div id="faq" className={styles.faqSection}>
+      <div className={styles.headerFAQ}>
+        <h2 className={styles.tituloSecao}>
+          Dúvidas? <span className={styles.destaque}>Nós esclarecemos.</span>
+        </h2>
+        <p className={styles.subtituloSecao}>
+          Tudo o que precisa saber para começar a trabalhar de forma mais
+          inteligente hoje mesmo.
+        </p>
+      </div>
 
-      <div className={styles.faqContainer}>
-        <FAQItem
-          pergunta="O DocFacil é legamente válido em Portugal?"
-          resposta="Sim! Todos os nossos modelos são baseados na legislação portuguesa e desenhados para serem jurudicamente sólidos, mas recomendamos sempre a revisão por um advogado."
-        />
-
-        <FAQItem
-          pergunta="Posso cancelar o meu plano Pro a qualquer altura?"
-          resposta="Absolutamente. O seu plano é sem fidelização. Pode cancelar a qualquer momento, sem perguntas, e continuará com acesso Pro até ao final do seu ciclo de faturação."
-        />
-
-        <FAQItem
-          pergunta="O que acontece aos meus documentos se eu cancelar?"
-          resposta="Os seus documentos são seus. Poderá descarregar todos os seus PDFs antes de cancelar. Após o cancelamento, a sua conta voltará ao plano 'Grátis'."
-        />
+      <div className={styles.faqLista}>
+        {faqData.map((item) => (
+          <FAQItem
+            key={item.id}
+            pergunta={item.pergunta}
+            resposta={item.resposta}
+          />
+        ))}
       </div>
     </div>
   );

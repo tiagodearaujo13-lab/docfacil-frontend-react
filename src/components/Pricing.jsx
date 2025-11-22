@@ -1,77 +1,99 @@
-import { useState } from 'react';
-import styles from './Pricing.module.css';
-import PricingCard from './PricingCard.jsx';
+import { useState } from "react";
+import styles from "./Pricing.module.css";
+import PricingCard from "./PricingCard.jsx";
+import ScrollReveal from "./ScrollReveal.jsx"; // <--- IMPORTANTE: O nosso motor de animação
 
 function Pricing() {
+  const [anual, setAnual] = useState(true);
 
-    const [planoAnual, setPlanoAnual] = useState(false);
+  return (
+    <div id="precos" className={styles.pricingSection}>
+      <div className={styles.headerPricing}>
+        <ScrollReveal>
+          <h2 className={styles.tituloSecao}>
+            Investimento Transparente. <br />
+            <span className={styles.destaque}>Sem Surpresas.</span>
+          </h2>
+          <p className={styles.subtituloSecao}>
+            Comece gratuitamente e faça upgrade quando o seu negócio crescer.
+          </p>
+        </ScrollReveal>
 
-    return (
-        <div className={styles.pricingSection}>
+        {/* --- TOGGLE MENSAL / ANUAL --- */}
+        <ScrollReveal delay="0.2s">
+          <div className={styles.toggleContainer}>
+            <span
+              className={!anual ? styles.opcaoAtiva : styles.opcaoInativa}
+              onClick={() => setAnual(false)}
+            >
+              Mensal
+            </span>
 
-            <h2 className={styles.tituloSecao}>
-                Comece Grátis. Use e Cresça sem Medo.
-            </h2>
-            <p className={styles.subtituloSecao}>
-                Comece de gráça e evolua quando precisar. Sem fidelização.
-            </p>
-
-            <div className={styles.toggleContainer}>
-                 <span 
-                  className={!planoAnual ? styles.toggleAtivo : styles.toggleInativo}
-                  onClick={() => setPlanoAnual(false)}
-                 >
-                     Mensal   
-                 </span>
-
-                 <div className={styles.anualWrapper} onClick={() => setPlanoAnual(true)}>
-                   <span 
-                     className={planoAnual ? styles.toggleAtivo : styles.toggleInativo}
-                   >
-                     Anual
-                     </span>
-                    <span className={styles.descontoBadge}>-20%</span>
-                   
-                 </div>
-            
+            <div
+              className={styles.switchTrack}
+              onClick={() => setAnual(!anual)}
+            >
+              <div
+                className={`${styles.switchKnob} ${
+                  anual ? styles.knobRight : styles.knobLeft
+                }`}
+              ></div>
             </div>
 
+            <span
+              className={anual ? styles.opcaoAtiva : styles.opcaoInativa}
+              onClick={() => setAnual(true)}
+            >
+              Anual <span className={styles.discountBadge}>-20%</span>
+            </span>
+          </div>
+        </ScrollReveal>
+      </div>
 
+      <div className={styles.gridCards}>
+        {/* --- CARD GRÁTIS (Vem da Esquerda) --- */}
+        <ScrollReveal direction="left">
+          <PricingCard
+            plano="Iniciante"
+            descricao="Para testar a plataforma."
+            preco="0€"
+            precoDetalhe="/mês"
+            features={[
+              "3 Documentos por mês",
+              "Acesso a modelos básicos",
+              "Exportação com marca d'água",
+              "Suporte comunitário",
+            ]}
+            botaoTexto="Criar Conta Grátis"
+            isPopular={false}
+            linkPara="/registo"
+          />
+        </ScrollReveal>
 
-            <div className={styles.gridCards}>
-                <PricingCard
-                plano="Grátis"
-                descricao="Para quem está a começar."
-                preco={planoAnual ? "0€" : "0€"}
-                precoDetalhe="/ mês "
-                features={[
-                    "Até 3 documentos por mês",
-                    "Acesso a todos od modelos",
-                    "Exportação para PDF com Marca DocFacil.pt"
-                ]}
-                botaoTexto="Começar Gratuitamente"
-                isPopular={false}
-                linkPara="/registo"
-                />
-
-                <PricingCard
-                 plano="Pro"
-                 descricao="Para profissionais e equipas."
-                 preco={planoAnual ? "8€" : "10€"}
-                 precoDetalhe="/ mês"
-                 features={[
-                    "Documentos ilimitados",
-                    "Remoção da marca d'água DocFacil.pt",
-                    "Personalizaçao com logótipo",
-                    "Suporte prioritário"
-                ]}
-                 botaoTexto="Aderir ao Pro"
-                 isPopular={true}
-                />
-
-            </div>
-        </div>
-    );
+        {/* --- CARD PRO (Vem da Direita) --- */}
+        <ScrollReveal direction="right">
+          {/* PLANO PRO */}
+          <PricingCard
+            plano="Profissional"
+            descricao="Para quem leva o negócio a sério."
+            // MUDANÇA AQUI: Preços psicológicos
+            preco={anual ? "7,90€" : "9,90€"}
+            precoDetalhe={anual ? "/mês (faturado anualmente)" : "/mês"}
+            features={[
+              "Documentos Ilimitados",
+              "Acesso a Modelos Premium (Atas, Contratos)",
+              "Sem marca d'água",
+              "Upload do seu Logótipo",
+              "Suporte Prioritário",
+            ]}
+            botaoTexto="Começar Agora"
+            isPopular={true}
+            linkPara="/registo"
+          />
+        </ScrollReveal>
+      </div>
+    </div>
+  );
 }
 
 export default Pricing;

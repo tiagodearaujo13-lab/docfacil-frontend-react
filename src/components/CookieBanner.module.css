@@ -1,0 +1,86 @@
+.bannerContainer {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 800px;
+  background-color: rgba(26, 32, 44, 0.95); /* Dark mode translúcido */
+  backdrop-filter: blur(10px); /* Efeito vidro */
+  color: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  border: 1px solid #4a5568;
+  z-index: 9999; /* Fica sempre por cima de tudo */
+  animation: slideUp 0.5s ease-out;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.content p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #e2e8f0;
+  line-height: 1.5;
+}
+
+.link {
+  color: #ff8c00;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.actions {
+  flex-shrink: 0; /* Botão não encolhe */
+}
+
+.btnAccept {
+  background-color: #ff8c00;
+  color: #1a202c;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.btnAccept:hover {
+  background-color: #ed8936;
+}
+
+/* Animação de entrada */
+@keyframes slideUp {
+  from { opacity: 0; transform: translate(-50%, 50px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .bannerContainer {
+    bottom: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+    border-radius: 12px 12px 0 0; /* Arredonda só em cima */
+    padding: 20px;
+  }
+
+  .content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .btnAccept {
+    width: 100%;
+    padding: 12px;
+  }
+}

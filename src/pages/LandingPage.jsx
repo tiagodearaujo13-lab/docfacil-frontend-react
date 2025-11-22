@@ -12,16 +12,16 @@ function LandingPage() {
     <>
       <Hero />
 
+      {/* Features não tem animação interna, então mantemos o wrapper aqui */}
       <div id="funcionalidades">
         <ScrollReveal>
           <Features />
         </ScrollReveal>
       </div>
 
+      {/* REMOVIDO ScrollReveal aqui porque o Steps.jsx já tem os seus próprios delays internos */}
       <div id="como-funciona">
-        <ScrollReveal>
-          <Steps />
-        </ScrollReveal>
+        <Steps />
       </div>
 
       <div id="testemunhos">
@@ -30,10 +30,9 @@ function LandingPage() {
         </ScrollReveal>
       </div>
 
+      {/* REMOVIDO ScrollReveal aqui porque o Pricing.jsx já tem as animações Esquerda/Direita */}
       <div id="precos">
-        <ScrollReveal>
-          <Pricing />
-        </ScrollReveal>
+        <Pricing />
       </div>
 
       <div id="faq">

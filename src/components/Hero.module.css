@@ -1,65 +1,135 @@
 .heroSection {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-    url('../assets/hero-background.jpg.png');
     background-color: #1a202c;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    color: white;
-    padding: 100px 30px; /* Um padding generoso */
-    box-sizing: border-box; /* Importante para o padding não 'partir' o tamanho */
-
-  /* --- A NOSSA CORREÇÃO ESTÁ AQUI --- */
-    min-height: calc(100vh - var(--header-height, 80px)); 
-  /* "Ocupa a altura total da janela (100vh) menos a altura do Header" */
-  /* Usei 'var(--header-height, 80px)' para ser dinâmico (se o header tiver 80px, subtrai 80px) */
-  /* SE VOCÊ NÃO DEFINIU UMA VARIAVEL '--header-height' PODE USAR:
-     min-height: calc(100vh - 80px); 
-     (Assumindo que o seu Header tem cerca de 80px de altura) */
+    
+    width: 100%;
+    min-height: calc(100vh - 80px);
+    padding: 20px;
+    box-sizing: border-box; /* Importante para não estourar a largura total */
+    overflow-x: hidden; /* Segurança extra contra scroll lateral */
 }
 
+.heroContent {
+    max-width: 900px;
+    width: 100%; /* Garante que não ultrapassa a largura da tela */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInUp 0.8s ease-out;
+}
 
 .titulo {
-    font-size: 42px;
-    font-weight: bold;
-    line-height: 1.2;
-    margin-bottom: 20px;
-}
-
-.titulo, .subtitulo {
-    text-align: center;
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: white;
+    margin-bottom: 25px;
+    letter-spacing: -1px;
 }
 
 .destaque {
-    color: #ff8c00;
-    border: #ff8c00;
+    background: linear-gradient(90deg, #ff8c00, #fbd38d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .subtitulo {
-    font-size: 20px;
+    font-size: 1.25rem;
     line-height: 1.6;
-    max-width: 600px;
-    margin-bottom: 30px;
+    color: #cbd5e0;
+    max-width: 700px;
+    margin-bottom: 40px;
 }
 
-.botaoCta {
-    background-color: #f6ad55;
+/* Grupo de Botões (CTA) */
+.ctaGroup {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    width: 100%; /* Para alinhar no mobile */
+    justify-content: center;
+    flex-wrap: wrap; /* Permite quebrar linha se necessário */
+}
+
+.botaoPrimary {
+    background-color: #ff8c00;
     color: #1a202c;
-    font-size: 18px;
+    font-size: 1.1rem;
     font-weight: bold;
+    text-decoration: none;
+    padding: 15px 40px;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 14px rgba(255, 140, 0, 0.4); 
+    white-space: nowrap; /* Evita que o texto quebre feio dentro do botão */
+}
+
+.botaoPrimary:hover {
+    background-color: #ed8936;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 140, 0, 0.6);
+}
+
+.botaoSecondary {
+    background-color: transparent;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
     text-decoration: none;
     padding: 15px 30px;
     border-radius: 8px;
     border: 1px solid #4a5568;
+    transition: all 0.2s;
+    white-space: nowrap;
 }
 
-.botaoCta:hover {
-    background-color: #ff8c00;
-    cursor: pointer;
-    border-color: #ff8c00;
+.botaoSecondary:hover {
+    border-color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.trustText {
+    font-size: 0.9rem;
+    color: #718096;
+    margin-top: 10px;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- RESPONSIVIDADE MOBILE --- */
+@media (max-width: 768px) {
+    .titulo {
+        font-size: 2.2rem; /* Texto um pouco menor para não quebrar palavras */
+        padding: 0 10px;
+    }
+    
+    .subtitulo {
+        font-size: 1rem;
+        padding: 0 10px;
+    }
+
+    .ctaGroup {
+        flex-direction: column; /* Um em cima do outro */
+        gap: 15px;
+        max-width: 100%;
+    }
+
+    .botaoPrimary, .botaoSecondary {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box; /* A CURA PARA O ESTOURO */
+        padding: 15px 20px; /* Padding lateral menor para telas pequenas */
+    }
 }

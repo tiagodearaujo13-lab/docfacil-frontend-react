@@ -1,79 +1,120 @@
 .featuresSection {
-    background-color: #293344;
+    background-color: #202836; /* Um tom ligeiramente diferente do Hero para contraste */
     color: white;
-    padding: 60px 30px;
+    padding: 80px 30px; /* Mais espaço vertical */
+}
+
+.headerFeatures {
+    text-align: center;
+    margin-bottom: 60px;
 }
 
 .tituloSecao {
-    font-size: 36px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 10px;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.destaque {
     color: #ff8c00;
-    border: #ff8c00;
 }
 
 .subtituloSecao {
-    font-size: 18px;
+    font-size: 1.1rem;
     text-align: center;
-    max-width: 600px;
-    margin: 0 auto 40px auto;
-}
-
-/* A "Grelha" (Grid) dos Cartões */
-.gridDeCards {
-    display: grid;
-    
-    /* Isto é magia: "crie colunas que tenham no mínimo 300px, 
-     mas que se ajustem (1fr)" */
-     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-     gap: 30px; /* O "espaço" entre os cartões */
-     max-width: 1000px; /* A grelha não fica demasiado larga */
-     margin: 0 auto; /* Centrar a grelha */
-}
-
-/* O "autocolante" para cada Cartão individual */
-.card {
-   background-color: #1a202c;
-   padding: 30px;
-   border-radius: 10px;
-   border: 1px solid #4a5568;
-   transition: border-color 0.3s ease;
-}
-
-.card:hover {
-    border-color: #f6ad55;
-    cursor: pointer;
-}
-
-/* O 'h3' (título) dentro do cartão */
-.card h3 {
-    font-size: 22px;
-    font-weight: bold;
-    color: #f6ad55;
-    margin-bottom: 15px;
-}
-
-/* O '<p>' (texto) dentro do cartão */
-.card p {
-    font-size: 16px;
+    max-width: 700px;
+    margin: 0 auto;
+    color: #a0aec0;
     line-height: 1.6;
 }
 
+/* --- GRID DOS CARTÕES --- */
+.gridDeCards {
+    display: grid;
+    /* Cria colunas automáticas, mas tentamos manter 3 por linha em telas grandes */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- ESTILO DO CARTÃO --- */
+.card {
+   background-color: #2d3748;
+   padding: 35px 30px;
+   border-radius: 16px;
+   border: 1px solid #4a5568;
+   transition: all 0.3s ease;
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   height: 100%; /* Garante que todos têm a mesma altura */
+}
+
+.card:hover {
+    transform: translateY(-10px); /* Levanta o cartão */
+    border-color: #ff8c00;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Ícone com fundo brilhante */
 .iconContainer {
-    background-color: #ff8c00;
-    border-radius: 50%;
-    padding: 10px;
+    background-color: rgba(255, 140, 0, 0.15); /* Laranja transparente */
+    border-radius: 12px;
+    padding: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50px;
-    height: 50px;
-    margin-bottom: 20px;
+    width: 55px;
+    height: 55px;
+    margin-bottom: 25px;
+    transition: background-color 0.3s;
+}
+
+.card:hover .iconContainer {
+    background-color: #ff8c00; /* Fica laranja sólido ao passar o rato */
 }
 
 .icon {
-    width: 24px;
-    height: 24px;
-    color: #1a202c;
+    width: 28px;
+    height: 28px;
+    color: #ff8c00;
+    transition: color 0.3s;
+}
+
+.card:hover .icon {
+    color: #1a202c; /* Ícone fica escuro no hover */
+}
+
+/* Título do Cartão */
+.card h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 15px 0;
+}
+
+/* Texto do Cartão */
+.card p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #cbd5e0;
+    margin: 0;
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 768px) {
+    .tituloSecao {
+        font-size: 2rem;
+    }
+    
+    .gridDeCards {
+        grid-template-columns: 1fr; /* Uma coluna no mobile */
+    }
+    
+    .card {
+        align-items: center;
+        text-align: center;
+    }
 }

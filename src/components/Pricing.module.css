@@ -1,169 +1,233 @@
 .pricingSection {
-    background-color: #1a202c;
+    background-color: #202836; /* Fundo intermédio */
     color: white;
-    padding: 60px 30px;
+    padding: 100px 30px;
+}
+
+.headerPricing {
+    text-align: center;
+    margin-bottom: 60px;
 }
 
 .tituloSecao {
-    font-size: 36px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 10px;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.destaque {
+    color: #ff8c00;
 }
 
 .subtituloSecao {
-    font-size: 18px;
-    text-align: center;
+    font-size: 1.1rem;
+    color: #a0aec0;
     max-width: 600px;
     margin: 0 auto 40px auto;
 }
 
+/* --- TOGGLE SWITCH --- */
 .toggleContainer {
     display: flex;
+    align-items: center;
     justify-content: center;
-    align-items: center;
-    background-color: #2d3748;
-    border-radius: 99px;
-    padding: 5px;
-    width: 250px;
-    margin: 0 auto 50px auto;
-}
-
-.toggleAtivo {
-    background-color: #ff8c00;
-    color: #1a202c;
-    padding: 10px 20px;
-    border-radius: 99px;
-    font-weight: bold;
+    gap: 15px;
+    margin-top: 30px;
     cursor: pointer;
 }
 
-.toggleInativo {
-    background-color: transparent;
+.opcaoAtiva {
+    font-weight: bold;
     color: white;
-    padding: 10px 20px;
-    border-radius: 99px;
-    font-weight: bold;
-    cursor: pointer;
+    transition: color 0.3s;
 }
 
-.anualWrapper {
-    display: flex;
-    align-items: center;
-    border-radius: 99px;
+.opcaoInativa {
+    font-weight: 500;
+    color: #718096;
+    transition: color 0.3s;
 }
 
-.toggleContainer .toggleAtivo {
+.switchTrack {
+    width: 60px;
+    height: 30px;
+    background-color: #2d3748;
+    border-radius: 30px;
+    position: relative;
+    border: 1px solid #4a5568;
+    transition: background-color 0.3s;
+}
+
+.switchKnob {
+    width: 24px;
+    height: 24px;
+    background-color: #ff8c00;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.knobLeft { transform: translateX(3px); }
+.knobRight { transform: translateX(31px); }
+
+.discountBadge {
     background-color: #ff8c00;
     color: #1a202c;
-}
-
-.descontoBadge {
-    background-color: #fefcbf;
-    color: #b7791f;
-    font-size: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
     padding: 2px 6px;
-    border-radius: 5px;
-    margin-left: 8px;
+    border-radius: 4px;
+    margin-left: 5px;
+    vertical-align: middle;
 }
 
-.gridDeCards {
+/* --- CARDS --- */
+.gridCards {
     display: grid;
-    grid-template-columns: 1fr 1 fr;
-    gap: 30px;
-    max-width: 800px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    max-width: 900px;
     margin: 0 auto;
+    align-items: center; /* Alinha verticalmente */
 }
 
 .card {
     background-color: #2d3748;
-    padding: 30px;
-    border-radius: 10px;
+    padding: 40px;
+    border-radius: 16px;
     border: 1px solid #4a5568;
     display: flex;
     flex-direction: column;
+    transition: transform 0.3s;
+    position: relative;
 }
 
+/* O Card Popular é maior e tem borda */
 .popular {
     border: 2px solid #ff8c00;
-    position: relative;
+    transform: scale(1.05); /* Aumenta ligeiramente */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    background-color: #252f3f; /* Ligeiramente mais claro para destaque */
 }
 
 .fitaPopular {
     position: absolute;
-    top: -15px;
-    right: 20px;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
     background-color: #ff8c00;
     color: #1a202c;
-    font-weight: bold;
-    font-size: 12px;
-    padding: 5px 10px;
-    border-radius: 5px;
+    font-weight: 800;
+    font-size: 0.8rem;
+    padding: 5px 15px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 .planoTitulo {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: white;
 }
 
 .planoDescricao {
     color: #a0aec0;
-    margin: 10px 0 20px 0;
-    flex-grow: 1;
+    font-size: 0.95rem;
+    margin: 0 0 25px 0;
 }
 
-.planoPreco{
-    font-size: 48px;
-    font-weight: bold;
-    margin: 0;
+.planoPreco {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 30px;
+    line-height: 1;
 }
 
 .precoDetalhe {
-    font-size: 16px;
-    font-weight: normal;
-    color: #a0aec0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #718096;
+    display: block;
+    margin-top: 5px;
 }
 
+/* LISTA DE FEATURES */
 .featuresList {
     list-style: none;
     padding: 0;
-    margin: 30px 0;
-    color: #a0aec0;
+    margin: 0 0 40px 0;
+    flex-grow: 1; /* Empurra o botão para baixo */
 }
 
-.featuresList  li {
-    margin-bottom: 10px;
-    font-size: 16px;
+.featuresList li {
+    display: flex;
+    align-items: flex-start; /* Alinha ícone com a primeira linha de texto */
+    gap: 10px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: #cbd5e0;
+    line-height: 1.4;
 }
 
-.botaoPlano{
-    background-color: #dd9b4c;
-    color: #1a202c;
-    font-size: 18px;
+.checkIcon {
+    width: 20px;
+    height: 20px;
+    color: #ff8c00;
+    flex-shrink: 0; /* Ícone não encolhe */
+    margin-top: 2px;
+}
+
+/* BOTÕES */
+.botaoNormal, .botaoPopular {
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
     font-weight: bold;
     text-decoration: none;
-    padding: 15px 30px;
-    border-radius: 8px;
-    text-align: center;
+    transition: all 0.2s;
+    display: block;
 }
 
-.botaoPlano:hover {
-    background-color: #ff8c00;
-}
-
-.card:not(.popular) .botaoPlano {
-    background-color: #4a5568;
+.botaoNormal {
+    background-color: transparent;
+    border: 1px solid #4a5568;
     color: white;
 }
 
-.card:not(.popular) .botaoPlano:hover {
-    background-color: #ff8c00;
-    color: #1a202c;
+.botaoNormal:hover {
+    background-color: rgba(255,255,255,0.05);
+    border-color: white;
 }
 
-@media (max-width: 768px) {
-    .gridDeCards {
+.botaoPopular {
+    background-color: #ff8c00;
+    color: #1a202c;
+    border: none;
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+}
+
+.botaoPopular:hover {
+    background-color: #ed8936;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 140, 0, 0.5);
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 900px) {
+    .gridCards {
         grid-template-columns: 1fr;
+        max-width: 400px;
+    }
+    
+    .popular {
+        transform: scale(1); /* Remove o zoom no mobile */
     }
 }

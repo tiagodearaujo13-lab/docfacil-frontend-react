@@ -1,70 +1,123 @@
 .stepsSection {
    background-color: #1a202c;
    color: white;
-   padding: 60px 30px;
-   max-width: 0 auto;
-   margin: 0 auto;
+   padding: 100px 30px;
+   position: relative;
+   overflow-x: hidden; /* Previne scroll lateral acidental */
+}
+
+.headerSteps {
+    text-align: center;
+    margin-bottom: 70px;
 }
 
 .tituloSecao {
-    font-size: 36px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 10px;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.destaque {
+    color: #ff8c00;
+    border-bottom: 3px solid #ff8c00;
 }
 
 .subtituloSecao {
-    font-size: 18px;
+    font-size: 1.1rem;
     text-align: center;
     max-width: 600px;
-    margin: 0 auto 50px auto;
-    color: #ff8c00;
-    border: #ff8c00;
+    margin: 0 auto;
+    color: #a0aec0;
 }
 
 .listaDePassos {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-    max-width: 700px;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
-.passo {
+.passoCard {
+    flex: 1;
+    background-color: #2d3748;
+    padding: 40px 30px;
+    border-radius: 20px;
     text-align: center;
+    position: relative;
+    border: 1px solid #4a5568;
+    transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
+    
+    /* CORREÇÃO DE SEGURANÇA */
+    box-sizing: border-box; 
+    min-width: 0; /* Permite encolher se necessário */
 }
 
-.circuloNumero {
+.passoCard:hover {
+    transform: translateY(-10px);
+    border-color: #ff8c00;
+}
+
+.numeroBadge {
     background-color: #ff8c00;
     color: #1a202c;
-    font-size: 24px;
-    font-weight: bold;
-    width: 50px;
-    height: 50px;
+    font-size: 2rem;
+    font-weight: 900;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
-    border: 1px solid #1a202c;
+    margin-bottom: 25px;
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.4);
+    border: 4px solid #1a202c;
 }
 
-.circuloNumero:hover {
-    cursor: pointer;
-    border-color: #ff8c00;
+.conteudoPasso h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: white;
 }
 
-.passo h3 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.passo p {
-    font-size: 16px;
+.conteudoPasso p {
+    font-size: 1rem;
     line-height: 1.6;
+    color: #cbd5e0;
+}
+
+.setaSeparadora {
+    font-size: 3rem;
+    color: #4a5568;
+    margin-top: 50px;
+    font-weight: bold;
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 900px) {
+    .stepsSection {
+        padding: 60px 20px; /* Menos padding na secção */
+    }
+
+    .listaDePassos {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        width: 100%;
+    }
+
+    .passoCard {
+        width: 100%; /* Ocupa a largura disponível */
+        max-width: 100%; /* Remove limite fixo */
+    }
+
+    .setaSeparadora {
+        display: none;
+    }
 }

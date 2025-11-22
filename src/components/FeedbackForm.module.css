@@ -1,80 +1,220 @@
 .feedbackSection {
-    background-color: #1a202c;
+    background-color: #202836; /* Mantém a alternância de cores das secções */
     color: white;
-    padding: 60px 30px;
+    padding: 100px 30px;
+    display: flex;
+    justify-content: center;
 }
 
+.container {
+    width: 100%;
+    max-width: 700px;
+}
+
+/* --- CARTÃO DO FORMULÁRIO --- */
 .formCard {
-    background-color: #293344;
-    max-width: 600px;
-    margin: 0 auto;
+    background-color: #2d3748;
     padding: 40px;
-    border-radius: 10px;
-    border: 1px solid #1a202c;
+    border-radius: 16px;
+    border: 1px solid #4a5568;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.5s ease-out;
 }
 
-.formCard:hover {
-    border-color: #ff8c00;
-    cursor: pointer;
-}
-
-.formCard h2 {
+.headerForm {
     text-align: center;
-    font-size: 32px;
-    font-weight: bold;
-    margin-top: 0;
-    margin-bottom: 10px;
-}
-
-.formCard p {
-    text-align: center;
-    font-size: 18px;
-    color: #ff8c00;
     margin-bottom: 30px;
 }
 
+.headerForm h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.headerForm p {
+    color: #a0aec0;
+    font-size: 1rem;
+}
+
+/* --- ESTRELAS --- */
+.starContainer {
+    text-align: center;
+    margin-bottom: 30px;
+    background-color: #1a202c;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px dashed #4a5568;
+}
+
+.starContainer label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #cbd5e0;
+}
+
+.stars {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.starIcon {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+/* Botão da estrela (resetando estilos padrão de botão) */
+.starOn, .starOff {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+    padding: 0;
+}
+
+.starOn { color: #ff8c00; } /* Laranja aceso */
+.starOff { color: #4a5568; } /* Cinza apagado */
+
+.starOn:hover, .starOff:hover {
+    transform: scale(1.2); /* Efeito pop */
+}
+
+.ratingText {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #ff8c00;
+    font-weight: bold;
+    min-height: 20px; /* Para não pular layout */
+}
+
+/* --- INPUTS --- */
 .form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
 }
 
-.form label {
-    font-weight: bold;
-    font-size: 14px;
-    color: white;
-    margin-bottom: -5px;
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
 }
 
-.form input[type="text"],
+.inputGroup label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+.form input,
 .form textarea {
     background-color: #1a202c;
-    border: 1px solid #293344;
+    border: 1px solid #4a5568;
     color: white;
     padding: 12px 15px;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 1rem;
     font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
 }
 
-.botaoLaranja {
-    background-color: #dd9b4c;
+.form input:focus,
+.form textarea:focus {
+    border-color: #ff8c00;
+    box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.1);
+}
+
+/* Layout Lado a Lado */
+.row {
+    display: flex;
+    gap: 20px;
+}
+
+/* Botão Enviar */
+.botaoSubmit {
+    background-color: #ff8c00;
     color: #1a202c;
-    font-size: 18px;
+    font-size: 1.1rem;
     font-weight: bold;
-    text-decoration: none;
-    padding: 15px 30px;
+    padding: 15px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
-    margin-top: 15px;
+    margin-top: 10px;
+    transition: all 0.2s;
 }
 
-.botaoLaranja:hover {
-    background-color: #ff8c00;
+.botaoSubmit:hover {
+    background-color: #ed8936;
+    transform: translateY(-2px);
 }
 
-.estrelasInput {
-    color: #4a5568;
-    font-size: 30px;
+/* --- SUCESSO --- */
+.successCard {
+    background-color: #2d3748;
+    padding: 50px;
+    border-radius: 16px;
+    text-align: center;
+    border: 1px solid #48bb78; /* Borda verde */
+    animation: fadeIn 0.5s ease-out;
+}
+
+.successIcon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.successCard h2 {
+    color: white;
+    margin-bottom: 10px;
+}
+
+.successCard p {
+    color: #a0aec0;
+    margin: 5px 0;
+}
+
+.successNote {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-top: 20px;
+    font-style: italic;
+}
+
+.botaoVoltar {
+    background: transparent;
+    border: 1px solid #4a5568;
+    color: #a0aec0;
+    padding: 10px 20px;
+    border-radius: 6px;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+.botaoVoltar:hover {
+    border-color: white;
+    color: white;
+}
+
+/* Animação */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .row {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .formCard {
+        padding: 25px;
+    }
 }

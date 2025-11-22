@@ -34,11 +34,10 @@ function DashboardHome() {
           // Calcular Estatísticas
           setStats({
             totalDocs: lista.length,
-            plano: "Grátis", // Futuramente virá do backend (Stripe)
+            plano: "Grátis", // Futuramente virá do backend
           });
 
-          // Pegar os últimos 3 documentos (assumindo que o ID maior é o mais recente)
-          // Se quiser ordenar por data, precisariamos de um campo created_at no backend
+          // Pegar os últimos 3 documentos
           const ultimos = lista.sort((a, b) => b.id - a.id).slice(0, 3);
           setRecentes(ultimos);
         }
@@ -79,7 +78,12 @@ function DashboardHome() {
 
         {/* --- GRID DE ESTATÍSTICAS --- */}
         <div className={styles.statsGrid}>
-          <div className={styles.statCard}>
+          {/* CARTÃO CLICÁVEL: DOCUMENTOS CRIADOS */}
+          <div
+            className={styles.statCard}
+            onClick={() => navigate("/dashboard/meus-documentos")}
+            style={{ cursor: "pointer" }} // O cursor muda para indicar que é clicável
+          >
             <span className={styles.statIcon}>📂</span>
             <div className={styles.statInfo}>
               <h3>{stats.totalDocs}</h3>
@@ -93,7 +97,12 @@ function DashboardHome() {
               <h3>{stats.plano}</h3>
               <p>Plano Atual</p>
             </div>
-            <button className={styles.btnUpgrade}>Upgrade</button>
+            <button
+              className={styles.btnUpgrade}
+              onClick={() => navigate("/dashboard/planos")}
+            >
+              Upgrade
+            </button>
           </div>
 
           <div className={styles.statCard}>

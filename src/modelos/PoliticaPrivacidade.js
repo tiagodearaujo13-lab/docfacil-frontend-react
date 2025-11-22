@@ -1,41 +1,63 @@
 export const gerarTextoRGPD = (dados) => {
   const dataHoje = new Date().toLocaleDateString("pt-PT");
 
-  const empresa = dados.empresa || "___________________";
-  const site = dados.site || "www.exemplo.pt";
-  const emailDPO = dados.emailDPO || "privacidade@exemplo.pt";
+  const empresa = dados.empresa || "___________________ (Nome da Empresa/Responsável)";
+  const nifEmpresa = dados.nifEmpregador || "_________"; // Reutilizamos NIF
+  const site = dados.site || "www.oseusite.pt";
+  const emailDPO = dados.emailDPO || "privacidade@oseusite.pt";
+
+  let clausulas = [
+    {
+      titulo: "1. OBJETIVO E ÂMBITO",
+      texto: `A presente Política de Privacidade visa informar os clientes e utilizadores do site ${site} sobre as regras de tratamento de dados pessoais recolhidos e tratados pela ${empresa} (NIF ${nifEmpresa}), em estrito cumprimento do Regulamento (UE) 2016/679 (RGPD) e da Lei n.º 58/2019.`
+    },
+    {
+      titulo: "2. RESPONSÁVEL PELO TRATAMENTO",
+      texto: `A entidade responsável pela recolha e tratamento dos dados pessoais é a ${empresa}, que decide quais os dados recolhidos, os meios de tratamento e as finalidades para que são utilizados.\nContacto para assuntos de privacidade: ${emailDPO}.`
+    },
+    {
+      titulo: "3. DADOS RECOLHIDOS E FINALIDADE",
+      texto: `A ${empresa} recolhe apenas os dados essenciais para a prestação do serviço, nomeadamente:\n\na) Dados de Identificação: Nome, NIF (para faturação);\nb) Dados de Contacto: Email, telefone, morada;\nc) Dados de Navegação: Cookies técnicos para funcionamento do site.\n\nFinalidades: Gestão contratual, cumprimento de obrigações fiscais, melhoria do serviço e apoio ao cliente.`
+    },
+    {
+      titulo: "4. PRAZO DE CONSERVAÇÃO",
+      texto: `Os dados pessoais serão conservados apenas durante o período necessário para as finalidades para as quais foram recolhidos:\n- Dados de Faturação: 10 anos (obrigação legal perante a Autoridade Tributária);\n- Dados de Conta/Cliente: Enquanto a relação contratual se mantiver ativa ou até o titular solicitar o apagamento.`
+    },
+    {
+      titulo: "5. DIREITOS DO TITULAR DOS DADOS",
+      texto: `O titular dos dados tem o direito de solicitar, a qualquer momento e gratuitamente:\n- O acesso aos seus dados pessoais;\n- A retificação de dados inexatos ou incompletos;\n- O apagamento dos seus dados ("direito a ser esquecido"), exceto quando a lei imponha a sua conservação;\n- A portabilidade dos dados para outra entidade;\n- A oposição ao tratamento para fins de marketing.`
+    },
+    {
+      titulo: "6. PARTILHA COM TERCEIROS",
+      texto: `Os dados pessoais não serão transmitidos a terceiros, exceto:\na) A entidades a quem os dados devam ser comunicados por força de obrigação legal (ex: Autoridade Tributária);\nb) A empresas subcontratantes estritamente necessárias à prestação do serviço (ex: processamento de pagamentos, alojamento web), que atuarão sob as nossas instruções e medidas de segurança.`
+    },
+    {
+      titulo: "7. SEGURANÇA",
+      texto: `A ${empresa} implementa medidas de segurança, técnicas e organizativas adequadas para proteger os dados pessoais contra a destruição acidental ou ilícita, a perda acidental, a alteração, a difusão ou o acesso não autorizados.`
+    }
+  ];
+
+  // --- CAMPO LIVRE (CLÁUSULAS EXTRAS) ---
+  // Útil para: "Utilizamos Google Analytics" ou "Recolhemos dados biométricos"
+  if (dados.clausulasExtras && dados.clausulasExtras.trim() !== "") {
+    const num = clausulas.length + 1;
+    clausulas.push({
+      titulo: `${num}. DISPOSIÇÕES ESPECÍFICAS`,
+      texto: dados.clausulasExtras
+    });
+  }
+
+  clausulas.push({
+    titulo: "VIGÊNCIA E ALTERAÇÕES",
+    texto: `Esta política entra em vigor em ${dataHoje}. A ${empresa} reserva-se o direito de atualizar este documento a qualquer momento, sendo as alterações publicadas no website.`
+  });
 
   return {
-    titulo: "POLÍTICA DE PRIVACIDADE E TRATAMENTO DE DADOS (RGPD)",
-    clausulas: [
-      {
-        titulo: "1. Enquadramento",
-        texto: `A ${empresa} está empenhada em proteger a privacidade dos seus clientes e utilizadores do website ${site}, cumprindo integralmente o Regulamento (UE) 2016/679 (Regulamento Geral sobre a Proteção de Dados - RGPD).`
-      },
-      {
-        titulo: "2. Responsável pelo Tratamento",
-        texto: `A responsabilidade pelo tratamento dos dados recai sobre a ${empresa}. Para qualquer questão relacionada, poderá contactar através do e-mail: ${emailDPO}.`
-      },
-      {
-        titulo: "3. Finalidade dos Dados",
-        texto: `Os dados recolhidos (como nome, e-mail, telefone) destinam-se exclusivamente à gestão da relação contratual, faturação, e envio de comunicações informativas, se consentido.`
-      },
-      {
-        titulo: "4. Direitos do Titular",
-        texto: `O titular dos dados tem o direito de solicitar à ${empresa}, a qualquer momento: o acesso aos seus dados pessoais; a retificação dos dados inexatos; o apagamento dos dados ("direito a ser esquecido"); a limitação do tratamento.`
-      },
-      {
-        titulo: "5. Partilha com Terceiros",
-        texto: `Os dados pessoais não serão transmitidos a terceiros, exceto para cumprimento de obrigações legais (ex: Autoridade Tributária) ou prestadores de serviços estritamente necessários (ex: contabilidade).`
-      },
-      {
-        titulo: "Vigência",
-        texto: `Esta política entra em vigor imediatamente (${dataHoje}) e pode ser atualizada a qualquer momento.`
-      }
-    ],
+    titulo: "POLÍTICA DE PRIVACIDADE (RGPD)",
+    clausulas: clausulas,
     assinantes: {
       parte1: "A Gerência",
-      parte2: ""
+      parte2: "" // Não requer assinatura do cliente, é um documento informativo/normativo
     }
   };
 };

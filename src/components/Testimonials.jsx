@@ -1,55 +1,78 @@
 import styles from "./Testimonials.module.css";
 
-function TestimonialCard(props) {
+// Dados simulados (No futuro, isto virá do seu Banco de Dados Neon!)
+const testemunhosData = [
+  {
+    id: 1,
+    nome: "Marina Ferreira",
+    cargo: "UX/UI Designer",
+    texto:
+      "Finalmente uma ferramenta que percebe as necessidades de um freelancer em Portugal. Poupo horas todas as semanas e os meus clientes comentam o quão profissionais as minhas propostas parecem agora.",
+    iniciais: "MF",
+  },
+  {
+    id: 2,
+    nome: "Pedro Santos",
+    cargo: "Consultor de Marketing",
+    texto:
+      "O DocFacil mudou a forma como gerimos os orçamentos na nossa agência. É tão simples que toda a equipa adotou a ferramenta no primeiro dia. Recomendo a 100%!",
+    iniciais: "PS",
+  },
+  {
+    id: 3,
+    nome: "Ana Ribeiro",
+    cargo: "Gestora de Alojamento Local",
+    texto:
+      "Usava o Word e perdia imenso tempo a formatar contratos de arrendamento. Com o DocFacil, tenho a certeza que as cláusulas estão legais e o design sai perfeito.",
+    iniciais: "AR",
+  },
+];
+
+function TestimonialCard({ nome, cargo, texto, iniciais }) {
   return (
     <div className={styles.card}>
-      <div className={styles.estrelas}>★★★★★</div>
-
-      <p className={styles.citacao}>"{props.citacao}"</p>
-
-      <div className={styles.autoInfo}>
-        <div className={styles.avatar}>{props.iniciais}</div>
-        <div>
-          <div className={styles.nomeAutor}>{props.nome}</div>
-          <div className={styles.tituloAutor}>{props.titulo}</div>
+      {/* Cabeçalho do Card: Autor */}
+      <div className={styles.headerCard}>
+        <div className={styles.avatar}>{iniciais}</div>
+        <div className={styles.infoAutor}>
+          <h4 className={styles.nomeAutor}>{nome}</h4>
+          <span className={styles.cargoAutor}>{cargo}</span>
         </div>
       </div>
+
+      {/* Estrelas */}
+      <div className={styles.estrelas}>★★★★★</div>
+
+      {/* Texto (Citação) */}
+      <p className={styles.citacao}>"{texto}"</p>
     </div>
   );
 }
 
 function Testimonials() {
   return (
-    <div className={styles.testimonialsSection}>
-      <h2 className={styles.tituloSecao}>
-        Não acerdite em nós. Acredite neles.
-      </h2>
-
-      <p className={styles.subtituloSecao}>
-        Veja o que os nossos utilizadores dizem.
-      </p>
+    <div id="testemunhos" className={styles.testimonialsSection}>
+      <div className={styles.headerSection}>
+        <h2 className={styles.tituloSecao}>
+          Não acredite apenas em nós. <br />
+          <span className={styles.destaque}>Acredite neles.</span>
+        </h2>
+        <p className={styles.subtituloSecao}>
+          Junte-se a centenas de profissionais portugueses que já modernizaram a
+          sua burocracia.
+        </p>
+      </div>
 
       <div className={styles.gridDeCards}>
-        <TestimonialCard
-          citacao="Finalmente uma ferramenta que percebe as necessidades de um freelancer em Portugal. Pouco horas todas as semanas e os meus clientes comentam o quão profissionais as minha propostas parecem agora."
-          iniciais="MF"
-          nome="Marina Ferreira"
-          titulo="UX/UI Designer"
-        />
-
-        <TestimonialCard
-          citacao="O DocFacil mudou a forma como gerimos os orçamentos na nossa pequena agência. É tão simples que toda a equipa adotou a ferramenta no primeiro dia. Recomendo a 100%!"
-          iniciais="PS"
-          nome="Pedro Santos"
-          titulo="Autonomo"
-        />
-
-        <TestimonialCard
-          citacao="Agora essa ferramenta deixar tudo fácil."
-          iniciais="MF"
-          nome="Maria das Flores"
-          titulo="Reformada"
-        />
+        {testemunhosData.map((item) => (
+          <TestimonialCard
+            key={item.id}
+            nome={item.nome}
+            cargo={item.cargo}
+            texto={item.texto}
+            iniciais={item.iniciais}
+          />
+        ))}
       </div>
     </div>
   );

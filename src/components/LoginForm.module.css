@@ -1,30 +1,39 @@
+/* --- CARTÃO DE LOGIN / REGISTO --- */
 .formCard {
     background-color: #1a202c; /* Fundo Escuro */
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    
+    /* --- CORREÇÃO DE LARGURA --- */
     width: 100%;
-    max-width: 400px;
+    max-width: 400px; /* No PC não passa disto */
+    box-sizing: border-box; /* OBRIGATÓRIO: Impede que o padding estoure a tela */
+    
     text-align: center;
     color: white;
-    margin: 0 auto; /* Centralizar se estiver num container */
+    margin: 0 auto; /* Centraliza horizontalmente */
 }
 
 .formCard h2 {
     margin-bottom: 10px;
     color: #ffffff;
+    font-size: 1.8rem;
 }
 
 .formCard p {
     color: #a0aec0;
     margin-bottom: 20px;
     font-size: 0.9rem;
+    line-height: 1.5;
 }
 
+/* --- FORMULÁRIO --- */
 .form {
     display: flex;
     flex-direction: column;
     text-align: left;
+    width: 100%; /* Garante que os inputs não fogem */
 }
 
 .form label {
@@ -43,17 +52,19 @@
     color: white;
     font-size: 1rem;
     outline: none;
-    width: 100%; /* Garante que ocupa a largura */
-    box-sizing: border-box; /* Evita estouro */
+    
+    width: 100%; 
+    box-sizing: border-box; /* Impede o input de crescer demais */
+    transition: border-color 0.2s;
 }
 
 .form input:focus {
     border-color: #ff8c00;
 }
 
-/* --- ESTILO DO OLHO (Password) --- */
+/* --- OLHO DA SENHA --- */
 .passwordWrapper {
-    position: relative; /* Permite posicionar o botão dentro */
+    position: relative;
     width: 100%;
 }
 
@@ -64,7 +75,7 @@
 .eyeButton {
     position: absolute;
     right: 10px;
-    top: 42%; /* Ajuste fino para centralizar verticalmente */
+    top: 42%; 
     transform: translateY(-50%);
     background: none;
     border: none;
@@ -72,13 +83,15 @@
     font-size: 1.2rem;
     padding: 0;
     color: #a0aec0;
+    display: flex;
+    align-items: center;
 }
 
 .eyeButton:hover {
     color: #ff8c00;
 }
 
-/* --- BOTÃO --- */
+/* --- BOTÃO LARANJA --- */
 .botaoLaranja {
     background-color: #ff8c00;
     color: #1a202c;
@@ -90,17 +103,18 @@
     font-size: 1rem;
     margin-top: 10px;
     transition: background 0.2s;
+    width: 100%; /* Ocupa a largura toda disponível */
 }
 
 .botaoLaranja:hover {
     background-color: #e07b00;
 }
 
-/* --- DIVISOR "OU" --- */
+/* --- DIVISOR OU --- */
 .divisor {
     display: flex;
     align-items: center;
-    margin: 20px 0;
+    margin: 25px 0;
 }
 
 .divisor::before, .divisor::after {
@@ -113,12 +127,13 @@
     margin: 0 10px;
     color: #a0aec0;
     font-weight: normal;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
 }
 
 /* --- LINKS --- */
 .linkRegisto {
-    margin-top: 20px;
+    margin-top: 25px;
     font-size: 0.9rem;
     color: #a0aec0;
 }
@@ -134,7 +149,7 @@
     text-decoration: underline;
 }
 
-/* --- MENSAGENS DE FEEDBACK (Sem Alert) --- */
+/* --- MENSAGENS DE ERRO/SUCESSO --- */
 .mensagem {
     padding: 12px;
     margin-bottom: 20px;
@@ -142,16 +157,34 @@
     text-align: center;
     font-size: 0.9rem;
     font-weight: 500;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .sucesso {
-    background-color: #dcfce7; /* Verde claro */
-    color: #166534; /* Verde escuro */
-    border: 1px solid #bbf7d0;
+    background-color: #22543d;
+    color: #9ae6b4;
+    border: 1px solid #48bb78;
 }
 
 .erro {
-    background-color: #fee2e2; /* Vermelho claro */
-    color: #991b1b; /* Vermelho escuro */
-    border: 1px solid #fecaca;
+    background-color: #742a2a;
+    color: #feb2b2;
+    border: 1px solid #fc8181;
+}
+
+/* =========================================
+   --- RESPONSIVIDADE (CORREÇÃO MOBILE) ---
+   ========================================= */
+@media (max-width: 480px) {
+    .formCard {
+        padding: 25px 20px; /* Reduzimos o padding pela metade */
+        box-shadow: none; /* Removemos a sombra para parecer mais limpo no mobile */
+        background-color: transparent; /* Opcional: fundo transparente em telas muito pequenas */
+        max-width: 100%; /* Ocupa a tela toda se preciso */
+    }
+
+    .formCard h2 {
+        font-size: 1.5rem; /* Título um pouco menor */
+    }
 }

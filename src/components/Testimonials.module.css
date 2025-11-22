@@ -1,93 +1,120 @@
 .testimonialsSection {
-    background-color: #293344;
+    background-color: #171923; /* Um tom quase preto para destacar os cards */
     color: white;
-    padding: 60px 30px;
-    max-width: 0 auto;
-    margin: 0 auto;
+    padding: 100px 30px;
+}
+
+.headerSection {
+    text-align: center;
+    margin-bottom: 60px;
 }
 
 .tituloSecao {
-    font-size: 36px;
-    font-weight:  bold;
-    text-align: center;
-    margin-bottom: 10px;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.destaque {
+    color: #ff8c00;
 }
 
 .subtituloSecao {
-    font-size: 18px;
-    text-align: center;
+    font-size: 1.1rem;
+    color: #a0aec0;
     max-width: 600px;
-    margin: 0 auto 50px auto;
-}
-
-.gridDeCards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    max-width: 1000px;
     margin: 0 auto;
 }
 
+/* GRID */
+.gridDeCards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* CARD */
 .card {
-    background-color: #1a202c;
+    background-color: #2d3748;
     padding: 30px;
-    border-radius: 10px;
-    border: 1px solid #293344;
+    border-radius: 16px;
+    border: 1px solid #4a5568;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: #ff8c00;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Header do Card (Avatar + Nome) */
+.headerCard {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    background-color: #ff8c00;
+    color: #1a202c;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.infoAutor {
     display: flex;
     flex-direction: column;
 }
 
-.card:hover {
-     border-color: #ff8c00;
-     cursor: pointer;   
-}
-
-
-.estrelas {
-    color: #ff8c00;
-    font-size: 20px;
-    margin-bottom: 15px;
-}
-
-.citacao {
-    font-size: 18px;
-    line-height: 1.6;
-    font-style: italic;
-    flex-grow: 1;
-    margin-bottom: 20px;
-}
-
-.autorInfo {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.avatar {
-    background-color: #ff8c00;
-    color: #1a202c;
-    font-weight: bold;
-    font-size: 18px;
-    border-radius: 50%;
-    width: 50%;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .nomeAutor {
-    font-weight: bold;
-    font-size: 16px;
+    margin: 0;
+    font-size: 1.1rem;
+    color: white;
 }
 
-.tituloAutor {
-    font-size: 14px;
-    color: #ff8c00;
+.cargoAutor {
+    font-size: 0.85rem;
+    color: #a0aec0;
 }
 
+/* Estrelas */
+.estrelas {
+    color: #ff8c00; /* Laranja */
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+}
+
+/* Citação */
+.citacao {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #cbd5e0;
+    font-style: italic;
+    margin: 0;
+}
+
+/* Responsividade */
 @media (max-width: 768px) {
     .gridDeCards {
         grid-template-columns: 1fr;
+    }
+    
+    .tituloSecao {
+        font-size: 2rem;
     }
 }

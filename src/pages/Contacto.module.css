@@ -1,0 +1,206 @@
+.pageWrapper {
+    background-color: #1a202c;
+    min-height: 100vh;
+    color: white;
+    padding: 80px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+}
+
+.headerContact {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.headerContact h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.headerContact p {
+    color: #a0aec0;
+    font-size: 1.1rem;
+}
+
+/* GRID (Lado a Lado) */
+.gridContact {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* Info menor, Form maior */
+    gap: 40px;
+    align-items: start;
+}
+
+/* --- CARTÃO DE INFORMAÇÃO (Esquerda) --- */
+.infoCard {
+    background-color: #2d3748;
+    padding: 40px;
+    border-radius: 16px;
+    border: 1px solid #4a5568;
+    height: 100%; /* Esticar */
+    box-sizing: border-box;
+}
+
+.infoCard h3 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    color: #ff8c00;
+    margin-bottom: 15px;
+}
+
+.infoText {
+    color: #cbd5e0;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+.infoItem {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.icon {
+    font-size: 1.8rem;
+    background-color: #1a202c;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid #4a5568;
+}
+
+.infoItem strong {
+    display: block;
+    font-size: 0.9rem;
+    color: #a0aec0;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.infoItem span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+}
+
+/* --- FORMULÁRIO (Direita) --- */
+.formContainer {
+    background-color: #2d3748; /* Fundo igual ao card para consistência */
+    padding: 40px;
+    border-radius: 16px;
+    border: 1px solid #4a5568;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.inputGroup label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #cbd5e0;
+}
+
+.inputGroup input,
+.inputGroup select,
+.inputGroup textarea {
+    background-color: #1a202c;
+    border: 1px solid #4a5568;
+    color: white;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.inputGroup input:focus,
+.inputGroup select:focus,
+.inputGroup textarea:focus {
+    border-color: #ff8c00;
+    box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.1);
+}
+
+.botaoEnviar {
+    background-color: #ff8c00;
+    color: #1a202c;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 15px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s;
+}
+
+.botaoEnviar:hover {
+    background-color: #ed8936;
+    transform: translateY(-2px);
+}
+
+.botaoEnviar:disabled {
+    background-color: #4a5568;
+    color: #718096;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Mensagens de Feedback */
+.msgSucesso, .msgErro {
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    margin-top: 10px;
+    animation: fadeIn 0.3s ease;
+}
+
+.msgSucesso {
+    background-color: #22543d;
+    color: #9ae6b4;
+    border: 1px solid #48bb78;
+}
+
+.msgErro {
+    background-color: #742a2a;
+    color: #feb2b2;
+    border: 1px solid #fc8181;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsividade */
+@media (max-width: 850px) {
+    .gridContact {
+        grid-template-columns: 1fr; /* Empilha */
+        gap: 30px;
+    }
+    
+    .infoCard {
+        padding: 30px;
+    }
+}

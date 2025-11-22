@@ -1,33 +1,46 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop.jsx";
+
+// Layouts
+import PublicLayout from "./components/PublicLayout.jsx";
+import DashboardLayout from "./components/DashboardLayout.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+
+// Páginas Públicas
 import LandingPage from "./pages/LandingPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegistoPage from "./pages/RegistoPage.jsx";
-import DashboardLayout from "./components/DashboardLayout.jsx";
-import ProtectedRoute from "./components/ProtectedRoute.jsx";
-import ScrollToTop from "./components/ScrollToTop.jsx";
-import PublicLayout from "./components/PublicLayout.jsx";
+import Contacto from "./pages/Contacto.jsx"; // <--- NOVO
+import Termos from "./pages/Termos.jsx"; // <--- NOVO
+import Privacidade from "./pages/Privacidade.jsx"; // <--- NOVO
 
-// Páginas do Dashboard
-import DashboardHome from "./pages/DashboardHome.jsx"; // <--- NOVO IMPORT
-import MeusDocumentos from "./pages/MeusDocumentos.jsx"; // Nota: Verifique se moveu para 'pages' ou mantenha 'components'
+// Páginas do Dashboard (Privadas)
+import DashboardHome from "./pages/DashboardHome.jsx";
+import MeusDocumentos from "./pages/MeusDocumentos.jsx";
 import Biblioteca from "./pages/Biblioteca.jsx";
 import Configuracao from "./pages/Configuracao.jsx";
 import Editor from "./pages/Editor.jsx";
+import Planos from "./pages/Planos.jsx"; // <--- NOVO
 
 function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
-
+      <ScrollToTop />{" "}
+      {/* Garante que ao mudar de página, o scroll vai para o topo */}
       <Routes>
-        {/* GRUPO 1: Rotas Públicas (Com Header e Footer) */}
+        {/* GRUPO 1: Rotas Públicas (Com Header e Footer da Landing Page) */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/registo" element={<RegistoPage />} />
+
+          {/* Novas Páginas Legais e Suporte */}
+          <Route path="/contacto" element={<Contacto />} />
+          <Route path="/termos" element={<Termos />} />
+          <Route path="/privacidade" element={<Privacidade />} />
         </Route>
 
-        {/* GRUPO 2: Rotas do Dashboard (Protegidas) */}
+        {/* GRUPO 2: Rotas do Dashboard (Protegidas por Login) */}
         <Route
           path="/dashboard"
           element={
@@ -36,20 +49,14 @@ function App() {
             </ProtectedRoute>
           }
         >
-          {/* Rota Padrão: VISÃO GERAL (Dashboard Home) */}
           <Route index element={<DashboardHome />} />
-
-          {/* Rota: BIBLIOTECA */}
           <Route path="biblioteca" element={<Biblioteca />} />
-
-          {/* Rota: MEUS DOCUMENTOS (Agora tem o seu próprio caminho) */}
           <Route path="meus-documentos" element={<MeusDocumentos />} />
-
-          {/* Rota: CONFIGURAÇÃO */}
           <Route path="config" element={<Configuracao />} />
-
-          {/* Rota: EDITOR */}
           <Route path="editor/:id" element={<Editor />} />
+
+          {/* Nova Página de Subscrição Interna */}
+          <Route path="planos" element={<Planos />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -8,8 +8,10 @@ export const gerarTextoTrabalho = (dados) => {
 
   const trabalhador = dados.trabalhador || "___________________ (Nome Completo)";
   const trabalhadorNIF = dados.nifTrabalhador || "_________";
-  const trabalhadorNISS = dados.nissTrabalhador || "_________"; // NISS é obrigatório em contratos oficiais
+  const trabalhadorNISS = dados.nissTrabalhador || "_________";
   const trabalhadorMorada = dados.moradaTrabalhador || "___________________";
+  // NOVO CAMPO
+  const iban = dados.ibanTrabalhador || "PT50 _________________________"; 
 
   // --- CONDIÇÕES ---
   const funcao = dados.funcao || "___________________";
@@ -31,7 +33,7 @@ export const gerarTextoTrabalho = (dados) => {
     },
     {
       titulo: "CLÁUSULA 3.ª (LOCAL DE TRABALHO E MOBILIDADE)",
-      texto: `1. O local de trabalho situa-se em: ${local}.\n2. O Empregador reserva-se o direito de transferir o Trabalhador para outro local de trabalho, temporária ou definitivamente, nas condições previstas no Artigo 194.º do Código do Trabalho, nomeadamente quando a mudança não cause prejuízo sério ao Trabalhador.`
+      texto: `1. O local de trabalho situa-se em: ${local}.\n2. O Empregador reserva-se o direito de transferir o Trabalhador para outro local de trabalho, temporária ou definitivamente, nas condições previstas no Artigo 194.º do Código do Trabalho.`
     },
     {
       titulo: "CLÁUSULA 4.ª (DURAÇÃO E MOTIVO DO TERMO)",
@@ -46,39 +48,34 @@ export const gerarTextoTrabalho = (dados) => {
       texto: `O período normal de trabalho é de 40 horas semanais, sendo o horário definido pelo Empregador, respeitando os limites legais e os dias de descanso semanal obrigatório e complementar.`
     },
     {
-      titulo: "CLÁUSULA 7.ª (RETRIBUIÇÃO E SUBSÍDIOS)",
-      texto: `1. Como contrapartida pelo trabalho prestado, o Empregador pagará ao Trabalhador a retribuição base mensal ilíquida de ${salario}€ (Euros).\n2. Acresce a este valor o Subsídio de Refeição diário, pago pelos dias de trabalho efetivo.\n3. O Trabalhador tem direito aos Subsídios de Férias e de Natal proporcionais à duração do contrato.`
+      titulo: "CLÁUSULA 7.ª (RETRIBUIÇÃO E PAGAMENTO)",
+      texto: `1. Como contrapartida pelo trabalho prestado, o Empregador pagará ao Trabalhador a retribuição base mensal ilíquida de ${salario}€ (Euros).\n2. O pagamento será efetuado por transferência bancária para o IBAN indicado pelo Trabalhador: ${iban}.\n3. Compete ao Trabalhador informar o Empregador, por escrito e com a devida antecedência, de qualquer alteração ao IBAN acima indicado.`
     },
     {
       titulo: "CLÁUSULA 8.ª (PERÍODO EXPERIMENTAL)",
       texto: `Durante os primeiros 30 dias de vigência do contrato (ou o prazo legal aplicável à função), qualquer das partes pode denunciá-lo sem necessidade de aviso prévio ou invocação de justa causa, não havendo lugar a indemnização.`
     },
     {
-      titulo: "CLÁUSULA 9.ª (FÉRIAS)",
-      texto: `O Trabalhador tem direito a um período de férias remuneradas proporcional à duração do contrato, nos termos do Código do Trabalho.`
+      titulo: "CLÁUSULA 9.ª (FÉRIAS E SUBSÍDIOS)",
+      texto: `O Trabalhador tem direito a férias, subsídio de férias e subsídio de Natal proporcionais à duração do contrato, nos termos da lei geral.`
     }
   ];
 
-  // --- CLÁUSULAS OPCIONAIS (CHECKBOXES) ---
-  
   if (dados.temConfidencialidade) {
     clausulas.push({
       titulo: "CLÁUSULA 10.ª (DEVER DE CONFIDENCIALIDADE)",
-      texto: "O Trabalhador obriga-se a guardar rigoroso sigilo profissional sobre todos os factos, informações, métodos ou negócios da empresa de que tome conhecimento, proibindo-se a sua divulgação a terceiros ou utilização em benefício próprio, mesmo após a cessação do contrato."
+      texto: "O Trabalhador obriga-se a guardar rigoroso sigilo profissional sobre todos os factos, informações, métodos ou negócios da empresa de que tome conhecimento."
     });
   }
 
   if (dados.temExclusividade) {
     clausulas.push({
       titulo: "CLÁUSULA 11.ª (EXCLUSIVIDADE)",
-      texto: "Durante a vigência deste contrato, o Trabalhador obriga-se a prestar a sua atividade profissional em regime de exclusividade ao Empregador, não podendo exercer, remunerada ou gratuitamente, qualquer outra atividade profissional, salvo autorização expressa por escrito."
+      texto: "Durante a vigência deste contrato, o Trabalhador obriga-se a prestar a sua atividade profissional em regime de exclusividade ao Empregador."
     });
   }
 
-  // --- CLÁUSULA PERSONALIZADA (CAMPO DE TEXTO LIVRE) ---
-  // É aqui que a empresa coloca as regras dela (Ex: uso de carro, farda, etc.)
   if (dados.clausulasExtras && dados.clausulasExtras.trim() !== "") {
-    // Calculamos o número da cláusula dinamicamente
     const numClausula = clausulas.length + 1; 
     clausulas.push({
       titulo: `CLÁUSULA ${numClausula}.ª (DISPOSIÇÕES ESPECÍFICAS)`,
@@ -86,7 +83,6 @@ export const gerarTextoTrabalho = (dados) => {
     });
   }
 
-  // --- FECHO ---
   clausulas.push({
     titulo: "CLÁUSULA FINAL (FORO E LEI APLICÁVEL)",
     texto: `Em tudo o que for omisso neste contrato, aplica-se a Legislação Portuguesa. Para dirimir quaisquer litígios emergentes, é competente o Tribunal do Trabalho da comarca de ${dados.comarca || "Lisboa"}.`
@@ -94,7 +90,7 @@ export const gerarTextoTrabalho = (dados) => {
 
   clausulas.push({
     titulo: "ASSINATURAS",
-    texto: `O presente contrato é feito em duplicado, ficando um exemplar para o Empregador e outro para o Trabalhador.\n\nAssinado em ${local}, no dia ${dataHoje}.`
+    texto: `O presente contrato é feito em duplicado, valendo como recibo do exemplar entregue ao Trabalhador.\n\nAssinado em ${local}, no dia ${dataHoje}.`
   });
 
   return {

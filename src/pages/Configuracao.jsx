@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Configuracao.module.css";
 
 function Configuracao() {
@@ -7,8 +8,9 @@ function Configuracao() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [statusMsg, setStatusMsg] = useState("");
+  const navigate = useNavigate();
 
-  // 1. Carregar dados do utilizador ao entrar na página
+  // 1. Carregar dados
   useEffect(() => {
     const carregarPerfil = async () => {
       try {
@@ -19,10 +21,8 @@ function Configuracao() {
 
         if (resposta.ok) {
           const dados = await resposta.json();
-          setNome(dados.nome || ""); // Se for null, fica vazio
+          setNome(dados.nome || "");
           setEmail(dados.email);
-        } else {
-          console.error("Erro ao carregar perfil");
         }
       } catch (erro) {
         console.error("Erro de conexão:", erro);
@@ -31,12 +31,11 @@ function Configuracao() {
     carregarPerfil();
   }, []);
 
-  // 2. Função para Salvar Alterações
+  // 2. Salvar Alterações
   const handleSalvar = async (e) => {
     e.preventDefault();
     setStatusMsg("A guardar...");
 
-    // Validação simples de password
     if (password && password !== confirmPassword) {
       alert("As passwords não coincidem!");
       setStatusMsg("");
@@ -53,13 +52,13 @@ function Configuracao() {
         },
         body: JSON.stringify({
           nome: nome,
-          password: password || undefined, // Só envia se tiver preenchido
+          password: password || undefined,
         }),
       });
 
       if (resposta.ok) {
         setStatusMsg("✅ Dados atualizados com sucesso!");
-        setPassword(""); // Limpa os campos de senha
+        setPassword("");
         setConfirmPassword("");
         setTimeout(() => setStatusMsg(""), 3000);
       } else {
@@ -68,6 +67,34 @@ function Configuracao() {
     } catch (erro) {
       console.error(erro);
       setStatusMsg("Erro de conexão.");
+    }
+  };
+
+  // 3. APAGAR CONTA (NOVO)
+  const handleApagarConta = async () => {
+    const confirmacao = window.confirm(
+      "TEM A CERTEZA? Esta ação é irreversível. Todos os seus documentos serão apagados para sempre."
+    );
+
+    if (confirmacao) {
+      try {
+        const token = localStorage.getItem("token");
+        const resposta = await fetch("http://localhost:3000/perfil", {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (resposta.ok) {
+          alert("A sua conta foi apagada. Obrigado por ter usado o DocFacil.");
+          localStorage.removeItem("token"); // Limpa a sessão
+          navigate("/"); // Manda para a Home pública
+        } else {
+          alert("Erro ao apagar conta. Tente novamente.");
+        }
+      } catch (erro) {
+        console.error(erro);
+        alert("Erro de conexão.");
+      }
     }
   };
 
@@ -81,7 +108,6 @@ function Configuracao() {
 
         <div className={styles.cardConfig}>
           <form onSubmit={handleSalvar}>
-            {/* Seção de Dados Pessoais */}
             <h3 className={styles.subTitulo}>Dados Pessoais</h3>
 
             <div className={styles.grupoInput}>
@@ -107,7 +133,6 @@ function Configuracao() {
 
             <hr className={styles.divisor} />
 
-            {/* Seção de Segurança */}
             <h3 className={styles.subTitulo}>Alterar Password</h3>
             <p className={styles.avisoPequeno}>
               Deixe em branco se não quiser alterar.
@@ -144,6 +169,18 @@ function Configuracao() {
               </button>
             </div>
           </form>
+        </div>
+
+        {/* --- ZONA DE PERIGO (NOVO) --- */}
+        <div className={styles.dangerZone}>
+          <h3>🚨 Zona de Perigo</h3>
+          <p>
+            Ao apagar a conta, todos os seus documentos e dados serão removidos
+            permanentemente.
+          </p>
+          <button onClick={handleApagarConta} className={styles.botaoApagar}>
+            Apagar Minha Conta
+          </button>
         </div>
       </div>
     </div>

@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Biblioteca.module.css";
+import { useToast } from "../contexts/ToastContext.jsx";
 
 function Biblioteca() {
   const navigate = useNavigate();
   const [filtro, setFiltro] = useState("todos");
   const [busca, setBusca] = useState("");
 
+  const { showToast } = useToast();
   const modelos = [
-    // ======================================
     // --- IMOBILIÁRIO ---
-    // ======================================
     {
       id: 2,
       titulo: "Contrato de Arrendamento",
@@ -28,16 +28,14 @@ function Biblioteca() {
       popular: true,
     },
     {
-      id: 12, // NOVO
+      id: 12,
       titulo: "Carta Oposição à Renovação",
       descricao: "Para Senhorios ou Inquilinos terminarem o contrato no prazo.",
       tipo: "oposicao",
       categoria: "imobiliario",
     },
 
-    // ======================================
     // --- RECURSOS HUMANOS (RH) ---
-    // ======================================
     {
       id: 11,
       titulo: "Contrato de Trabalho (Efetivo)",
@@ -54,23 +52,21 @@ function Biblioteca() {
       categoria: "rh",
     },
     {
-      id: 13, // NOVO
+      id: 13,
       titulo: "Contrato Serviço Doméstico",
       descricao: "Para empregadas de limpeza, cuidadores ou governantas.",
       tipo: "domestico",
       categoria: "rh",
     },
     {
-      id: 14, // NOVO
+      id: 14,
       titulo: "Carta de Demissão (Rescisão)",
       descricao: "Para o trabalhador se despedir cumprindo o aviso prévio.",
       tipo: "rescisao_trabalho",
       categoria: "rh",
     },
 
-    // ======================================
     // --- COMERCIAL / VENDAS ---
-    // ======================================
     {
       id: 1,
       titulo: "Contrato Prestação de Serviços",
@@ -94,9 +90,7 @@ function Biblioteca() {
       categoria: "comercial",
     },
 
-    // ======================================
     // --- JURÍDICO / GERAL ---
-    // ======================================
     {
       id: 9,
       titulo: "Compra e Venda de Veículo",
@@ -106,14 +100,14 @@ function Biblioteca() {
       popular: true,
     },
     {
-      id: 15, // NOVO
+      id: 15,
       titulo: "Ata de Assembleia Geral",
       descricao: "Aprovação de contas anual e distribuição de lucros.",
       tipo: "ata_assembleia",
       categoria: "juridico",
     },
     {
-      id: 16, // NOVO
+      id: 16,
       titulo: "Procuração Profissional",
       descricao: "Confira poderes a advogados ou terceiros para o representar.",
       tipo: "procuracao",
@@ -142,7 +136,6 @@ function Biblioteca() {
     },
   ];
 
-  // Lógica de Filtragem
   const modelosFiltrados = modelos.filter((modelo) => {
     const correspondeCategoria =
       filtro === "todos" ? true : modelo.categoria === filtro;
@@ -157,7 +150,7 @@ function Biblioteca() {
       const token = localStorage.getItem("token");
 
       if (!token) {
-        alert("Para criar documentos, por favor faça login.");
+        showToast("Faça login para criar documentos.", "erro");
         return;
       }
 
@@ -175,26 +168,33 @@ function Biblioteca() {
 
       if (resposta.ok) {
         const dados = await resposta.json();
+        // Sucesso! Vamos para o editor
         navigate(`/dashboard/editor/${dados.id}`);
+      } else if (resposta.status === 403) {
+        // --- LIMITE ATINGIDO ---
+        showToast("⚠️ Limite Grátis atingido! Faça Upgrade.", "erro");
+        // Redireciona para a página de planos após ler a mensagem
+        setTimeout(() => navigate("/dashboard/planos"), 2000);
       } else {
-        alert("Erro ao conectar com o servidor.");
+        showToast("Erro ao criar documento.", "erro");
       }
     } catch (erro) {
       console.error(erro);
-      alert("Erro de conexão. Verifique se o backend está a rodar.");
+      showToast("Erro de conexão com o servidor.", "erro");
     }
   };
 
   return (
     <div className={styles.pageBackground}>
       <div className={styles.container}>
-        {/* Cabeçalho */}
+        {/* Cabeçalho da Biblioteca */}
         <div className={styles.header}>
           <div>
             <h2>Biblioteca de Modelos</h2>
             <p>Documentos juridicamente validados para o seu negócio.</p>
           </div>
 
+          {/* Barra de Pesquisa */}
           <div className={styles.searchBox}>
             <input
               type="text"
@@ -205,7 +205,7 @@ function Biblioteca() {
           </div>
         </div>
 
-        {/* Filtros */}
+        {/* Filtros / Abas */}
         <div className={styles.filtros}>
           <button
             className={filtro === "todos" ? styles.ativo : ""}
@@ -239,11 +239,12 @@ function Biblioteca() {
           </button>
         </div>
 
-        {/* Grid */}
+        {/* Grid de Cards */}
         <div className={styles.gridModelos}>
           {modelosFiltrados.length > 0 ? (
             modelosFiltrados.map((modelo) => (
               <div key={modelo.id} className={styles.cardModelo}>
+                {/* Badge de Popular */}
                 {modelo.popular && (
                   <span className={styles.badgePopular}>🔥 Popular</span>
                 )}

@@ -1,62 +1,58 @@
+/* --- BARRA DE NAVEGAÇÃO --- */
 .navBar {
-    background-color: #1a202c;
-    padding:  20px 30px;
+    background-color: rgba(26, 32, 44, 0.95); /* Quase opaco, mas permite blur */
+    backdrop-filter: blur(10px); /* Efeito de vidro fosco */
+    border-bottom: 1px solid #2d3748; /* Linha subtil em baixo */
+    padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 0;
     z-index: 1000;
+    transition: all 0.3s ease;
 }
 
 .logo {
     color: #ffffff;
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 800; /* Mais grosso */
     text-decoration: none;
+    letter-spacing: -0.5px;
 }
 
+/* Ícone do Menu (Hambúrguer) */
 .menuIcon {
     color: #ffffff;
-    font-size: 30px;
+    font-size: 28px;
     cursor: pointer;
-}
-
-.menuMobileAberto {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #1a202c;
+    padding: 5px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 100;
+    transition: color 0.2s;
 }
 
-.linkMenuMobile {
+.menuIcon:hover {
     color: #ff8c00;
-    text-decoration: none;
-    font-size: 28px;
-    font-weight: bold;
-    padding: 20px;
 }
 
+/* --- MENU DESKTOP --- */
 .menuDesktop {
-    display: none;
+    display: none; /* Escondido no mobile */
+    align-items: center;
+    gap: 30px;
 }
 
 .linkDesktop {
-    color: #ffffff;
+    color: #e2e8f0; /* Cinza claro, mais elegante que branco puro */
     text-decoration: none;
     font-weight: 500;
-    margin-left: 20px;
-    font-size: 16px;
+    font-size: 15px;
+    transition: color 0.2s;
 }
 
-.linkDesktop:hover{
+.linkDesktop:hover {
     color: #ff8c00;
 }
 
@@ -65,13 +61,90 @@
     font-weight: bold;
 }
 
+/* Botão de Login (Destaque no Desktop) */
+.botaoLogin {
+    background-color: transparent;
+    border: 1px solid #ff8c00;
+    color: #ff8c00;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 15px;
+    transition: all 0.2s;
+}
+
+.botaoLogin:hover {
+    background-color: #ff8c00;
+    color: #1a202c;
+    transform: translateY(-2px);
+}
+
+/* --- MENU MOBILE (FULL SCREEN ANIMADO) --- */
+.menuMobileAberto {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #1a202c;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000; /* Acima de tudo */
+    gap: 30px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Botão de fechar no topo direito do mobile */
+.fecharMobile {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 40px;
+    color: #a0aec0;
+    cursor: pointer;
+}
+
+.linkMenuMobile {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 10px;
+    transition: color 0.2s;
+}
+
+.linkMenuMobile:hover {
+    color: #ff8c00;
+}
+
+/* Botão de destaque no mobile */
+.linkLoginMobile {
+    background-color: #ff8c00;
+    color: #1a202c;
+    padding: 15px 40px;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-top: 20px;
+}
+
+/* --- MEDIA QUERIES --- */
 @media (min-width: 768px) {
-    
- .menuIcon {
+    .menuIcon {
         display: none;
     }   
 
- .menuDesktop{
-        display: block;
+    .menuDesktop {
+        display: flex;
     }
+}
+
+/* Animação suave */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }

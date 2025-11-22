@@ -88,7 +88,9 @@ function Sidebar() {
         </ul>
 
         <div className={styles.sidebarFooter}>
-          <button className={styles.botaoPlanos}>Ver Planos</button>
+          <Link to="/dashboard/planos" style={{ textDecoration: "none" }}>
+            <button className={styles.botaoPlanos}>Ver Planos</button>
+          </Link>
           <button onClick={handleLogout} className={styles.botaoSair}>
             <span>Sair</span>
           </button>

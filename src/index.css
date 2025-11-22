@@ -7,6 +7,7 @@
 html {
   /* A "magia" para o clique do menu deslizar suavemente */
   scroll-behavior: smooth;
+  height: 100%;
 
   /* O 'html' NÃO PODE ter height: 100% */
 }
@@ -40,4 +41,17 @@ body {
 a {
   text-decoration: none;
   color: inherit; /* Os links herdam a cor do "pai" */
+}
+
+[class*="visible"] {
+  opacity: 1 !important;
+  transform: translate(0, 0) !important;
+}
+
+/* Garante que o HTML e Body permitem scroll correto */
+html, body {
+  height: auto !important;
+  min-height: 100vh;
+  overflow-x: hidden; /* Evita scroll lateral */
+  overflow-y: auto;   /* Garante scroll vertical */
 }
