@@ -8,9 +8,9 @@ function Configuracao() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [statusMsg, setStatusMsg] = useState("");
+  const [loadingPortal, setLoadingPortal] = useState(false); // Novo estado
   const navigate = useNavigate();
 
-  // 1. Carregar dados
   useEffect(() => {
     const carregarPerfil = async () => {
       try {
@@ -25,13 +25,12 @@ function Configuracao() {
           setEmail(dados.email);
         }
       } catch (erro) {
-        console.error("Erro de conexão:", erro);
+        console.error(erro);
       }
     };
     carregarPerfil();
   }, []);
 
-  // 2. Salvar Alterações
   const handleSalvar = async (e) => {
     e.preventDefault();
     setStatusMsg("A guardar...");
@@ -50,14 +49,11 @@ function Configuracao() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          nome: nome,
-          password: password || undefined,
-        }),
+        body: JSON.stringify({ nome, password: password || undefined }),
       });
 
       if (resposta.ok) {
-        setStatusMsg("✅ Dados atualizados com sucesso!");
+        setStatusMsg("✅ Dados atualizados!");
         setPassword("");
         setConfirmPassword("");
         setTimeout(() => setStatusMsg(""), 3000);
@@ -65,35 +61,56 @@ function Configuracao() {
         setStatusMsg("❌ Erro ao atualizar.");
       }
     } catch (erro) {
-      console.error(erro);
       setStatusMsg("Erro de conexão.");
     }
   };
 
-  // 3. APAGAR CONTA (NOVO)
-  const handleApagarConta = async () => {
-    const confirmacao = window.confirm(
-      "TEM A CERTEZA? Esta ação é irreversível. Todos os seus documentos serão apagados para sempre."
-    );
+  // --- NOVA FUNÇÃO: ABRIR PORTAL STRIPE ---
+  const handleGerirSubscricao = async () => {
+    setLoadingPortal(true);
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:3000/portal-cliente", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    if (confirmacao) {
+      if (res.ok) {
+        const data = await res.json();
+        window.location.href = data.url; // Vai para o Stripe
+      } else {
+        // MUDANÇA AQUI: Mensagem mais clara
+        if (res.status === 404) {
+          alert(
+            "Ainda não tem uma assinatura ativa para gerir. \n\nVá à página de Planos para aderir ao Pro."
+          );
+        } else {
+          alert("Erro ao conectar ao Stripe. Tente novamente.");
+        }
+      }
+    } catch (error) {
+      alert("Erro de conexão.");
+    } finally {
+      setLoadingPortal(false);
+    }
+  };
+
+  const handleApagarConta = async () => {
+    if (
+      window.confirm("TEM A CERTEZA? Esta ação apaga tudo permanentemente.")
+    ) {
       try {
         const token = localStorage.getItem("token");
-        const resposta = await fetch("http://localhost:3000/perfil", {
+        const res = await fetch("http://localhost:3000/perfil", {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
         });
-
-        if (resposta.ok) {
-          alert("A sua conta foi apagada. Obrigado por ter usado o DocFacil.");
-          localStorage.removeItem("token"); // Limpa a sessão
-          navigate("/"); // Manda para a Home pública
-        } else {
-          alert("Erro ao apagar conta. Tente novamente.");
+        if (res.ok) {
+          localStorage.removeItem("token");
+          navigate("/");
         }
       } catch (erro) {
-        console.error(erro);
-        alert("Erro de conexão.");
+        alert("Erro ao apagar.");
       }
     }
   };
@@ -103,7 +120,7 @@ function Configuracao() {
       <div className={styles.container}>
         <div className={styles.header}>
           <h2>⚙️ Configuração da Conta</h2>
-          <p>Gerencie os seus dados pessoais e segurança.</p>
+          <p>Gerencie os seus dados e subscrição.</p>
         </div>
 
         <div className={styles.cardConfig}>
@@ -111,7 +128,7 @@ function Configuracao() {
             <h3 className={styles.subTitulo}>Dados Pessoais</h3>
 
             <div className={styles.grupoInput}>
-              <label>Email (Não editável)</label>
+              <label>Email</label>
               <input
                 type="email"
                 value={email}
@@ -124,7 +141,6 @@ function Configuracao() {
               <label>Nome Completo</label>
               <input
                 type="text"
-                placeholder="O seu nome..."
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 className={styles.input}
@@ -133,31 +149,26 @@ function Configuracao() {
 
             <hr className={styles.divisor} />
 
-            <h3 className={styles.subTitulo}>Alterar Password</h3>
-            <p className={styles.avisoPequeno}>
-              Deixe em branco se não quiser alterar.
-            </p>
-
+            <h3 className={styles.subTitulo}>Segurança</h3>
             <div className={styles.row}>
               <div className={styles.grupoInput}>
                 <label>Nova Password</label>
                 <input
                   type="password"
-                  placeholder="Nova senha"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={styles.input}
+                  placeholder="Nova senha"
                 />
               </div>
-
               <div className={styles.grupoInput}>
-                <label>Confirmar Password</label>
+                <label>Confirmar</label>
                 <input
                   type="password"
-                  placeholder="Repita a senha"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className={styles.input}
+                  placeholder="Repita a senha"
                 />
               </div>
             </div>
@@ -165,19 +176,31 @@ function Configuracao() {
             <div className={styles.footerAcoes}>
               <span className={styles.status}>{statusMsg}</span>
               <button type="submit" className={styles.botaoSalvar}>
-                💾 Guardar Alterações
+                💾 Guardar
               </button>
             </div>
           </form>
         </div>
 
-        {/* --- ZONA DE PERIGO (NOVO) --- */}
+        {/* --- NOVA SECÇÃO: GESTÃO DE ASSINATURA --- */}
+        <div className={styles.cardSubscription}>
+          <div className={styles.subInfo}>
+            <h3>💳 A sua Subscrição</h3>
+            <p>Faça download de faturas, mude o cartão ou cancele o plano.</p>
+          </div>
+          <button
+            onClick={handleGerirSubscricao}
+            className={styles.botaoGerir}
+            disabled={loadingPortal}
+          >
+            {loadingPortal ? "A carregar..." : "Gerir Subscrição / Faturas"}
+          </button>
+        </div>
+
+        {/* Zona de Perigo */}
         <div className={styles.dangerZone}>
           <h3>🚨 Zona de Perigo</h3>
-          <p>
-            Ao apagar a conta, todos os seus documentos e dados serão removidos
-            permanentemente.
-          </p>
+          <p>Ao apagar a conta, todos os documentos serão removidos.</p>
           <button onClick={handleApagarConta} className={styles.botaoApagar}>
             Apagar Minha Conta
           </button>

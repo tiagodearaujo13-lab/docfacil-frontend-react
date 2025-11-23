@@ -35,8 +35,7 @@ function Footer() {
       </div>
 
       <div className={styles.copyright}>
-        © {new Date().getFullYear()} DocFacil.pt. Desenvolvido com ❤️ em
-        Portugal.
+        © {new Date().getFullYear()} DocFacil.pt. Todos direitos reservados.
       </div>
     </footer>
   );

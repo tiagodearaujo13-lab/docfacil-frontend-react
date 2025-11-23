@@ -1,0 +1,60 @@
+.stripeBtn {
+  /* COR LARANJA (Igual à Landing Page) */
+  background-color: #ff8c00; 
+  
+  color: #1a202c; /* Texto Escuro para contraste */
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  
+  /* Tamanho e Forma */
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: auto; /* Empurra para baixo no card */
+
+  /* Sombra e Animação */
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(255, 140, 0, 0.4); 
+}
+
+.stripeBtn:hover {
+  background-color: #ed8936;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 140, 0, 0.6);
+}
+
+.stripeBtn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+  transform: none;
+  box-shadow: none;
+}
+
+.icon {
+  height: 18px;
+  width: auto;
+  fill: #1a202c; /* Ícone preto */
+}
+
+/* O Selo de Segurança */
+.securityNote {
+  font-size: 0.75rem;
+  color: #a0aec0;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  font-size: 1.2rem;
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }

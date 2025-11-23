@@ -7,16 +7,15 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Estados visuais
-  const [mostrarSenha, setMostrarSenha] = useState(false); // O Olhinho
-  const [mensagem, setMensagem] = useState(""); // Mensagem na tela
-  const [tipoMensagem, setTipoMensagem] = useState(""); // 'sucesso' ou 'erro'
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [mensagem, setMensagem] = useState("");
+  const [tipoMensagem, setTipoMensagem] = useState("");
 
   const navigate = useNavigate();
 
   const handleSubmit = async (evento) => {
     evento.preventDefault();
-    setMensagem(""); // Limpa mensagens antigas
+    setMensagem("");
 
     try {
       const response = await fetch("http://localhost:3000/login", {
@@ -28,24 +27,17 @@ function LoginForm() {
       const data = await response.json();
 
       if (response.status === 200) {
-        // SUCESSO!
-        console.log("Login com sucesso!", data.token);
         localStorage.setItem("token", data.token);
-
         setMensagem("Login efetuado com sucesso! A entrar...");
         setTipoMensagem("sucesso");
-
-        // Redireciona automaticamente após 1.5 segundos
         setTimeout(() => {
           navigate("/dashboard");
         }, 1500);
       } else {
-        // ERRO (Senha errada, etc)
         setMensagem(data.message || "Email ou password incorretos.");
         setTipoMensagem("erro");
       }
     } catch (error) {
-      console.error("Erro de rede:", error);
       setMensagem("Não foi possível ligar ao servidor.");
       setTipoMensagem("erro");
     }
@@ -56,7 +48,6 @@ function LoginForm() {
       <h2>Login</h2>
       <p>Bem-vindo de volta! Faça login para aceder aos seus documentos.</p>
 
-      {/* MENSAGEM DE STATUS (Sem Alert) */}
       {mensagem && (
         <div
           className={`${styles.mensagem} ${
@@ -78,12 +69,24 @@ function LoginForm() {
           required
         />
 
-        <label htmlFor="password">Password</label>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <label htmlFor="password">Password</label>
 
-        {/* Wrapper para colocar o olhinho junto com o input */}
+          {/* --- O NOVO LINK AQUI --- */}
+          <Link to="/recuperar-senha" className={styles.linkEsqueceu}>
+            Esqueceu-se?
+          </Link>
+        </div>
+
         <div className={styles.passwordWrapper}>
           <input
-            type={mostrarSenha ? "text" : "password"} // A Mágica acontece aqui
+            type={mostrarSenha ? "text" : "password"}
             id="password"
             placeholder="A sua password"
             value={password}

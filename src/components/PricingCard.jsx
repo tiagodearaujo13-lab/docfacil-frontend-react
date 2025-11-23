@@ -49,6 +49,19 @@ function PricingCard({
       >
         {botaoTexto}
       </Link>
+
+      {isPopular && (
+        <p
+          style={{
+            fontSize: "0.75rem",
+            color: "#718096",
+            marginTop: "10px",
+            textAlign: "center",
+          }}
+        >
+          🔒 Pagamento seguro via Stripe
+        </p>
+      )}
     </div>
   );
 }

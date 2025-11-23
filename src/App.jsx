@@ -13,6 +13,7 @@ import RegistoPage from "./pages/RegistoPage.jsx";
 import Contacto from "./pages/Contacto.jsx"; // <--- NOVO
 import Termos from "./pages/Termos.jsx"; // <--- NOVO
 import Privacidade from "./pages/Privacidade.jsx"; // <--- NOVO
+import RecuperarSenha from "./pages/RecuperarSenha.jsx";
 
 // Páginas do Dashboard (Privadas)
 import DashboardHome from "./pages/DashboardHome.jsx";
@@ -33,6 +34,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/registo" element={<RegistoPage />} />
+          <Route path="/recuperar-senha" element={<RecuperarSenha />} />
 
           {/* Novas Páginas Legais e Suporte */}
           <Route path="/contacto" element={<Contacto />} />

@@ -107,11 +107,27 @@
 
 /* O Card Popular é maior e tem borda */
 .popular {
-    border: 2px solid #ff8c00;
-    transform: scale(1.05); /* Aumenta ligeiramente */
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-    background-color: #252f3f; /* Ligeiramente mais claro para destaque */
+  transform: scale(1.05);
+  border: 2px solid #ff8c00; /* Borda laranja vibrante */
+  background: linear-gradient(145deg, #2d3748, #252f3f); /* Gradiente subtil no fundo */
+  z-index: 1;
+  
+ 
+  box-shadow: 
+    0 10px 30px -10px rgba(255, 140, 0, 0.5), /* Sombra difusa laranja */
+    0 0 20px 5px rgba(255, 140, 0, 0.3),      /* Brilho interno */
+    0 0 40px 10px rgba(255, 140, 0, 0.1);     /* Brilho externo largo */
+    
+  transition: all 0.3s ease-in-out;
+}
+
+/* Efeito extra ao passar o rato */
+.popular:hover {
+  transform: scale(1.08) translateY(-5px);
+  box-shadow: 
+    0 20px 40px -10px rgba(255, 140, 0, 0.6),
+    0 0 30px 10px rgba(255, 140, 0, 0.4),
+    0 0 60px 20px rgba(255, 140, 0, 0.2);
 }
 
 .fitaPopular {

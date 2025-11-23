@@ -173,6 +173,19 @@
     border: 1px solid #fc8181;
 }
 
+.linkEsqueceu {
+    font-size: 0.85rem;
+    color: #a0aec0;
+    text-decoration: none;
+    margin-bottom: 5px;
+    transition: color 0.2s;
+}
+
+.linkEsqueceu:hover {
+    color: #ff8c00; /* Laranja ao passar o rato */
+    text-decoration: underline;
+}
+
 /* =========================================
    --- RESPONSIVIDADE (CORREÇÃO MOBILE) ---
    ========================================= */
@@ -188,3 +201,4 @@
         font-size: 1.5rem; /* Título um pouco menor */
     }
 }
+

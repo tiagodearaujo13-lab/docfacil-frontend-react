@@ -26,49 +26,13 @@
   color: #a0aec0;
 }
 
-/* Card de Status (Topo) */
-.statusCard {
-  background-color: #2d3748;
-  border: 1px solid #4a5568;
-  border-left: 5px solid #ff8c00;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.labelStatus {
-  font-weight: bold;
-  color: #a0aec0;
-  margin-right: 10px;
-}
-
-.valorStatus {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #fff;
-  background: #ff8c00;
-  padding: 2px 10px;
-  border-radius: 4px;
-  color: #1a202c;
-}
-
-.avisoUpgrade {
-  color: #cbd5e0;
-  font-style: italic;
-  font-size: 0.9rem;
-}
-
 /* Toggle Mensal/Anual */
 .toggleArea {
   display: flex;
   justify-content: center;
-  align-items: center; /* Garante alinhamento vertical */
-  gap: 30px; /* Aumentei de 20px para 30px para dar ar */
-  margin-bottom: 40px; /* Mais espaço em baixo */
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 50px;
   cursor: pointer;
   font-weight: bold;
   font-size: 1.1rem;
@@ -77,51 +41,177 @@
 .toggleAtivo {
   color: #ff8c00;
   border-bottom: 2px solid #ff8c00;
+  padding-bottom: 2px;
 }
 
 .toggleInativo {
   color: #718096;
 }
 
-/* Grid de Planos */
+/* --- GRID DE PLANOS --- */
 .gridPlanos {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  align-items: start;
+  gap: 40px;
+  align-items: stretch; 
 }
 
-/* Ajuste para o Card Pro destacar */
-.cardProWrapper {
-  transform: scale(1.05); /* Um pouco maior para destaque */
+/* --- ESTILO DOS CARTÕES (Igual à Landing Page) --- */
+.card {
+  background-color: #2d3748;
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid #4a5568;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.3s;
+  height: 100%; /* Para ficarem alinhados */
 }
 
-/* FAQ */
-.faqSection {
-  margin-top: 60px;
-  border-top: 1px solid #4a5568;
-  padding-top: 20px;
+/* Estilos do Card Popular (Pro) */
+.popular {
+  border: 2px solid #ff8c00;
+  transform: scale(1.05);
+  z-index: 10;
+  background-color: #252f3f; /* Fundo ligeiramente mais escuro para destacar */
+  
+  /* O EFEITO NEON ESTÁ AQUI: */
+  box-shadow: 
+    0 10px 30px -10px rgba(255, 140, 0, 0.5), /* Sombra difusa laranja */
+    0 0 20px 5px rgba(255, 140, 0, 0.3),      /* Brilho interno */
+    0 0 40px 10px rgba(255, 140, 0, 0.1);     /* Brilho externo largo */
+    
+  transition: all 0.3s ease-in-out;
+}
+
+.popular:hover {
+  transform: scale(1.08) translateY(-5px);
+  box-shadow: 
+    0 20px 40px -10px rgba(255, 140, 0, 0.6),
+    0 0 30px 10px rgba(255, 140, 0, 0.4),
+    0 0 60px 20px rgba(255, 140, 0, 0.2);
+}
+
+.fitaPopular {
+  position: absolute;
+  top: -15px;
+  right: 50%;
+  transform: translateX(50%);
+  background-color: #ff8c00;
+  color: #1a202c;
+  font-weight: 800;
+  font-size: 0.8rem;
+  padding: 5px 15px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  white-space: nowrap;
+}
+
+/* Tipografia do Card */
+.planoTitulo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  color: white;
+}
+
+.planoDescricao {
   color: #a0aec0;
+  font-size: 0.95rem;
+  margin: 0 0 25px 0;
 }
 
-.faqSection h3 {
-  color: #fff;
-  margin-bottom: 20px;
+.planoPreco {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 30px;
+  line-height: 1;
 }
 
-.faqSection p {
-  margin-bottom: 10px;
+.precoDetalhe {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #718096;
+  display: block;
+  margin-top: 5px;
+}
+
+/* Lista de Funcionalidades */
+.featuresList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+  flex-grow: 1;
+}
+
+.featuresList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  color: #cbd5e0;
+  line-height: 1.4;
+}
+
+/* Ícone SVG Check */
+.checkIcon {
+  width: 20px;
+  height: 20px;
+  color: #ff8c00;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* --- BOTÕES --- */
+
+/* Botão Pro (Branco no Card Laranja) */
+.botaoPopular {
+  background-color: white;
+  color: #1a202c; /* Texto escuro */
+  font-weight: bold;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: auto; /* Empurra para o fundo se o card esticar */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.botaoPopular:hover {
+  transform: translateY(-2px);
+  background-color: #f7fafc;
+  box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+}
+
+.botaoPopular:disabled {
+  opacity: 0.7;
+  cursor: wait;
+  transform: none;
+}
+
+/* Ajuste para o wrapper */
+.cardProWrapper {
+  /* O wrapper não precisa de estilo extra se o transform estiver no .popular */
 }
 
 /* Mobile */
 @media (max-width: 768px) {
-  .statusCard {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+  .gridPlanos {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
   }
   
-  .cardProWrapper {
+  .popular {
     transform: scale(1); /* Remove zoom no mobile */
+    margin-top: 20px;
   }
 }

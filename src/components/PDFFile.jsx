@@ -6,15 +6,16 @@ import {
   Document,
   StyleSheet,
   Image,
+  Link,
 } from "@react-pdf/renderer";
 
 // --- CORES DO TEMA ---
-const COR_DESTAQUE = "#ff8c00"; // Laranja
+const COR_DESTAQUE = "#ff8c00"; // Laranja da Marca
 const COR_TEXTO = "#1a202c"; // Azul Escuro
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: 130, // Espaço generoso para o Header não tapar texto
+    paddingTop: 130,
     paddingBottom: 80,
     paddingHorizontal: 50,
     fontFamily: "Times-Roman",
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 
-  // --- CABEÇALHO FIXO ---
+  // --- CABEÇALHO FIXO (Laranja) ---
   headerBar: {
     position: "absolute",
     top: 0,
@@ -36,12 +37,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 40,
   },
-
-  // Áreas do Header (30% Logo | 70% Título)
-  headerLeft: {
-    width: "35%",
-    justifyContent: "center",
-  },
+  headerLeft: { width: "35%", justifyContent: "center" },
   headerRight: {
     width: "65%",
     alignItems: "flex-end",
@@ -57,30 +53,34 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: "#ffffff",
-    fontSize: 11, // Um pouco menor para não quebrar linha em títulos longos
+    fontSize: 11,
     fontFamily: "Helvetica-Bold",
     textTransform: "uppercase",
     textAlign: "right",
   },
 
-  // --- RODAPÉ FIXO ---
+  // --- RODAPÉ FIXO (AGORA TAMBÉM LARANJA) ---
   footerBar: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    height: 40,
-    backgroundColor: COR_DESTAQUE,
+    height: 50,
+    backgroundColor: COR_DESTAQUE, // <--- MUDANÇA AQUI: Laranja igual ao topo
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 50,
   },
   footerText: {
-    color: "#ffffff",
-    fontSize: 9,
+    color: "#ffffff", // <--- MUDANÇA AQUI: Texto Branco para contraste
+    fontSize: 8,
     fontFamily: "Helvetica",
-    fontWeight: "bold",
+  },
+  footerLink: {
+    color: "#ffffff", // Link branco
+    textDecoration: "underline", // Sublinhado para saber que é link
+    fontFamily: "Helvetica-Bold",
   },
 
   // --- CONTEÚDO ---
@@ -93,9 +93,7 @@ const styles = StyleSheet.create({
     color: COR_TEXTO,
     textDecoration: "underline",
   },
-  clausulaBox: {
-    marginBottom: 12,
-  },
+  clausulaBox: { marginBottom: 12 },
   clausulaTitle: {
     fontSize: 11,
     fontFamily: "Times-Bold",
@@ -103,11 +101,7 @@ const styles = StyleSheet.create({
     color: COR_TEXTO,
     textTransform: "uppercase",
   },
-  clausulaBody: {
-    textAlign: "justify",
-    fontSize: 11,
-    color: "#000",
-  },
+  clausulaBody: { textAlign: "justify", fontSize: 11, color: "#000" },
 
   // --- ASSINATURAS ---
   signaturesRow: {
@@ -142,7 +136,7 @@ const PDFFile = ({ contrato, plano, logo }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* === CABEÇALHO FIXO === */}
+        {/* CABEÇALHO */}
         <View style={styles.headerBar} fixed>
           <View style={styles.headerLeft}>
             {plano === "pro" && logo ? (
@@ -156,11 +150,10 @@ const PDFFile = ({ contrato, plano, logo }) => {
           </View>
         </View>
 
-        {/* === TÍTULO PRINCIPAL === */}
+        {/* TÍTULO */}
         <Text style={styles.mainTitle}>{contrato.titulo}</Text>
 
-        {/* === CLÁUSULAS === */}
-        {/* REMOVI 'wrap={false}' para o texto fluir naturalmente entre páginas */}
+        {/* CLÁUSULAS */}
         {contrato.clausulas.map((clausula, index) => (
           <View key={index} style={styles.clausulaBox}>
             <Text style={styles.clausulaTitle}>{clausula.titulo}</Text>
@@ -168,7 +161,7 @@ const PDFFile = ({ contrato, plano, logo }) => {
           </View>
         ))}
 
-        {/* === ASSINATURAS === */}
+        {/* ASSINATURAS */}
         <View style={styles.signaturesRow}>
           <View style={styles.signatureBox}>
             <View style={styles.signatureLine} />
@@ -182,13 +175,24 @@ const PDFFile = ({ contrato, plano, logo }) => {
           </View>
         </View>
 
-        {/* === RODAPÉ FIXO === */}
+        {/* RODAPÉ PROFISSIONAL */}
         <View style={styles.footerBar} fixed>
-          <Text style={styles.footerText}>Processado por DocFacil.pt</Text>
+          <View>
+            <Text style={styles.footerText}>
+              Gerado via{" "}
+              <Link src="https://docfacil.pt" style={styles.footerLink}>
+                DocFacil.pt
+              </Link>
+            </Text>
+            <Text style={styles.footerText}>
+              Em conformidade com a Legislação Portuguesa em vigor.
+            </Text>
+          </View>
+
           <Text
             style={styles.footerText}
             render={({ pageNumber, totalPages }) =>
-              `Página ${pageNumber} de ${totalPages}`
+              `Pág. ${pageNumber} / ${totalPages}`
             }
           />
         </View>
