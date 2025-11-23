@@ -98,15 +98,18 @@ function Editor() {
         const token = localStorage.getItem("token");
 
         const respostaDoc = await fetch(
-          `http://localhost:3000/documento/${id}`,
+          `https://meu-backend-api-rohr.onrender.com/documento/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
 
-        const respostaPerfil = await fetch(`http://localhost:3000/perfil`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const respostaPerfil = await fetch(
+          `https://meu-backend-api-rohr.onrender.com/perfil`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         if (respostaDoc.ok) {
           const doc = await respostaDoc.json();
@@ -155,7 +158,7 @@ function Editor() {
     setStatusMsg("⏳ A processar...");
     try {
       const token = localStorage.getItem("token");
-      await fetch(`http://localhost:3000/documento/${id}`, {
+      await fetch(`https://meu-backend-api-rohr.onrender.com/documento/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -24,11 +24,14 @@ function Contacto() {
 
     try {
       // Chama o servidor de verdade!
-      const res = await fetch("http://localhost:3000/enviar-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        "https://meu-backend-api-rohr.onrender.com/enviar-email",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (res.ok) {
         showToast("Mensagem enviada com sucesso! 🚀", "sucesso");

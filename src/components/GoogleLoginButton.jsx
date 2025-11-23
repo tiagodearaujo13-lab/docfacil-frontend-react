@@ -32,11 +32,14 @@ function GoogleLoginButton() {
 
       try {
         // Enviar o token do Google para o NOSSO Backend
-        const res = await fetch("http://localhost:3000/google-login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ access_token: tokenResponse.access_token }),
-        });
+        const res = await fetch(
+          "https://meu-backend-api-rohr.onrender.com/google-login",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ access_token: tokenResponse.access_token }),
+          }
+        );
 
         const data = await res.json();
 

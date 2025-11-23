@@ -16,10 +16,13 @@ function MeusDocumentos() {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const resposta = await fetch("http://localhost:3000/meus-documentos", {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const resposta = await fetch(
+        "https://meu-backend-api-rohr.onrender.com/meus-documentos",
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       if (resposta.ok) {
         const lista = await resposta.json();
@@ -52,10 +55,13 @@ function MeusDocumentos() {
   const apagarDefinitivo = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      const resposta = await fetch(`http://localhost:3000/documento/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const resposta = await fetch(
+        `https://meu-backend-api-rohr.onrender.com/documento/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       if (resposta.ok) {
         const novaLista = documentos.filter((doc) => doc.id !== id);

@@ -45,11 +45,14 @@ function RegistoForm() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/registo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        "https://meu-backend-api-rohr.onrender.com/registo",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       if (response.status === 201) {
         setMensagem("Conta criada com sucesso! A redirecionar para o login...");

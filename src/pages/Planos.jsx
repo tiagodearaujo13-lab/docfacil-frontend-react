@@ -13,14 +13,17 @@ function Planos() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("http://localhost:3000/criar-checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ ciclo: cicloAnual ? "anual" : "mensal" }),
-      });
+      const response = await fetch(
+        "https://meu-backend-api-rohr.onrender.com/criar-checkout",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ ciclo: cicloAnual ? "anual" : "mensal" }),
+        }
+      );
 
       const data = await response.json();
 

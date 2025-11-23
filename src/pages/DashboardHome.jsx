@@ -16,18 +16,24 @@ function DashboardHome() {
 
       try {
         // 1. Buscar Nome do Utilizador
-        const resPerfil = await fetch("http://localhost:3000/perfil", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const resPerfil = await fetch(
+          "https://meu-backend-api-rohr.onrender.com/perfil",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (resPerfil.ok) {
           const dataPerfil = await resPerfil.json();
           setNome(dataPerfil.nome || "Utilizador");
         }
 
         // 2. Buscar Documentos para Estatísticas
-        const resDocs = await fetch("http://localhost:3000/meus-documentos", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const resDocs = await fetch(
+          "https://meu-backend-api-rohr.onrender.com/meus-documentos",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (resDocs.ok) {
           const lista = await resDocs.json();
 

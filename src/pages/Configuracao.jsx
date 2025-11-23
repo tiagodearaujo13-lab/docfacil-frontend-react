@@ -15,9 +15,12 @@ function Configuracao() {
     const carregarPerfil = async () => {
       try {
         const token = localStorage.getItem("token");
-        const resposta = await fetch("http://localhost:3000/perfil", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const resposta = await fetch(
+          "https://meu-backend-api-rohr.onrender.com/perfil",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         if (resposta.ok) {
           const dados = await resposta.json();
@@ -43,14 +46,17 @@ function Configuracao() {
 
     try {
       const token = localStorage.getItem("token");
-      const resposta = await fetch("http://localhost:3000/perfil", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ nome, password: password || undefined }),
-      });
+      const resposta = await fetch(
+        "https://meu-backend-api-rohr.onrender.com/perfil",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ nome, password: password || undefined }),
+        }
+      );
 
       if (resposta.ok) {
         setStatusMsg("✅ Dados atualizados!");
@@ -70,10 +76,13 @@ function Configuracao() {
     setLoadingPortal(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:3000/portal-cliente", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        "https://meu-backend-api-rohr.onrender.com/portal-cliente",
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       if (res.ok) {
         const data = await res.json();
@@ -101,10 +110,13 @@ function Configuracao() {
     ) {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:3000/perfil", {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(
+          "https://meu-backend-api-rohr.onrender.com/perfil",
+          {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (res.ok) {
           localStorage.removeItem("token");
           navigate("/");

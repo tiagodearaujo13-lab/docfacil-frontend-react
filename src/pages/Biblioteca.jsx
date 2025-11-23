@@ -154,17 +154,20 @@ function Biblioteca() {
         return;
       }
 
-      const resposta = await fetch("http://localhost:3000/criar-documento", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          titulo: modelo.titulo,
-          tipo_documento: modelo.tipo,
-        }),
-      });
+      const resposta = await fetch(
+        "https://meu-backend-api-rohr.onrender.com/criar-documento",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            titulo: modelo.titulo,
+            tipo_documento: modelo.tipo,
+          }),
+        }
+      );
 
       if (resposta.ok) {
         const dados = await resposta.json();
