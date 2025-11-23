@@ -274,3 +274,31 @@ textarea.input {
     order: 2;
   }
 }
+
+/* ... código anterior ... */
+
+/* Aviso Mobile (Só aparece se ativado pelo React) */
+.mobileWarning {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: white;
+  padding: 20px;
+  background-color: #2d3748;
+  border-radius: 8px;
+  border: 1px dashed #4a5568;
+}
+
+.mobileWarning span {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.mobileWarning p {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: #cbd5e0;
+}
