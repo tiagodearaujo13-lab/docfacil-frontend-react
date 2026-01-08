@@ -52,7 +52,7 @@ O projeto segue uma arquitetura moderna, desacoplada e escalável, com foco em p
 ### 2. Sistema de Subscrição (SaaS)
 * Integração profunda com Stripe.
 * Gestão de Planos (Free vs Pro).
-* **Lógica de Negócio:** Utilizadores "Free" têm limite de 3 documentos/mês e marca d'água; "Pro" têm acesso ilimitado.
+* **Lógica de Negócio:** Utilizadores "Free" têm limite de 1 documentos/mês e marca d'água; "Pro" têm acesso ilimitado.
 
 ### 3. Segurança & Autenticação
 * Login Híbrido: Email/Senha (com hash `bcrypt`) ou Google Account.
