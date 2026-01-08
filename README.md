@@ -12,7 +12,7 @@ O **DocFacil.pt** resolve a complexidade burocrática para Freelancers e PMEs, p
 
 A plataforma inclui um sistema completo de autenticação, gestão de subscrições (Stripe), geração de PDFs dinâmicos e armazenamento na nuvem.
 
-** Live Demo:** [https://docfacil.pt](https://docfacil.pt)
+** Live:** [https://docfacil.pt](https://docfacil.pt)
 
 ---
 
@@ -81,3 +81,4 @@ O projeto segue uma arquitetura moderna, desacoplada e escalável, com foco em p
     │   ├── pages/           # Views/Páginas da Aplicação
     │   └── App.jsx          # Router Config
     └── vite.config.js       # Configuração de Build
+    
