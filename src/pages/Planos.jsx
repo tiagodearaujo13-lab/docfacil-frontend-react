@@ -8,13 +8,13 @@ function Planos() {
   const [planoSelecionado, setPlanoSelecionado] = useState("professional"); // 🎯 Default para o mais vendido
   const [loading, setLoading] = useState(false);
 
-  // 🎯 NOVOS PREÇOS ESTRATÉGICOS
+  // 🎯 NOVOS PREÇOS ESTRATÉGICOS (PREÇO DE LANÇAMENTO)
   const planos = {
     essential: {
       nome: "Essential",
-      descricao: "Para freelancers e pequenos negócios.",
-      precoMensal: "14,99€",
-      precoAnual: "11,99€",
+      descricao: "Para quem está a começar.",
+      precoMensal: "6,90€", // 🔥 Antes 14,99€
+      precoAnual: "4,90€", // 🔥 Antes 11,99€
       features: [
         "5 Documentos por mês",
         "Acesso a modelos premium",
@@ -23,18 +23,18 @@ function Planos() {
         "Atualizações legais incluídas",
       ],
       stripePriceId: {
-        mensal: "price_essential_mensal", // 🎯 Você vai criar no Stripe
+        mensal: "price_essential_mensal",
         anual: "price_essential_anual",
       },
     },
     professional: {
       nome: "Profissional",
-      descricao: "Para profissionais sérios.",
-      precoMensal: "24,99€",
-      precoAnual: "19,99€",
+      descricao: "Para uso ilimitado e sem restrições.",
+      precoMensal: "14,90€", // 🔥 Antes 24,99€
+      precoAnual: "9,90€", // 🔥 Antes 19,99€
       features: [
         "Documentos Ilimitados",
-        "Acesso a TODOS os modelos premium",
+        "Acesso a TODOS os modelos",
         "Upload do seu Logótipo",
         "Suporte Prioritário 24/7",
         "Atualizações legais automáticas",
@@ -54,7 +54,7 @@ function Planos() {
       const token = localStorage.getItem("token");
       const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-      // 🚨 CORREÇÃO CRÍTICA: Mapear "professional" para "pro"
+      // 🚨 Mapeamento importante: "professional" no front vira "pro" no back
       const planoCorrigido = plano === "professional" ? "pro" : "essential";
 
       console.log("Enviando para backend:", {
@@ -69,7 +69,7 @@ function Planos() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          plano: planoCorrigido, // ✅ AGORA CORRETO: "pro" em vez de "professional"
+          plano: planoCorrigido,
           ciclo: cicloAnual ? "anual" : "mensal",
         }),
       });
@@ -83,11 +83,11 @@ function Planos() {
           window.gtag("event", "upgrade_purchase_initiate", {
             value: cicloAnual
               ? plano === "essential"
-                ? 11.99
-                : 19.99
+                ? 4.9
+                : 9.9
               : plano === "essential"
-              ? 14.99
-              : 24.99,
+              ? 6.9
+              : 14.9,
             currency: "EUR",
             payment_plan: cicloAnual ? "annual" : "monthly",
             plan_type: plano,
@@ -108,22 +108,30 @@ function Planos() {
     }
   };
 
-  // 🎯 CALCULAR ECONOMIA VS SERVIÇOS TRADICIONAIS
+  // 🎯 CALCULAR ECONOMIA REAL
   const calcularEconomia = (plano) => {
-    const precoMensal = plano === "essential" ? 14.99 : 24.99;
-    // Assumindo que 1 contrato tradicional = €150
-    const economia = (((150 - precoMensal) / 150) * 100).toFixed(0);
-    return economia > 0 ? economia : 85; // Mínimo de 85% de economia
+    // Agora a comparação é brutal: 15€ vs 150€ do advogado
+    const precoMensal = plano === "essential" ? 6.9 : 14.9;
+    const servicoTradicional = 150;
+    const economia = (
+      ((servicoTradicional - precoMensal) / servicoTradicional) *
+      100
+    ).toFixed(0);
+    return economia; // Vai dar > 90%
   };
 
   return (
     <div className={styles.pageBackground}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h2>Escolha o Melhor Plano para o Seu Negócio</h2>
+          <h2>Preços de Lançamento (Tempo Limitado)</h2>
           <p>
-            Economize até {calcularEconomia("professional")}% vs serviços
-            tradicionais
+            Aproveite para garantir o acesso vitalício a estes valores.
+            <br />
+            <span style={{ color: "#48bb78", fontWeight: "bold" }}>
+              Economize {calcularEconomia("professional")}% vs um advogado
+              tradicional
+            </span>
           </p>
         </div>
 
@@ -144,8 +152,17 @@ function Planos() {
             onClick={() => setCicloAnual(true)}
           >
             Anual{" "}
-            <span style={{ fontSize: "0.7rem", marginLeft: "5px" }}>
-              (-20%)
+            <span
+              style={{
+                fontSize: "0.7rem",
+                marginLeft: "5px",
+                background: "#ff8c00",
+                color: "black",
+                padding: "2px 6px",
+                borderRadius: "10px",
+              }}
+            >
+              -30% EXTRA
             </span>
           </div>
         </div>
@@ -183,7 +200,7 @@ function Planos() {
                 borderRadius: "12px",
               }}
             >
-              MAIS ECONÓMICO
+              MAIS BARATO
             </div>
 
             <h3 className={styles.planoTitulo}>{planos.essential.nome}</h3>
@@ -196,7 +213,7 @@ function Planos() {
                 ? planos.essential.precoAnual
                 : planos.essential.precoMensal}
               <span className={styles.precoDetalhe}>
-                {cicloAnual ? "/mês (cobrado anualmente)" : "/mês"}
+                {cicloAnual ? "/mês (faturado anualmente)" : "/mês"}
               </span>
             </div>
 
@@ -218,8 +235,7 @@ function Planos() {
                   fontWeight: "bold",
                 }}
               >
-                💰 Economiza {calcularEconomia("essential")}% vs métodos
-                tradicionais
+                Menos que um pequeno-almoço ☕
               </span>
             </div>
 
@@ -256,7 +272,7 @@ function Planos() {
 
           {/* 🏆 PLANO PROFESSIONAL (MAIS POPULAR) */}
           <div className={`${styles.card} ${styles.popular}`}>
-            <div className={styles.fitaPopular}>MAIS POPULAR</div>
+            <div className={styles.fitaPopular}>RECOMENDADO</div>
 
             <h3 className={styles.planoTitulo}>{planos.professional.nome}</h3>
             <p className={styles.planoDescricao}>
@@ -268,7 +284,7 @@ function Planos() {
                 ? planos.professional.precoAnual
                 : planos.professional.precoMensal}
               <span className={styles.precoDetalhe}>
-                {cicloAnual ? "/mês (cobrado anualmente)" : "/mês"}
+                {cicloAnual ? "/mês (faturado anualmente)" : "/mês"}
               </span>
             </div>
 
@@ -290,8 +306,7 @@ function Planos() {
                   fontWeight: "bold",
                 }}
               >
-                💰 Economiza {calcularEconomia("professional")}% vs serviços
-                tradicionais
+                🔥 O preferido dos clientes
               </span>
             </div>
 
@@ -318,7 +333,7 @@ function Planos() {
               text={
                 loading && planoSelecionado === "professional"
                   ? "A processar..."
-                  : "Fazer Upgrade"
+                  : "Quero Acesso Ilimitado"
               }
               onClick={() => handleUpgrade("professional")}
               loading={loading && planoSelecionado === "professional"}

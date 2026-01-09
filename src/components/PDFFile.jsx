@@ -23,16 +23,34 @@ const styles = StyleSheet.create({
     lineHeight: 1.5,
     color: "#000",
     backgroundColor: "#fff",
+    position: "relative",
   },
 
-  // --- CABEÇALHO FIXO ---
+  // --- MARCA D'ÁGUA ---
+  watermarkContainer: {
+    position: "absolute",
+    top: 300,
+    left: 100,
+    right: 0,
+    bottom: 0,
+    opacity: 0.15,
+    transform: "rotate(-45deg)",
+    zIndex: -1,
+  },
+  watermarkText: {
+    fontSize: 60,
+    fontFamily: "Helvetica-Bold",
+    color: "#ff0000",
+    textAlign: "center",
+  },
+
+  // --- CABEÇALHO (Base) ---
   headerBar: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     height: 90,
-    backgroundColor: COR_DESTAQUE,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 40,
@@ -45,40 +63,37 @@ const styles = StyleSheet.create({
   },
 
   logoImage: { width: 100, height: 50, objectFit: "contain" },
+
+  // Estilos de Texto do Header
   logoText: {
-    color: "#ffffff",
     fontSize: 16,
     fontFamily: "Helvetica-Bold",
     textTransform: "uppercase",
   },
   headerTitle: {
-    color: "#ffffff",
     fontSize: 11,
     fontFamily: "Helvetica-Bold",
     textTransform: "uppercase",
     textAlign: "right",
   },
 
-  // --- RODAPÉ FIXO ---
+  // --- RODAPÉ (Base) ---
   footerBar: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     height: 50,
-    backgroundColor: COR_DESTAQUE,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 50,
   },
   footerText: {
-    color: "#ffffff",
     fontSize: 8,
     fontFamily: "Helvetica",
   },
   footerLink: {
-    color: "#ffffff",
     textDecoration: "underline",
     fontFamily: "Helvetica-Bold",
   },
@@ -103,16 +118,14 @@ const styles = StyleSheet.create({
   },
   clausulaBody: { textAlign: "justify", fontSize: 11, color: "#000" },
 
-  // --- ASSINATURAS (ATUALIZADO PARA 3 PESSOAS) ---
+  // --- ASSINATURAS ---
   signaturesRow: {
     marginTop: 50,
     flexDirection: "row",
-    justifyContent: "space-between", // Distribui o espaço
+    justifyContent: "space-between",
     breakInside: "avoid",
   },
-  // Estilo normal para 2 assinaturas (45% cada)
   signatureBox2: { width: "45%", alignItems: "center" },
-  // Estilo menor para 3 assinaturas (30% cada) para caber Fiador
   signatureBox3: { width: "30%", alignItems: "center" },
 
   signatureLine: {
@@ -130,30 +143,62 @@ const styles = StyleSheet.create({
 });
 
 const PDFFile = ({ contrato, plano, logo }) => {
-  // Segurança para evitar crash se 'assinantes' não existir
   const assinantes = contrato.assinantes || {};
-
   const nomeParte1 = assinantes.parte1 || "Primeira Parte";
   const nomeParte2 = assinantes.parte2 || "Segunda Parte";
-  const nomeExtra = assinantes.extra || null; // ex: Fiador
-
-  // Se tiver "extra", usamos o layout de 3 colunas, senão usamos o de 2
+  const nomeExtra = assinantes.extra || null;
   const boxStyle = nomeExtra ? styles.signatureBox3 : styles.signatureBox2;
+
+  // --- LÓGICA VISUAL INTELIGENTE ---
+  const isFree = plano === "free" || !plano;
+  const isPaid = !isFree;
+
+  // Se for pago: Fundo Branco e Texto Preto (Aspeto Jurídico Limpo)
+  // Se for Grátis: Fundo Laranja e Texto Branco (Branding DocFacil)
+  const headerStyle = [
+    styles.headerBar,
+    { backgroundColor: isPaid ? "#ffffff" : COR_DESTAQUE },
+    isPaid ? { borderBottom: "1px solid #000" } : {}, // Linha fina preta nos pagos
+  ];
+
+  const footerStyle = [
+    styles.footerBar,
+    { backgroundColor: isPaid ? "#ffffff" : COR_DESTAQUE },
+    isPaid ? { borderTop: "1px solid #000" } : {}, // Linha fina preta nos pagos
+  ];
+
+  const textHeaderColor = isPaid ? "#000000" : "#ffffff";
+  const textFooterColor = isPaid ? "#000000" : "#ffffff";
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* CABEÇALHO */}
-        <View style={styles.headerBar} fixed>
+        {/* MARCA D'ÁGUA (SÓ NO FREE) */}
+        {isFree && (
+          <View style={styles.watermarkContainer} fixed>
+            <Text style={styles.watermarkText}>VERSÃO GRÁTIS</Text>
+            <Text style={styles.watermarkText}>SEM VALIDADE</Text>
+            <Text style={styles.watermarkText}>DOCFACIL.PT</Text>
+          </View>
+        )}
+
+        {/* CABEÇALHO INTELIGENTE */}
+        <View style={headerStyle} fixed>
           <View style={styles.headerLeft}>
+            {/* Se for PRO e tiver logo, mostra o logo do cliente */}
             {plano === "pro" && logo ? (
               <Image src={logo} style={styles.logoImage} />
             ) : (
-              <Text style={styles.logoText}>DOCFACIL.PT</Text>
+              // Se não, mostra texto DocFacil (Branco no Free, Preto no Pago)
+              <Text style={[styles.logoText, { color: textHeaderColor }]}>
+                DOCFACIL.PT
+              </Text>
             )}
           </View>
           <View style={styles.headerRight}>
-            <Text style={styles.headerTitle}>{contrato.titulo}</Text>
+            <Text style={[styles.headerTitle, { color: textHeaderColor }]}>
+              {contrato.titulo}
+            </Text>
           </View>
         </View>
 
@@ -168,23 +213,20 @@ const PDFFile = ({ contrato, plano, logo }) => {
           </View>
         ))}
 
-        {/* ASSINATURAS (CORRIGIDO PARA SUPORTAR FIADOR) */}
+        {/* ASSINATURAS */}
         <View style={styles.signaturesRow}>
-          {/* Parte 1 (Ex: Senhorio) */}
           <View style={boxStyle}>
             <View style={styles.signatureLine} />
             <Text style={styles.signatureName}>{nomeParte1}</Text>
             <Text style={styles.signatureLabel}>(Assinatura)</Text>
           </View>
 
-          {/* Parte 2 (Ex: Inquilino) */}
           <View style={boxStyle}>
             <View style={styles.signatureLine} />
             <Text style={styles.signatureName}>{nomeParte2}</Text>
             <Text style={styles.signatureLabel}>(Assinatura)</Text>
           </View>
 
-          {/* Parte Extra (Ex: Fiador) - Só renderiza se existir */}
           {nomeExtra && (
             <View style={boxStyle}>
               <View style={styles.signatureLine} />
@@ -194,22 +236,25 @@ const PDFFile = ({ contrato, plano, logo }) => {
           )}
         </View>
 
-        {/* RODAPÉ PROFISSIONAL */}
-        <View style={styles.footerBar} fixed>
+        {/* RODAPÉ INTELIGENTE */}
+        <View style={footerStyle} fixed>
           <View>
-            <Text style={styles.footerText}>
+            <Text style={[styles.footerText, { color: textFooterColor }]}>
               Gerado via{" "}
-              <Link src="https://docfacil.pt" style={styles.footerLink}>
+              <Link
+                src="https://docfacil.pt"
+                style={[styles.footerLink, { color: textFooterColor }]}
+              >
                 DocFacil.pt
               </Link>
             </Text>
-            <Text style={styles.footerText}>
+            <Text style={[styles.footerText, { color: textFooterColor }]}>
               Em conformidade com a Legislação Portuguesa em vigor.
             </Text>
           </View>
 
           <Text
-            style={styles.footerText}
+            style={[styles.footerText, { color: textFooterColor }]}
             render={({ pageNumber, totalPages }) =>
               `Pág. ${pageNumber} / ${totalPages}`
             }

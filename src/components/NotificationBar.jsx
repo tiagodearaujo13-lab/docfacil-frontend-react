@@ -19,7 +19,7 @@ const NotificationBar = () => {
           </span>
         </p>
 
-        <Link to="/planos" style={styles.button}>
+        <Link to="/registo" style={styles.button}>
           VER PLANOS
         </Link>
       </div>

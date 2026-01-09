@@ -87,9 +87,9 @@ function Pricing() {
       ],
     },
     essential: {
-      precoMensal: "14,99€",
-      precoAnual: "11,99€",
-      descricao: "Para freelancers e pequenos negócios.",
+      precoMensal: "6,90€", // 🔥 PREÇO REDUZIDO
+      precoAnual: "4,90€", // 🔥 PREÇO REDUZIDO
+      descricao: "O essencial por um preço simbólico.",
       features: [
         "5 Documentos por mês",
         "Acesso a modelos premium",
@@ -99,12 +99,12 @@ function Pricing() {
       ],
     },
     professional: {
-      precoMensal: "24,99€",
-      precoAnual: "19,99€",
-      descricao: "Para profissionais sérios.",
+      precoMensal: "14,90€", // 🔥 PREÇO REDUZIDO
+      precoAnual: "9,90€", // 🔥 PREÇO REDUZIDO
+      descricao: "Liberdade total para o seu negócio.",
       features: [
         "Documentos Ilimitados",
-        "Acesso a TODOS os modelos premium",
+        "Acesso a TODOS os modelos",
         "Upload do seu Logótipo",
         "Suporte Prioritário 24/7",
         "Atualizações legais automáticas",
@@ -120,8 +120,7 @@ function Pricing() {
           <span className={styles.destaque}>Não em Burocracia.</span>
         </h2>
         <p className={styles.subtituloSecao}>
-          Economize até 85% vs serviços tradicionais. Documentos 100% válidos em
-          Portugal.
+          Preços de lançamento por tempo limitado. Cancele quando quiser.
         </p>
 
         {/* TOGGLE SIMPLIFICADO E FUNCIONAL */}
@@ -145,7 +144,7 @@ function Pricing() {
             className={anual ? styles.opcaoAtiva : styles.opcaoInativa}
             onClick={() => setAnual(true)}
           >
-            Anual <span className={styles.discountBadge}>-20%</span>
+            Anual <span className={styles.discountBadge}>-30% EXTRA</span>
           </span>
         </div>
       </div>
@@ -211,11 +210,11 @@ function Pricing() {
           </div>
           <div className={styles.comparacaoItem}>
             <strong>DocFacil Profissional</strong>
-            <span>€24,99/mês (documentos ilimitados)</span>
+            <span>€14,90/mês (documentos ilimitados)</span>
           </div>
           <div className={styles.comparacaoItem}>
             <strong>Sua Economia</strong>
-            <span className={styles.economia}>Até 85%</span>
+            <span className={styles.economia}>Mais de 90%</span>
           </div>
         </div>
       </div>
