@@ -1,16 +1,84 @@
-# React + Vite
+# DocFacil.pt - Plataforma SaaS de Automação Jurídica
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Status](https://img.shields.io/badge/Status-Production-success)
+![License](https://img.shields.io/badge/License-Proprietary-blue)
+![Version](https://img.shields.io/badge/Version-1.0.0-orange)
 
-Currently, two official plugins are available:
+> **Micro-SaaS Fullstack** desenvolvido para automatizar a criação de contratos e documentos jurídicos em conformidade com a legislação portuguesa.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Visão Geral
 
-## React Compiler
+O **DocFacil.pt** resolve a complexidade burocrática para Freelancers e PMEs, permitindo gerar contratos blindados (Arrendamento, Trabalho, CPCV, etc.) em segundos através de um formulário inteligente.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+A plataforma inclui um sistema completo de autenticação, gestão de subscrições (Stripe), geração de PDFs dinâmicos e armazenamento na nuvem.
 
-## Expanding the ESLint configuration
+** Live:** [https://docfacil.pt](https://docfacil.pt)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Tech Stack & Arquitetura
+
+O projeto segue uma arquitetura moderna, desacoplada e escalável, com foco em performance e segurança.
+
+### **Frontend (Client-Side)**
+* **Framework:** React.js (Vite)
+* **Styling:** CSS Modules (Scoped & Responsivo)
+* **Routing:** React Router v6 (Protected Routes & Layouts)
+* **PDF Engine:** `@react-pdf/renderer` (Client-side generation para privacidade)
+* **Animations:** Intersection Observer API (Custom Hook)
+
+### **Backend (Server-Side)**
+* **Runtime:** Node.js
+* **Framework:** Express.js (RESTful API)
+* **Database:** PostgreSQL (Hospedado em Neon.tech)
+* **ORM/Query:** `pg` (node-postgres) com queries parametrizadas (segurança contra SQL Injection)
+* **Email:** Nodemailer (SMTP Integrado com cPanel)
+
+### **Infraestrutura & Serviços**
+* **Auth:** JWT (JSON Web Tokens) + Google OAuth 2.0
+* **Payments:** Stripe API (Checkout, Webhooks & Customer Portal)
+* **Hosting:**
+    * Frontend: cPanel (Apache Rewrite Rules)
+    * Backend: Render (Auto-Deploy CI/CD)
+
+---
+
+## Funcionalidades Principais
+
+### 1. Motor de Documentos Inteligente
+* Geração de PDFs em tempo real baseada em templates jurídicos parametrizáveis.
+* Lógica condicional (ex: cláusulas de fiador ou exclusividade aparecem apenas se selecionadas).
+
+### 2. Sistema de Subscrição (SaaS)
+* Integração profunda com Stripe.
+* Gestão de Planos (Free vs Pro).
+* **Lógica de Negócio:** Utilizadores "Free" têm limite de 1 documentos/mês e marca d'água; "Pro" têm acesso ilimitado.
+
+### 3. Segurança & Autenticação
+* Login Híbrido: Email/Senha (com hash `bcrypt`) ou Google Account.
+* Proteção de Rotas (`Middleware` no Backend e `Higher-Order Components` no Frontend).
+* Gestão de Variáveis de Ambiente (`dotenv`) para chaves sensíveis.
+
+### 4. Dashboard & Analytics
+* Painel de controlo com estatísticas de uso em tempo real.
+* Gestão de perfil e documentos salvos na nuvem.
+
+---
+
+## 📂 Estrutura do Projeto
+
+```bash
+/
+├── backend/                 # API Node.js & Express
+│   ├── server.js            # Entry point & Rotas
+│   └── .env                 # Variáveis de Ambiente (Ignorado)
+│
+└── frontend/                # Aplicação React
+    ├── src/
+    │   ├── components/      # Componentes Reutilizáveis (UI)
+    │   ├── contexts/        # Context API (Toast, Auth)
+    │   ├── modelos/         # Lógica Jurídica dos Contratos (.js)
+    │   ├── pages/           # Views/Páginas da Aplicação
+    │   └── App.jsx          # Router Config
+    └── vite.config.js       # Configuração de Build
+    
