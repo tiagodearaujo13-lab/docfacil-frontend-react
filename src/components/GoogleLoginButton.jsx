@@ -26,6 +26,23 @@ const GoogleIcon = () => (
 function GoogleLoginButton() {
   const navigate = useNavigate();
 
+  // Função centralizada de Sucesso (para evitar duplicação de código)
+  const handleLoginSuccess = (data, method) => {
+    localStorage.setItem("token", data.token);
+    console.log("Login Google validado pelo servidor!");
+
+    // START: CÓDIGO GA4 - CONVERSÃO DE INSCRIÇÃO
+    if (window.gtag) {
+      window.gtag("event", "signup", {
+        method: method,
+        // Recomendação senior: Se tiver o user_id, adicione aqui para atribuição
+      });
+    }
+    // END: CÓDIGO GA4
+
+    navigate("/dashboard");
+  };
+
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       console.log("Google respondeu:", tokenResponse);
@@ -44,10 +61,8 @@ function GoogleLoginButton() {
         const data = await res.json();
 
         if (res.ok) {
-          // Sucesso Real! Guardamos o nosso JWT
-          localStorage.setItem("token", data.token);
-          console.log("Login Google validado pelo servidor!");
-          navigate("/dashboard");
+          // Sucesso Real! Usamos a função centralizada
+          handleLoginSuccess(data, "Google");
         } else {
           alert("Erro ao validar com o servidor: " + data.message);
         }

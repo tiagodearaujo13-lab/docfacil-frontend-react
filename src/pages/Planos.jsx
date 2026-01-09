@@ -1,106 +1,230 @@
 import { useState } from "react";
 import styles from "./Planos.module.css";
 import PricingCard from "../components/PricingCard.jsx";
-import StripeButton from "../components/StripeButton.jsx"; // <--- Importado e usado
+import StripeButton from "../components/StripeButton.jsx";
 
 function Planos() {
-  const [planoAtual, setPlanoAtual] = useState("Grátis");
   const [cicloAnual, setCicloAnual] = useState(false);
+  const [planoSelecionado, setPlanoSelecionado] = useState("professional"); // 🎯 Default para o mais vendido
   const [loading, setLoading] = useState(false);
 
-  const handleUpgrade = async () => {
+  // 🎯 NOVOS PREÇOS ESTRATÉGICOS
+  const planos = {
+    essential: {
+      nome: "Essential",
+      descricao: "Para freelancers e pequenos negócios.",
+      precoMensal: "14,99€",
+      precoAnual: "11,99€",
+      features: [
+        "5 Documentos por mês",
+        "Acesso a modelos premium",
+        "Sem marca d'água",
+        "Suporte por email",
+        "Atualizações legais incluídas",
+      ],
+      stripePriceId: {
+        mensal: "price_essential_mensal", // 🎯 Você vai criar no Stripe
+        anual: "price_essential_anual",
+      },
+    },
+    professional: {
+      nome: "Profissional",
+      descricao: "Para profissionais sérios.",
+      precoMensal: "24,99€",
+      precoAnual: "19,99€",
+      features: [
+        "Documentos Ilimitados",
+        "Acesso a TODOS os modelos premium",
+        "Upload do seu Logótipo",
+        "Suporte Prioritário 24/7",
+        "Atualizações legais automáticas",
+      ],
+      stripePriceId: {
+        mensal: "price_professional_mensal",
+        anual: "price_professional_anual",
+      },
+    },
+  };
+
+  const handleUpgrade = async (plano) => {
+    setPlanoSelecionado(plano);
     setLoading(true);
+
     try {
       const token = localStorage.getItem("token");
+      const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-      const response = await fetch(
-        "https://meu-backend-api-rohr.onrender.com/criar-checkout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ ciclo: cicloAnual ? "anual" : "mensal" }),
-        }
-      );
+      // 🚨 CORREÇÃO CRÍTICA: Mapear "professional" para "pro"
+      const planoCorrigido = plano === "professional" ? "pro" : "essential";
+
+      console.log("Enviando para backend:", {
+        plano: planoCorrigido,
+        ciclo: cicloAnual ? "anual" : "mensal",
+      });
+
+      const response = await fetch(`${baseUrl}/criar-checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          plano: planoCorrigido, // ✅ AGORA CORRETO: "pro" em vez de "professional"
+          ciclo: cicloAnual ? "anual" : "mensal",
+        }),
+      });
 
       const data = await response.json();
+      console.log("Resposta do backend:", data);
 
       if (data.url) {
+        // 📊 GA4 - RASTREAR INÍCIO DE UPGRADE
+        if (window.gtag) {
+          window.gtag("event", "upgrade_purchase_initiate", {
+            value: cicloAnual
+              ? plano === "essential"
+                ? 11.99
+                : 19.99
+              : plano === "essential"
+              ? 14.99
+              : 24.99,
+            currency: "EUR",
+            payment_plan: cicloAnual ? "annual" : "monthly",
+            plan_type: plano,
+          });
+        }
+
         window.location.href = data.url;
       } else {
-        alert("Erro ao iniciar pagamento. Tente novamente.");
+        alert(
+          "Erro ao iniciar pagamento: " + (data.error || "Tente novamente.")
+        );
       }
     } catch (error) {
-      console.error(error);
-      alert("Erro de conexão.");
+      console.error("Erro completo:", error);
+      alert("Erro de conexão: " + error.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  // 🎯 CALCULAR ECONOMIA VS SERVIÇOS TRADICIONAIS
+  const calcularEconomia = (plano) => {
+    const precoMensal = plano === "essential" ? 14.99 : 24.99;
+    // Assumindo que 1 contrato tradicional = €150
+    const economia = (((150 - precoMensal) / 150) * 100).toFixed(0);
+    return economia > 0 ? economia : 85; // Mínimo de 85% de economia
   };
 
   return (
     <div className={styles.pageBackground}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h2>💎 Subscrição e Faturação</h2>
-          <p>Escolha o plano ideal para o seu volume de trabalho.</p>
+          <h2>Escolha o Melhor Plano para o Seu Negócio</h2>
+          <p>
+            Economize até {calcularEconomia("professional")}% vs serviços
+            tradicionais
+          </p>
         </div>
 
-        {/* Toggle Mensal / Anual */}
+        {/* --- TOGGLE MELHORADO --- */}
         <div className={styles.toggleArea}>
-          <span
-            className={!cicloAnual ? styles.toggleAtivo : styles.toggleInativo}
+          <div
+            className={`${styles.btnToggle} ${
+              !cicloAnual ? styles.toggleAtivo : styles.toggleInativo
+            }`}
             onClick={() => setCicloAnual(false)}
           >
             Mensal
-          </span>
-          <span
-            className={cicloAnual ? styles.toggleAtivo : styles.toggleInativo}
+          </div>
+          <div
+            className={`${styles.btnToggle} ${
+              cicloAnual ? styles.toggleAtivo : styles.toggleInativo
+            }`}
             onClick={() => setCicloAnual(true)}
           >
-            Anual (-20%)
-          </span>
+            Anual{" "}
+            <span style={{ fontSize: "0.7rem", marginLeft: "5px" }}>
+              (-20%)
+            </span>
+          </div>
         </div>
 
         <div className={styles.gridPlanos}>
-          {/* PLANO GRÁTIS */}
+          {/* 🎯 PLANO ATUAL (INICIANTE) */}
           <PricingCard
-            plano="Grátis"
-            descricao="Para quem está a começar."
+            plano="Iniciante"
+            descricao="O seu plano atual."
             preco="0€"
             precoDetalhe="/mês"
             features={[
-              "3 Documentos por mês",
+              "1 Documento por mês",
               "Modelos Básicos",
               "Com Marca d'água",
+              "Suporte Comunitário",
             ]}
             botaoTexto="Plano Atual"
             isPopular={false}
           />
 
-          {/* PLANO PRO (Customizado) */}
-          <div className={`${styles.card} ${styles.popular}`}>
-            <div className={styles.fitaPopular}>MAIS POPULAR</div>
+          {/* 🆕 PLANO ESSENTIAL */}
+          <div className={styles.card}>
+            <div
+              style={{
+                position: "absolute",
+                top: "-12px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                backgroundColor: "#48bb78",
+                color: "white",
+                fontSize: "0.8rem",
+                fontWeight: "bold",
+                padding: "4px 12px",
+                borderRadius: "12px",
+              }}
+            >
+              MAIS ECONÓMICO
+            </div>
 
-            <h3 className={styles.planoTitulo}>Profissional</h3>
-            <p className={styles.planoDescricao}>Para profissionais sérios.</p>
+            <h3 className={styles.planoTitulo}>{planos.essential.nome}</h3>
+            <p className={styles.planoDescricao}>
+              {planos.essential.descricao}
+            </p>
 
             <div className={styles.planoPreco}>
-              {cicloAnual ? "7,90€" : "9,90€"}
+              {cicloAnual
+                ? planos.essential.precoAnual
+                : planos.essential.precoMensal}
               <span className={styles.precoDetalhe}>
                 {cicloAnual ? "/mês (cobrado anualmente)" : "/mês"}
               </span>
             </div>
 
+            {/* 🎯 BADGE DE ECONOMIA */}
+            <div
+              style={{
+                background: "rgba(72, 187, 120, 0.1)",
+                border: "1px solid #48bb78",
+                borderRadius: "8px",
+                padding: "8px 12px",
+                marginBottom: "20px",
+                textAlign: "center",
+              }}
+            >
+              <span
+                style={{
+                  color: "#48bb78",
+                  fontSize: "0.9rem",
+                  fontWeight: "bold",
+                }}
+              >
+                💰 Economiza {calcularEconomia("essential")}% vs métodos
+                tradicionais
+              </span>
+            </div>
+
             <ul className={styles.featuresList}>
-              {[
-                "Documentos Ilimitados",
-                "Acesso a Modelos Premium",
-                "Sem Marca d'água",
-                "Upload de Logótipo",
-              ].map((feat, i) => (
+              {planos.essential.features.map((feat, i) => (
                 <li key={i}>
                   <svg
                     className={styles.checkIcon}
@@ -119,9 +243,85 @@ function Planos() {
             </ul>
 
             <StripeButton
-              text={loading ? "A processar..." : "Fazer Upgrade"}
-              onClick={handleUpgrade}
-              loading={loading}
+              text={
+                loading && planoSelecionado === "essential"
+                  ? "A processar..."
+                  : "Escolher Essential"
+              }
+              onClick={() => handleUpgrade("essential")}
+              loading={loading && planoSelecionado === "essential"}
+              style={{ backgroundColor: "#48bb78" }}
+            />
+          </div>
+
+          {/* 🏆 PLANO PROFESSIONAL (MAIS POPULAR) */}
+          <div className={`${styles.card} ${styles.popular}`}>
+            <div className={styles.fitaPopular}>MAIS POPULAR</div>
+
+            <h3 className={styles.planoTitulo}>{planos.professional.nome}</h3>
+            <p className={styles.planoDescricao}>
+              {planos.professional.descricao}
+            </p>
+
+            <div className={styles.planoPreco}>
+              {cicloAnual
+                ? planos.professional.precoAnual
+                : planos.professional.precoMensal}
+              <span className={styles.precoDetalhe}>
+                {cicloAnual ? "/mês (cobrado anualmente)" : "/mês"}
+              </span>
+            </div>
+
+            {/* 🎯 BADGE DE ECONOMIA */}
+            <div
+              style={{
+                background: "rgba(255, 140, 0, 0.1)",
+                border: "1px solid #ff8c00",
+                borderRadius: "8px",
+                padding: "8px 12px",
+                marginBottom: "20px",
+                textAlign: "center",
+              }}
+            >
+              <span
+                style={{
+                  color: "#ff8c00",
+                  fontSize: "0.9rem",
+                  fontWeight: "bold",
+                }}
+              >
+                💰 Economiza {calcularEconomia("professional")}% vs serviços
+                tradicionais
+              </span>
+            </div>
+
+            <ul className={styles.featuresList}>
+              {planos.professional.features.map((feat, i) => (
+                <li key={i}>
+                  <svg
+                    className={styles.checkIcon}
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  {feat}
+                </li>
+              ))}
+            </ul>
+
+            <StripeButton
+              text={
+                loading && planoSelecionado === "professional"
+                  ? "A processar..."
+                  : "Fazer Upgrade"
+              }
+              onClick={() => handleUpgrade("professional")}
+              loading={loading && planoSelecionado === "professional"}
             />
           </div>
         </div>

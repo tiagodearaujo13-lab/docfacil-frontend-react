@@ -1,42 +1,68 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout.jsx";
-import styles from "../components/LoginForm.module.css"; // Reusa o estilo do Login
+import styles from "../components/LoginForm.module.css";
 
 function RecuperarSenha() {
   const [email, setEmail] = useState("");
-  const [enviado, setEnviado] = useState(false);
+  const [status, setStatus] = useState("idle"); // idle, loading, success, error
+  const [msg, setMsg] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aqui futuramente ligaremos ao Backend para enviar o email de reset
-    setEnviado(true);
+    setStatus("loading");
+    setMsg("");
+
+    try {
+      // URL Dinâmica para funcionar no Render e Localhost
+
+      const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+      const res = await fetch(`${baseUrl}/esqueceu-senha`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (res.ok) {
+        setStatus("success");
+      } else {
+        setStatus("error");
+        setMsg("Email não encontrado ou erro no servidor.");
+      }
+    } catch (err) {
+      setStatus("error");
+      setMsg("Erro de conexão.");
+    }
   };
 
   return (
     <AuthLayout>
       <div className={styles.formCard}>
-        {!enviado ? (
+        {status !== "success" ? (
           <>
             <h2>Recuperar Conta</h2>
-            <p>
-              Insira o seu email. Enviaremos instruções para redefinir a sua
-              password.
-            </p>
+            <p>Insira o seu email. Enviaremos um link seguro.</p>
+
+            {status === "error" && (
+              <div className={styles.mensagem + " " + styles.erro}>{msg}</div>
+            )}
 
             <form className={styles.form} onSubmit={handleSubmit}>
               <label htmlFor="email">Email</label>
               <input
                 type="email"
-                id="email"
-                placeholder="o.seu.email@exemplo.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
 
-              <button type="submit" className={styles.botaoLaranja}>
-                Enviar Email de Recuperação
+              <button
+                type="submit"
+                className={styles.botaoLaranja}
+                disabled={status === "loading"}
+              >
+                {status === "loading" ? "A enviar..." : "Enviar Link"}
               </button>
             </form>
           </>
@@ -44,11 +70,11 @@ function RecuperarSenha() {
           <div style={{ textAlign: "center", padding: "20px 0" }}>
             <span style={{ fontSize: "50px" }}>📩</span>
             <h3 style={{ color: "white", marginTop: "20px" }}>
-              Verifique o seu email
+              Email Enviado!
             </h3>
             <p style={{ color: "#a0aec0" }}>
-              Se existir uma conta com o email <strong>{email}</strong>,
-              enviámos um link de recuperação.
+              Verifique a sua caixa de entrada (e o spam). O link é válido por
+              20 minutos.
             </p>
           </div>
         )}

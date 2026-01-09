@@ -26,7 +26,7 @@ function FeedbackForm() {
         {!enviado ? (
           <div className={styles.formCard}>
             <div className={styles.headerForm}>
-              <h2>A sua opinião vale ouro. 🏆</h2>
+              <h2>A sua opinião vale ouro.</h2>
               <p>
                 Ajude-nos a melhorar o DocFacil.pt. O seu testemunho pode
                 aparecer na nossa página principal!

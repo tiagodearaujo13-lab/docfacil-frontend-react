@@ -1,96 +1,223 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./Pricing.module.css";
 import PricingCard from "./PricingCard.jsx";
-import ScrollReveal from "./ScrollReveal.jsx"; // <--- IMPORTANTE: O nosso motor de animação
+
+// Hook customizado para detectar quando elemento está na viewport
+function useInView(ref, threshold = 0.3) {
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.unobserve(element);
+        }
+      },
+      { threshold }
+    );
+
+    observer.observe(element);
+
+    return () => {
+      if (element) observer.unobserve(element);
+    };
+  }, [ref, threshold]);
+
+  return isInView;
+}
+
+// Componente wrapper para animações
+function AnimatedSection({ children, direction = "none" }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, 0.3);
+
+  const getAnimationStyle = () => {
+    if (!isInView) {
+      switch (direction) {
+        case "left":
+          return {
+            opacity: 0,
+            transform: "translateX(-100px)",
+          };
+        case "up":
+          return {
+            opacity: 0,
+            transform: "translateY(100px)",
+          };
+        case "right":
+          return {
+            opacity: 0,
+            transform: "translateX(100px)",
+          };
+        default:
+          return { opacity: 0 };
+      }
+    }
+    return {
+      opacity: 1,
+      transform: "translateX(0) translateY(0)",
+      transition: "all 0.6s ease-out",
+    };
+  };
+
+  return (
+    <div ref={ref} style={getAnimationStyle()}>
+      {children}
+    </div>
+  );
+}
 
 function Pricing() {
   const [anual, setAnual] = useState(true);
 
+  const planos = {
+    iniciante: {
+      precoMensal: "0€",
+      precoAnual: "0€",
+      descricao: "Para testar a plataforma.",
+      features: [
+        "1 Documento por mês",
+        "Acesso a modelos básicos",
+        "Exportação com marca d'água",
+        "Suporte comunitário",
+      ],
+    },
+    essential: {
+      precoMensal: "14,99€",
+      precoAnual: "11,99€",
+      descricao: "Para freelancers e pequenos negócios.",
+      features: [
+        "5 Documentos por mês",
+        "Acesso a modelos premium",
+        "Sem marca d'água",
+        "Suporte por email",
+        "Atualizações legais incluídas",
+      ],
+    },
+    professional: {
+      precoMensal: "24,99€",
+      precoAnual: "19,99€",
+      descricao: "Para profissionais sérios.",
+      features: [
+        "Documentos Ilimitados",
+        "Acesso a TODOS os modelos premium",
+        "Upload do seu Logótipo",
+        "Suporte Prioritário 24/7",
+        "Atualizações legais automáticas",
+      ],
+    },
+  };
+
   return (
     <div id="precos" className={styles.pricingSection}>
       <div className={styles.headerPricing}>
-        <ScrollReveal>
-          <h2 className={styles.tituloSecao}>
-            Investimento Transparente. <br />
-            <span className={styles.destaque}>Sem Surpresas.</span>
-          </h2>
-          <p className={styles.subtituloSecao}>
-            Comece gratuitamente e faça upgrade quando o seu negócio crescer.
-          </p>
-        </ScrollReveal>
+        <h2 className={styles.tituloSecao}>
+          Invista no Seu Negócio. <br />
+          <span className={styles.destaque}>Não em Burocracia.</span>
+        </h2>
+        <p className={styles.subtituloSecao}>
+          Economize até 85% vs serviços tradicionais. Documentos 100% válidos em
+          Portugal.
+        </p>
 
-        {/* --- TOGGLE MENSAL / ANUAL --- */}
-        <ScrollReveal delay="0.2s">
-          <div className={styles.toggleContainer}>
-            <span
-              className={!anual ? styles.opcaoAtiva : styles.opcaoInativa}
-              onClick={() => setAnual(false)}
-            >
-              Mensal
-            </span>
+        {/* TOGGLE SIMPLIFICADO E FUNCIONAL */}
+        <div className={styles.toggleContainer}>
+          <span
+            className={!anual ? styles.opcaoAtiva : styles.opcaoInativa}
+            onClick={() => setAnual(false)}
+          >
+            Mensal
+          </span>
 
+          <div className={styles.switchTrack} onClick={() => setAnual(!anual)}>
             <div
-              className={styles.switchTrack}
-              onClick={() => setAnual(!anual)}
-            >
-              <div
-                className={`${styles.switchKnob} ${
-                  anual ? styles.knobRight : styles.knobLeft
-                }`}
-              ></div>
-            </div>
-
-            <span
-              className={anual ? styles.opcaoAtiva : styles.opcaoInativa}
-              onClick={() => setAnual(true)}
-            >
-              Anual <span className={styles.discountBadge}>-20%</span>
-            </span>
+              className={`${styles.switchKnob} ${
+                anual ? styles.knobRight : styles.knobLeft
+              }`}
+            ></div>
           </div>
-        </ScrollReveal>
+
+          <span
+            className={anual ? styles.opcaoAtiva : styles.opcaoInativa}
+            onClick={() => setAnual(true)}
+          >
+            Anual <span className={styles.discountBadge}>-20%</span>
+          </span>
+        </div>
       </div>
 
       <div className={styles.gridCards}>
-        {/* --- CARD GRÁTIS (Vem da Esquerda) --- */}
-        <ScrollReveal direction="left">
+        {/* CARD INICIANTE - Vem da ESQUERDA */}
+        <AnimatedSection direction="left">
           <PricingCard
             plano="Iniciante"
-            descricao="Para testar a plataforma."
-            preco="0€"
+            descricao={planos.iniciante.descricao}
+            preco={planos.iniciante.precoMensal}
             precoDetalhe="/mês"
-            features={[
-              "3 Documentos por mês",
-              "Acesso a modelos básicos",
-              "Exportação com marca d'água",
-              "Suporte comunitário",
-            ]}
+            features={planos.iniciante.features}
             botaoTexto="Criar Conta Grátis"
             isPopular={false}
             linkPara="/registo"
           />
-        </ScrollReveal>
+        </AnimatedSection>
 
-        {/* --- CARD PRO (Vem da Direita) --- */}
-        <ScrollReveal direction="right">
-          {/* PLANO PRO */}
+        {/* CARD ESSENTIAL - Vem de BAIXO */}
+        <AnimatedSection direction="up">
+          <PricingCard
+            plano="Essential"
+            descricao={planos.essential.descricao}
+            preco={
+              anual ? planos.essential.precoAnual : planos.essential.precoMensal
+            }
+            precoDetalhe={anual ? "/mês (faturado anualmente)" : "/mês"}
+            features={planos.essential.features}
+            botaoTexto="Começar Agora"
+            isPopular={false}
+            badgeExtra="MAIS ECONÓMICO"
+            linkPara="/registo"
+          />
+        </AnimatedSection>
+
+        {/* CARD PROFESSIONAL - Vem da DIREITA */}
+        <AnimatedSection direction="right">
           <PricingCard
             plano="Profissional"
-            descricao="Para quem leva o negócio a sério."
-            // MUDANÇA AQUI: Preços psicológicos
-            preco={anual ? "7,90€" : "9,90€"}
+            descricao={planos.professional.descricao}
+            preco={
+              anual
+                ? planos.professional.precoAnual
+                : planos.professional.precoMensal
+            }
             precoDetalhe={anual ? "/mês (faturado anualmente)" : "/mês"}
-            features={[
-              "Documentos Ilimitados",
-              "Acesso a Modelos Premium (Atas, Contratos)",
-              "Sem marca d'água",
-              "Upload do seu Logótipo",
-              "Suporte Prioritário",
-            ]}
+            features={planos.professional.features}
             botaoTexto="Começar Agora"
             isPopular={true}
             linkPara="/registo"
           />
-        </ScrollReveal>
+        </AnimatedSection>
+      </div>
+
+      {/* SEÇÃO DE COMPARAÇÃO ATUALIZADA */}
+      <div className={styles.comparacaoAdvogado}>
+        <h3>💰 Compare e Economize</h3>
+        <div className={styles.comparacaoGrid}>
+          <div className={styles.comparacaoItem}>
+            <strong>Serviços Tradicionais</strong>
+            <span>€150-€300 por contrato</span>
+          </div>
+          <div className={styles.comparacaoItem}>
+            <strong>DocFacil Profissional</strong>
+            <span>€24,99/mês (documentos ilimitados)</span>
+          </div>
+          <div className={styles.comparacaoItem}>
+            <strong>Sua Economia</strong>
+            <span className={styles.economia}>Até 85%</span>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 
-  // --- CABEÇALHO FIXO (Laranja) ---
+  // --- CABEÇALHO FIXO ---
   headerBar: {
     position: "absolute",
     top: 0,
@@ -59,27 +59,27 @@ const styles = StyleSheet.create({
     textAlign: "right",
   },
 
-  // --- RODAPÉ FIXO (AGORA TAMBÉM LARANJA) ---
+  // --- RODAPÉ FIXO ---
   footerBar: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     height: 50,
-    backgroundColor: COR_DESTAQUE, // <--- MUDANÇA AQUI: Laranja igual ao topo
+    backgroundColor: COR_DESTAQUE,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 50,
   },
   footerText: {
-    color: "#ffffff", // <--- MUDANÇA AQUI: Texto Branco para contraste
+    color: "#ffffff",
     fontSize: 8,
     fontFamily: "Helvetica",
   },
   footerLink: {
-    color: "#ffffff", // Link branco
-    textDecoration: "underline", // Sublinhado para saber que é link
+    color: "#ffffff",
+    textDecoration: "underline",
     fontFamily: "Helvetica-Bold",
   },
 
@@ -103,14 +103,18 @@ const styles = StyleSheet.create({
   },
   clausulaBody: { textAlign: "justify", fontSize: 11, color: "#000" },
 
-  // --- ASSINATURAS ---
+  // --- ASSINATURAS (ATUALIZADO PARA 3 PESSOAS) ---
   signaturesRow: {
     marginTop: 50,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-between", // Distribui o espaço
     breakInside: "avoid",
   },
-  signatureBox: { width: "45%", alignItems: "center" },
+  // Estilo normal para 2 assinaturas (45% cada)
+  signatureBox2: { width: "45%", alignItems: "center" },
+  // Estilo menor para 3 assinaturas (30% cada) para caber Fiador
+  signatureBox3: { width: "30%", alignItems: "center" },
+
   signatureLine: {
     borderTopWidth: 1,
     borderTopColor: "#000",
@@ -126,12 +130,15 @@ const styles = StyleSheet.create({
 });
 
 const PDFFile = ({ contrato, plano, logo }) => {
-  const nomeParte1 = contrato.assinantes
-    ? contrato.assinantes.parte1
-    : "Primeira Parte";
-  const nomeParte2 = contrato.assinantes
-    ? contrato.assinantes.parte2
-    : "Segunda Parte";
+  // Segurança para evitar crash se 'assinantes' não existir
+  const assinantes = contrato.assinantes || {};
+
+  const nomeParte1 = assinantes.parte1 || "Primeira Parte";
+  const nomeParte2 = assinantes.parte2 || "Segunda Parte";
+  const nomeExtra = assinantes.extra || null; // ex: Fiador
+
+  // Se tiver "extra", usamos o layout de 3 colunas, senão usamos o de 2
+  const boxStyle = nomeExtra ? styles.signatureBox3 : styles.signatureBox2;
 
   return (
     <Document>
@@ -161,18 +168,30 @@ const PDFFile = ({ contrato, plano, logo }) => {
           </View>
         ))}
 
-        {/* ASSINATURAS */}
+        {/* ASSINATURAS (CORRIGIDO PARA SUPORTAR FIADOR) */}
         <View style={styles.signaturesRow}>
-          <View style={styles.signatureBox}>
+          {/* Parte 1 (Ex: Senhorio) */}
+          <View style={boxStyle}>
             <View style={styles.signatureLine} />
             <Text style={styles.signatureName}>{nomeParte1}</Text>
             <Text style={styles.signatureLabel}>(Assinatura)</Text>
           </View>
-          <View style={styles.signatureBox}>
+
+          {/* Parte 2 (Ex: Inquilino) */}
+          <View style={boxStyle}>
             <View style={styles.signatureLine} />
             <Text style={styles.signatureName}>{nomeParte2}</Text>
             <Text style={styles.signatureLabel}>(Assinatura)</Text>
           </View>
+
+          {/* Parte Extra (Ex: Fiador) - Só renderiza se existir */}
+          {nomeExtra && (
+            <View style={boxStyle}>
+              <View style={styles.signatureLine} />
+              <Text style={styles.signatureName}>{nomeExtra}</Text>
+              <Text style={styles.signatureLabel}>(Assinatura)</Text>
+            </View>
+          )}
         </View>
 
         {/* RODAPÉ PROFISSIONAL */}

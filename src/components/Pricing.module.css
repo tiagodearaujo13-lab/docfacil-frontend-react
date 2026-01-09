@@ -1,7 +1,8 @@
 .pricingSection {
-    background-color: #202836; /* Fundo intermédio */
+    background-color: #202836;
     color: white;
     padding: 100px 30px;
+    min-height: 100vh;
 }
 
 .headerPricing {
@@ -27,7 +28,7 @@
     margin: 0 auto 40px auto;
 }
 
-/* --- TOGGLE SWITCH --- */
+/* --- TOGGLE SWITCH CORRIGIDO --- */
 .toggleContainer {
     display: flex;
     align-items: center;
@@ -41,12 +42,24 @@
     font-weight: bold;
     color: white;
     transition: color 0.3s;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 6px;
+    background-color: #ff8c00;
 }
 
 .opcaoInativa {
     font-weight: 500;
     color: #718096;
     transition: color 0.3s;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 6px;
+}
+
+.opcaoInativa:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .switchTrack {
@@ -57,6 +70,7 @@
     position: relative;
     border: 1px solid #4a5568;
     transition: background-color 0.3s;
+    cursor: pointer;
 }
 
 .switchKnob {
@@ -70,8 +84,13 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.knobLeft { transform: translateX(3px); }
-.knobRight { transform: translateX(31px); }
+.knobLeft { 
+    transform: translateX(3px); 
+}
+
+.knobRight { 
+    transform: translateX(33px); 
+}
 
 .discountBadge {
     background-color: #ff8c00;
@@ -84,50 +103,106 @@
     vertical-align: middle;
 }
 
-/* --- CARDS --- */
+/* --- CARDS COM ANIMAÇÕES --- */
 .gridCards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 40px;
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
-    align-items: center; /* Alinha verticalmente */
+    align-items: start;
 }
 
 .card {
     background-color: #2d3748;
-    padding: 40px;
+    padding: 40px 30px 30px 30px;
     border-radius: 16px;
     border: 1px solid #4a5568;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s;
+    transition: all 0.3s ease;
     position: relative;
+    min-height: 500px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Animações específicas para cada card */
+.gridCards > div:nth-child(1) .card {
+    animation: slideInLeft 0.8s ease-out 0.2s forwards;
+}
+
+.gridCards > div:nth-child(2) .card {
+    animation: slideInUp 0.8s ease-out 0.4s forwards;
+}
+
+.gridCards > div:nth-child(3) .card {
+    animation: slideInRight 0.8s ease-out 0.6s forwards;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* O Card Popular é maior e tem borda */
 .popular {
-  transform: scale(1.05);
-  border: 2px solid #ff8c00; /* Borda laranja vibrante */
-  background: linear-gradient(145deg, #2d3748, #252f3f); /* Gradiente subtil no fundo */
-  z-index: 1;
-  
- 
-  box-shadow: 
-    0 10px 30px -10px rgba(255, 140, 0, 0.5), /* Sombra difusa laranja */
-    0 0 20px 5px rgba(255, 140, 0, 0.3),      /* Brilho interno */
-    0 0 40px 10px rgba(255, 140, 0, 0.1);     /* Brilho externo largo */
-    
-  transition: all 0.3s ease-in-out;
+    transform: scale(1.05);
+    border: 2px solid #ff8c00;
+    background: linear-gradient(145deg, #2d3748, #252f3f);
+    z-index: 1;
+    box-shadow: 
+        0 10px 30px -10px rgba(255, 140, 0, 0.5),
+        0 0 20px 5px rgba(255, 140, 0, 0.3),
+        0 0 40px 10px rgba(255, 140, 0, 0.1);
 }
 
-/* Efeito extra ao passar o rato */
 .popular:hover {
-  transform: scale(1.08) translateY(-5px);
-  box-shadow: 
-    0 20px 40px -10px rgba(255, 140, 0, 0.6),
-    0 0 30px 10px rgba(255, 140, 0, 0.4),
-    0 0 60px 20px rgba(255, 140, 0, 0.2);
+    transform: scale(1.08) translateY(-5px);
+    box-shadow: 
+        0 20px 40px -10px rgba(255, 140, 0, 0.6),
+        0 0 30px 10px rgba(255, 140, 0, 0.4),
+        0 0 60px 20px rgba(255, 140, 0, 0.2);
 }
 
 .fitaPopular {
@@ -144,6 +219,27 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    white-space: nowrap;
+    z-index: 3;
+}
+
+/* 🆕 BADGE EXTRA */
+.badgeExtra {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #48bb78;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    white-space: nowrap;
+    z-index: 2;
 }
 
 .planoTitulo {
@@ -160,7 +256,7 @@
 }
 
 .planoPreco {
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: 800;
     color: white;
     margin-bottom: 30px;
@@ -180,25 +276,25 @@
     list-style: none;
     padding: 0;
     margin: 0 0 40px 0;
-    flex-grow: 1; /* Empurra o botão para baixo */
+    flex-grow: 1;
 }
 
 .featuresList li {
     display: flex;
-    align-items: flex-start; /* Alinha ícone com a primeira linha de texto */
+    align-items: flex-start;
     gap: 10px;
     margin-bottom: 15px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: #cbd5e0;
     line-height: 1.4;
 }
 
 .checkIcon {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     color: #ff8c00;
-    flex-shrink: 0; /* Ícone não encolhe */
-    margin-top: 2px;
+    flex-shrink: 0;
+    margin-top: 3px;
 }
 
 /* BOTÕES */
@@ -210,6 +306,17 @@
     text-decoration: none;
     transition: all 0.2s;
     display: block;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.botaoNormal:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .botaoNormal {
@@ -218,7 +325,7 @@
     color: white;
 }
 
-.botaoNormal:hover {
+.botaoNormal:hover:not(:disabled) {
     background-color: rgba(255,255,255,0.05);
     border-color: white;
 }
@@ -230,20 +337,130 @@
     box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
 }
 
-.botaoPopular:hover {
+.botaoPopular:hover:not(:disabled) {
     background-color: #ed8936;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(255, 140, 0, 0.5);
 }
 
-/* RESPONSIVIDADE */
-@media (max-width: 900px) {
+/* 🎯 SEÇÃO DE COMPARAÇÃO ATUALIZADA */
+.comparacaoAdvogado {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border: 1px solid #ff8c00;
+    border-radius: 16px;
+    padding: 40px;
+    margin-top: 60px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(255, 140, 0, 0.1);
+    animation: fadeInUp 0.8s ease-out 0.8s forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.comparacaoAdvogado h3 {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    color: #ff8c00;
+}
+
+.comparacaoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.comparacaoItem {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #4a5568;
+}
+
+.comparacaoItem strong {
+    display: block;
+    color: white;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.comparacaoItem span {
+    color: #a0aec0;
+    font-size: 0.9rem;
+}
+
+.economia {
+    color: #48bb78 !important;
+    font-weight: bold;
+    font-size: 1.1rem !important;
+}
+
+/* 🔧 RESPONSIVIDADE */
+@media (max-width: 1100px) {
+    .gridCards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+        max-width: 800px;
+    }
+    
+    .popular {
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    .pricingSection {
+        padding: 60px 20px;
+    }
+    
+    .tituloSecao {
+        font-size: 2rem;
+    }
+    
     .gridCards {
         grid-template-columns: 1fr;
         max-width: 400px;
     }
     
-    .popular {
-        transform: scale(1); /* Remove o zoom no mobile */
+    .card {
+        padding: 30px 20px 20px 20px;
+        min-height: auto;
+    }
+    
+    .planoPreco {
+        font-size: 2.5rem;
+    }
+    
+    .comparacaoGrid {
+        grid-template-columns: 1fr;
+    }
+    
+    .comparacaoAdvogado {
+        padding: 30px 20px;
+        margin-top: 40px;
+    }
+    
+    .toggleContainer {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .switchTrack {
+        margin: 10px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .tituloSecao {
+        font-size: 1.75rem;
+    }
+    
+    .card {
+        padding: 25px 15px 15px 15px;
+    }
+    
+    .planoPreco {
+        font-size: 2rem;
     }
 }

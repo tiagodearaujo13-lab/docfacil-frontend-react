@@ -1,84 +1,86 @@
 export const gerarTextoOposicao = (dados) => {
   const dataHoje = new Date().toLocaleDateString("pt-PT");
 
-  // --- Lógica para determinar quem envia ---
-  // Se o utilizador preencheu "Senhorio" no campo 'prestador', assumimos que é o Senhorio a enviar.
-  // Caso contrário, é o Inquilino. Vamos usar um campo 'tipoRemetente' se existir, ou deduzir.
-  const isSenhorio = dados.role === "senhorio" || dados.prestador !== ""; 
-  
-  // Remetente (Quem envia a carta)
-  const remetenteNome = isSenhorio ? (dados.senhorio || dados.prestador) : (dados.inquilino || dados.cliente);
-  const remetenteMorada = isSenhorio ? dados.senhorioMorada : dados.inquilinoMorada;
+  // --- LÓGICA DE IDENTIFICAÇÃO (CRÍTICA) ---
+  // Tenta determinar quem está a enviar a carta com base num campo explícito 'tipoRemetente'
+  // Se não existir, tenta deduzir pelos campos preenchidos.
+  // IMPORTANTE: No seu frontend, adicione um Select: "Sou o Senhorio" ou "Sou o Inquilino".
+  const tipoRemetente = dados.tipoRemetente ? dados.tipoRemetente.toLowerCase() : "inquilino";
+  const isSenhorio = tipoRemetente === "senhorio";
 
-  // Destinatário (Quem recebe)
-  const destinatarioNome = isSenhorio ? (dados.inquilino || dados.cliente) : (dados.senhorio || dados.prestador);
+  // --- DADOS DO REMETENTE (Quem assina) ---
+  const remetenteNome = isSenhorio ? dados.senhorio : dados.inquilino;
+  const remetenteMorada = isSenhorio ? dados.senhorioMorada : dados.inquilinoMorada;
+  const remetenteLabel = isSenhorio ? "O Senhorio" : "O Arrendatário";
+
+  // --- DADOS DO DESTINATÁRIO (Quem recebe) ---
+  const destinatarioNome = isSenhorio ? dados.inquilino : dados.senhorio;
   const destinatarioMorada = isSenhorio ? dados.inquilinoMorada : dados.senhorioMorada;
 
-  const moradaImovel = dados.moradaImovel || "___________________";
-  const dataFimContrato = dados.prazo || "DD/MM/AAAA"; // Data em que o contrato termina
+  // --- DADOS DO CONTRATO ---
+  const moradaImovel = dados.moradaImovel || "___________________ (Morada do Imóvel)";
+  const dataFimContrato = dados.dataFim || "DD/MM/AAAA"; // Data em que o contrato termina
 
-  // --- LEGISLAÇÃO APLICÁVEL (O Segredo do documento oficial) ---
-  // Artigo 1097.º do Código Civil (Oposição pelo Senhorio)
-  // Artigo 1098.º do Código Civil (Oposição pelo Arrendatário)
-  const artigoLei = isSenhorio 
-    ? "artigo 1097.º do Código Civil" 
-    : "artigo 1098.º do Código Civil";
+  // --- LÓGICA JURÍDICA DINÂMICA ---
+  let fundamentoLegal, textoCorpo, textoAviso;
 
-  const prazoLei = isSenhorio
-    ? "respeitando a antecedência legal exigida para a comunicação pelo Senhorio"
-    : "respeitando a antecedência legal exigida para a comunicação pelo Arrendatário";
+  if (isSenhorio) {
+    // Senhorio opõe-se à renovação (Art. 1097 CC)
+    // Prazos exigentes: 240 dias (contratos >6 anos), 120 dias (1-6 anos), etc.
+    fundamentoLegal = "artigo 1097.º do Código Civil";
+    textoCorpo = `Comunico a V. Exa. a minha intenção de opor-me à renovação automática do contrato de arrendamento que vigorará até ${dataFimContrato}. Pretendo, assim, que o contrato cesse os seus efeitos nessa data.`;
+    textoAviso = "Nota: O Senhorio deve respeitar prazos de pré-aviso longos (ex: 120 ou 240 dias). Verifique a data de envio.";
+  } else {
+    // Inquilino opõe-se à renovação ou denuncia (Art. 1098 CC)
+    fundamentoLegal = "artigo 1098.º do Código Civil";
+    textoCorpo = `Comunico a V. Exas. que não pretendo a renovação do contrato de arrendamento atualmente em vigor, devendo o mesmo cessar os seus efeitos no dia ${dataFimContrato}.`;
+    textoAviso = "Nota: O Inquilino deve respeitar um pré-aviso legal (geralmente 120 dias antes do fim do prazo).";
+  }
 
   return {
-    titulo: "COMUNICAÇÃO DE OPOSIÇÃO À RENOVAÇÃO DO CONTRATO DE ARRENDAMENTO",
+    titulo: "CARTA DE OPOSIÇÃO À RENOVAÇÃO DO ARRENDAMENTO",
     clausulas: [
       {
-        titulo: "ENVIO",
-        texto: `REGISTADA COM AVISO DE RECEÇÃO`
+        titulo: "FORMA DE ENVIO",
+        texto: `VIA: CARTA REGISTADA COM AVISO DE RECEÇÃO`
       },
       {
-        titulo: "REMETENTE:",
-        texto: `${remetenteNome}\n${remetenteMorada || "Morada do Remetente"}`
+        titulo: "REMETENTE",
+        texto: `${remetenteNome}\n${remetenteMorada || "(Endereço do Remetente)"}`
       },
       {
-        titulo: "DESTINATÁRIO:",
-        texto: `${destinatarioNome}\n${destinatarioMorada || "Morada do Destinatário"}`
+        titulo: "DESTINATÁRIO",
+        texto: `${destinatarioNome}\n${destinatarioMorada || "(Endereço do Destinatário)"}`
       },
       {
-        titulo: "Data e Local:",
-        texto: `${dados.comarca || "Lisboa"}, ${dataHoje}`
+        titulo: "LOCAL E DATA",
+        texto: `${dados.comarca || "Portugal"}, ${dataHoje}`
       },
       {
-        titulo: "ASSUNTO:",
-        texto: `Oposição à renovação do contrato de arrendamento relativo ao imóvel sito em: ${moradaImovel}.`
+        titulo: "ASSUNTO",
+        texto: `Oposição à renovação do contrato de arrendamento.\nImóvel: ${moradaImovel}`
       },
       {
-        titulo: "Exmo(s). Senhor(es),",
-        texto: `Na qualidade de outorgante no contrato de arrendamento habitacional celebrado referente à fração autónoma/imóvel acima identificado, venho por este meio comunicar a V. Exas. a minha vontade de **NÃO RENOVAR** o referido contrato.`
+        titulo: "TEXTO DA COMUNICAÇÃO",
+        texto: `Exmos. Senhores,\n\n${textoCorpo}\n\nA presente comunicação é efetuada ao abrigo do disposto no ${fundamentoLegal}, respeitando a antecedência legalmente exigida para o efeito.`
       },
       {
-        titulo: "1. Fundamentação Legal",
-        texto: `A presente comunicação é efetuada ao abrigo do disposto no ${artigoLei}, sendo expedida nesta data, ${prazoLei}, para que produza os seus efeitos no termo do prazo contratual em curso.`
+        titulo: "ENTREGA DO LOCADO E VISTORIA",
+        texto: `Na data da cessação (${dataFimContrato}), o imóvel será entregue livre de pessoas e bens e em bom estado de conservação (ressalvado o desgaste decorrente da sua prudente utilização).\n\nPara o efeito, solicito o agendamento de uma vistoria conjunta ao imóvel e a consequente entrega das chaves, devendo V. Exas. confirmar a disponibilidade de horário com a maior brevidade possível.`
       },
       {
-        titulo: "2. Cessação e Entrega",
-        texto: `Assim, o contrato de arrendamento cessará impreterivelmente no dia ${dataFimContrato}. Nesta data, o imóvel deverá estar livre de pessoas e bens e em bom estado de conservação, ressalvadas as deteriorações inerentes a uma prudente utilização.`
+        titulo: "CAUÇÃO (Se aplicável)",
+        texto: `Mais se recorda que, verificada a inexistência de danos no imóvel, deverá proceder-se à devolução do montante da caução prestada no início do contrato.`
       },
       {
-        titulo: "3. Vistoria e Chaves",
-        texto: `Solicito o agendamento de uma data e hora, próxima do termo do contrato, para efetuarmos a vistoria conjunta ao local e proceder à entrega formal das chaves.`
+        titulo: "FECHO",
+        texto: `Sem outro assunto de momento, apresento os meus melhores cumprimentos,`
       },
       {
-        titulo: "Fecho",
-        texto: `Sem outro assunto de momento, subscrevo-me com os melhores cumprimentos,`
-      },
-      {
-        titulo: "Assinatura",
-        texto: `\n__________________________________\n(Assinatura do Remetente)`
+        titulo: "ASSINATURA",
+        texto: `\n______________________________________________\n${remetenteNome}\n(${remetenteLabel})`
       }
     ],
-    assinantes: {
-      parte1: "", // Cartas não têm "Partes" assinadas em baixo da mesma forma que contratos
-      parte2: ""
-    }
+    
   };
 };

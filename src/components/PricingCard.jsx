@@ -10,10 +10,34 @@ function PricingCard({
   botaoTexto,
   isPopular,
   linkPara,
+  badgeExtra,
+  onClick, // ✅ AGORA FUNCIONA: Para handling personalizado
 }) {
+  // 🎯 Determinar se é um botão de ação ou link
+  const ConteudoBotao = onClick ? (
+    <button
+      className={isPopular ? styles.botaoPopular : styles.botaoNormal}
+      onClick={onClick}
+      disabled={botaoTexto === "Plano Atual"}
+    >
+      {botaoTexto}
+    </button>
+  ) : (
+    <Link
+      to={linkPara || "#"}
+      className={isPopular ? styles.botaoPopular : styles.botaoNormal}
+    >
+      {botaoTexto}
+    </Link>
+  );
+
   return (
     <div className={`${styles.card} ${isPopular ? styles.popular : ""}`}>
+      {/* 🎯 BADGE PRINCIPAL - MAIS POPULAR */}
       {isPopular && <div className={styles.fitaPopular}>MAIS POPULAR</div>}
+
+      {/* 🆕 BADGE EXTRA (ex: MAIS ECONÓMICO) */}
+      {badgeExtra && <div className={styles.badgeExtra}>{badgeExtra}</div>}
 
       <h3 className={styles.planoTitulo}>{plano}</h3>
       <p className={styles.planoDescricao}>{descricao}</p>
@@ -43,12 +67,7 @@ function PricingCard({
         ))}
       </ul>
 
-      <Link
-        to={linkPara}
-        className={isPopular ? styles.botaoPopular : styles.botaoNormal}
-      >
-        {botaoTexto}
-      </Link>
+      {ConteudoBotao}
 
       {isPopular && (
         <p

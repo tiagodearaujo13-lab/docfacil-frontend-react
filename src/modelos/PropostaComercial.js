@@ -1,74 +1,82 @@
 export const gerarTextoProposta = (dados) => {
   const dataHoje = new Date().toLocaleDateString("pt-PT");
 
+  // --- DADOS ---
+  const fornecedor = dados.prestador || "___________________ (Prestador)";
+  const fornecedorNIF = dados.prestadorNIF || "_________";
   const cliente = dados.cliente || "___________________ (Cliente)";
-  const fornecedor = dados.prestador || "___________________ (Sua Empresa)"; 
-  const validade = dados.validadeProposta || "15 dias";
-  const escopo = dados.descricaoServico || "Descrição detalhada do projeto, etapas e entregáveis.";
+  const validade = dados.validadeProposta || "15 dias"; 
+  
+  // Valores
   const valor = dados.valor || "0,00";
+  const iva = dados.iva || "23"; // Taxa de IVA padrão
+  const condicoesPagamento = dados.condicoesPagamento || "50% na Adjudicação e 50% na Entrega Final.";
   const prazoExecucao = dados.prazo || "30 dias úteis";
-  const condicoesPagamento = dados.condicoesPagamento || "50% na adjudicação e 50% na entrega final.";
+  const escopo = dados.descricaoServico || "Descrição detalhada do projeto, etapas e entregáveis.";
 
+  // --- INÍCIO DAS CLÁUSULAS FIXAS ---
   let clausulas = [
     {
-      titulo: "1. ENQUADRAMENTO",
-      texto: `A empresa/profissional ${fornecedor} apresenta a seguinte proposta comercial para ${cliente}, com o objetivo de fornecer serviços especializados de alta qualidade, garantindo profissionalismo e cumprimento rigoroso de prazos.`
+      titulo: "1. ENQUADRAMENTO E PARTES",
+      texto: `A presente proposta regula a prestação de serviços entre:\nPRESTADOR: ${fornecedor}, NIF ${fornecedorNIF}.\nCLIENTE: ${cliente}.\n\nEsta proposta, uma vez adjudicada (aceite), converte-se automaticamente em Contrato de Prestação de Serviços, regendo-se pelas cláusulas seguintes.`
     },
     {
-      titulo: "2. ESCOPO DO PROJETO (Deliverables)",
-      texto: `O serviço a prestar inclui estritamente os seguintes itens:\n\n${escopo}\n\nQualquer serviço ou tarefa não explicitamente listada acima será considerada "fora do escopo" e sujeita a orçamentação adicional.`
+      titulo: "2. ESCOPO DO PROJETO (DELIVERABLES)",
+      texto: `O serviço inclui estritamente:\n\n${escopo}\n\nEXCLUSÕES: Quaisquer tarefas, funcionalidades, reuniões extra ou revisões não listadas acima consideram-se trabalhos extra ("Out of Scope"), sujeitos a novo orçamento e aprovação.`
     },
     {
       titulo: "3. INVESTIMENTO E PAGAMENTO",
-      texto: `O investimento total para a execução deste projeto é de ${valor}€ (Euros), acrescido de IVA à taxa legal em vigor, se aplicável.\n\nCondições de Pagamento: ${condicoesPagamento}.\nO trabalho terá início apenas após a confirmação do pagamento da primeira tranche (adjudicação).`
+      texto: `Valor do Investimento: ${valor}€ (Euros), acrescido de IVA à taxa de ${iva}% (se aplicável).\nCondições: ${condicoesPagamento}.\n\nO atraso no pagamento de qualquer tranche confere ao Prestador o direito de cobrar juros de mora à taxa legal comercial em vigor, acrescidos de indemnização pelos custos administrativos de cobrança (40€ por fatura).`
     },
     {
-      titulo: "4. PRAZOS E DEPENDÊNCIAS",
-      texto: `O prazo estimado para a conclusão é de ${prazoExecucao}. Este prazo inicia-se apenas quando o Cliente fornecer todos os materiais, acessos e informações necessárias.\nAtrasos na entrega de feedback ou materiais por parte do Cliente suspendem a contagem do prazo de execução.`
+      titulo: "4. PRAZOS E COLABORAÇÃO",
+      texto: `Prazo estimado: ${prazoExecucao}, contado a partir da receção de todos os elementos necessários (textos, imagens, acessos) a fornecer pelo Cliente. A inércia do Cliente na entrega de elementos suspende a contagem do prazo de execução.`
     },
     {
       titulo: "5. ALTERAÇÕES E REVISÕES",
-      texto: `Estão incluídas até 2 (duas) rondas de revisões/alterações ao trabalho apresentado. Revisões adicionais ou alterações estruturais após a aprovação inicial serão cobradas à taxa horária em vigor.`
+      texto: `O orçamento inclui até 2 (duas) rondas de revisões sobre o trabalho apresentado. Alterações estruturais (mudança de briefing) ou pedidos de revisão que excedam este limite serão faturados à taxa horária vigente do Prestador.`
     },
     {
-      titulo: "6. PROPRIEDADE INTELECTUAL",
-      texto: `A propriedade intelectual e os direitos de uso sobre o trabalho final só serão transferidos para o Cliente após o pagamento integral do valor acordado. Até lá, o Fornecedor reserva a propriedade de todos os materiais desenvolvidos.`
+      titulo: "6. RESERVA DE PROPRIEDADE INTELECTUAL",
+      texto: `A titularidade dos Direitos Patrimoniais sobre o trabalho final transfere-se para o Cliente apenas após o integral e efetivo pagamento do preço. O Prestador mantém os Direitos Morais (autoria) e o direito de utilizar o trabalho em portfólio para autopromoção.`
     },
     {
-      titulo: "7. VALIDADE DA PROPOSTA",
-      texto: `As condições financeiras e comerciais apresentadas nesta proposta são válidas por ${validade} a contar da data de emissão (${dataHoje}). Após este período, o Fornecedor reserva-se o direito de atualizar os valores.`
+      titulo: "7. VALIDADE E ADJUDICAÇÃO",
+      texto: `Esta proposta é válida por ${validade} a contar de ${dataHoje}. A adjudicação pode ser formalizada por assinatura deste documento ou mediante resposta por email com declaração inequívoca de aceitação (ex: "Aceito a proposta"), valendo tal como celebração do contrato para todos os efeitos legais.`
     }
   ];
 
-  // --- CLÁUSULAS OPCIONAIS DO EDITOR ---
+  // --- LÓGICA DINÂMICA (NUMERAÇÃO CORRETA) ---
   
+  // Passo 1: Verifica se tem confidencialidade
   if (dados.temConfidencialidade) {
+    const num = clausulas.length + 1; // Calcula o número (será 8)
     clausulas.push({
-      titulo: "8. CONFIDENCIALIDADE",
-      texto: "O Fornecedor compromete-se a manter estrito sigilo sobre quaisquer dados ou estratégias do Cliente a que tenha acesso durante a execução deste projeto."
+      titulo: `${num}. CONFIDENCIALIDADE`,
+      texto: "Ambas as partes obrigam-se a manter estrito sigilo sobre quaisquer dados, estratégias, segredos de negócio ou informações técnicas a que tenham acesso durante a execução deste projeto."
     });
   }
 
-  // --- CAMPO LIVRE (CLÁUSULAS EXTRAS) ---
-  // Ótimo para: "O cliente paga o alojamento do site" ou "Custos de impressão não incluídos"
+  // Passo 2: Verifica se tem cláusulas extras
   if (dados.clausulasExtras && dados.clausulasExtras.trim() !== "") {
-    const num = clausulas.length + 1;
+    const num = clausulas.length + 1; // Calcula o número (será 8 ou 9, dependendo do anterior)
     clausulas.push({
       titulo: `${num}. DISPOSIÇÕES ESPECÍFICAS`,
       texto: dados.clausulasExtras
     });
   }
 
+  // Passo 3: Adiciona a Aceitação (sem número, pois é o fecho)
   clausulas.push({
-    titulo: "ACEITAÇÃO (ADJUDICAÇÃO)",
-    texto: `A assinatura deste documento, ou o envio de um e-mail com a expressão "De Acordo" em resposta a esta proposta, formaliza a adjudicação do serviço e a aceitação de todos os termos acima descritos.\n\nEmitido em: ${dataHoje}`
+    titulo: "ACEITAÇÃO EXPRESSA",
+    texto: `Ao adjudicar esta proposta, o Cliente declara ter lido e aceite todos os termos e condições acima descritos.\n\nEmitido em: ${dataHoje}`
   });
 
   return {
-    titulo: "PROPOSTA COMERCIAL DE SERVIÇOS",
+    titulo: "PROPOSTA COMERCIAL E CONTRATO",
     clausulas: clausulas,
     assinantes: {
-      parte1: "O Fornecedor",
+      parte1: "O Prestador",
       parte2: "O Cliente (Li e Aceito)"
     }
   };

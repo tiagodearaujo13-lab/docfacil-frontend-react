@@ -1,58 +1,61 @@
 export const gerarTextoProcuracao = (dados) => {
   const dataHoje = new Date().toLocaleDateString("pt-PT");
 
-  // Mandante (Quem dá os poderes - ex: o seu cliente)
-  // Reutilizamos os campos de 'prestador' para o Mandante
-  const mandante = dados.prestador || "Nome Completo do Mandante";
+  // --- MANDANTE (Quem passa a procuração) ---
+  const mandante = dados.prestador || "___________________ (Nome Completo)";
   const mandanteNIF = dados.prestadorNIF || "_________";
-  const mandanteCC = dados.prestadorCC || "_________"; // Vamos precisar mapear este campo
-  const mandanteMorada = dados.prestadorMorada || "Morada Completa";
+  const mandanteCC = dados.prestadorCC || "_________";
+  // Importante: Cartórios exigem validade do CC e Estado Civil
+  const mandanteValidade = dados.validadeCC || "Válido até __/__/____"; 
+  const mandanteEstCivil = dados.estadoCivil || "Casado(a)/Solteiro(a)"; 
+  const mandanteMorada = dados.prestadorMorada || "___________________";
 
-  // Mandatário (Quem recebe os poderes - ex: advogado, contabilista, familiar)
-  // Reutilizamos os campos de 'cliente' para o Mandatário
-  const mandatario = dados.cliente || "Nome Completo do Procurador";
+  // --- MANDATÁRIO (Procurador/Advogado) ---
+  const mandatario = dados.cliente || "___________________ (Nome Completo)";
   const mandatarioNIF = dados.clienteNIF || "_________";
-  const mandatarioCC = dados.clienteCC || "_________"; // Vamos precisar mapear este campo
-  const mandatarioMorada = dados.clienteMorada || "Morada Completa";
+  const mandatarioCC = dados.clienteCC || "_________";
+  const mandatarioMorada = dados.clienteMorada || "___________________";
 
-  // Poderes Específicos
-  // O utilizador escreve "Vender o imóvel X" ou "Movimentar conta Y" no campo descrição
-  const poderesDescritos = dados.descricaoServico || "Poderes gerais de administração civil.";
-  
-  // Opções Extras
-  const permiteSubstabelecer = dados.temConfidencialidade ? "COM" : "SEM"; // Usamos a checkbox 'confidencialidade' como 'substabelecimento' por enquanto
+  // --- PODERES ---
+  // Se vazio, assume poderes forenses gerais.
+  const poderesDescritos = dados.descricaoServico || "Os necessários para o exercício do mandato forense geral, incluindo os de confessar, desistir ou transigir em qualquer pleito.";
+
+  // --- LÓGICA DE SUBSTABELECIMENTO (CORRIGIDA) ---
+  // Usa uma variável específica 'podeSubstabelecer' em vez de reutilizar 'temConfidencialidade'
+  const substabelecimento = dados.podeSubstabelecer 
+    ? "COM a faculdade de substabelecer (delegar poderes)" 
+    : "SEM a faculdade de substabelecer";
 
   return {
-    titulo: "PROCURAÇÃO",
+    titulo: "PROCURAÇÃO FORENSE",
     clausulas: [
       {
-        titulo: "1. MANDANTE (Quem confere os poderes)",
-        texto: `${mandante}, portador do Cartão de Cidadão n.º ${mandanteCC} e contribuinte fiscal n.º ${mandanteNIF}, residente em: ${mandanteMorada}.`
+        titulo: "IDENTIFICAÇÃO DO MANDANTE",
+        texto: `${mandante}, estado civil ${mandanteEstCivil}, portador do Cartão de Cidadão n.º ${mandanteCC}, ${mandanteValidade}, e NIF ${mandanteNIF}, residente em: ${mandanteMorada}.`
       },
       {
-        titulo: "2. MANDATÁRIO (Quem recebe os poderes)",
-        texto: `${mandatario}, portador do Cartão de Cidadão n.º ${mandatarioCC} e contribuinte fiscal n.º ${mandatarioNIF}, residente em: ${mandatarioMorada}.`
+        titulo: "IDENTIFICAÇÃO DO MANDATÁRIO",
+        texto: `${mandatario}, portador do Cartão de Cidadão n.º ${mandatarioCC} e NIF ${mandatarioNIF}, com domicílio profissional/residência em: ${mandatarioMorada}.`
       },
       {
-        titulo: "3. PODERES CONFERIDOS",
-        texto: `Pelo presente instrumento e nos termos do artigo 262.º do Código Civil, o Mandante constitui seu bastante procurador o Mandatário, a quem confere os poderes necessários para:\n\n${poderesDescritos}\n\nMais confere os poderes para praticar todos os atos preparatórios, acessórios ou complementares que se mostrem necessários ao fiel cumprimento deste mandato, incluindo assinar requerimentos, contratos ou escrituras públicas.`
+        titulo: "PODERES CONFERIDOS",
+        texto: `Pelo presente instrumento, o Mandante constitui seu bastante procurador o Mandatário, a quem confere:\n\n${poderesDescritos}\n\nMais confere poderes para praticar todos os atos preparatórios, acessórios ou complementares que se mostrem necessários ao fiel cumprimento deste mandato, prometendo haver por bom, firme e valioso tudo o que pelo dito procurador for obrado.`
       },
       {
-        titulo: "4. SUBSTABELECIMENTO",
-        texto: `O presente mandato é conferido ${permiteSubstabelecer} a faculdade de substabelecimento (ou seja, o Mandatário poderá/não poderá delegar estes poderes noutra pessoa).`
+        titulo: "SUBSTABELECIMENTO",
+        texto: `O presente mandato é conferido ${substabelecimento} a terceiros.`
       },
       {
-        titulo: "5. VALIDADE",
-        texto: `Esta procuração é válida por tempo indeterminado (ou até revogação expressa), servindo de título executivo bastante para os fins a que se destina.`
+        titulo: "VALIDADE E FORMA",
+        texto: `Esta procuração é válida por tempo indeterminado até revogação expressa.\nNOTA LEGAL: Para que esta procuração tenha efeitos em atos notariais (ex: compra e venda de imóveis) ou judiciais, a assinatura do Mandante deve ser objeto de Reconhecimento Presencial de Letra e Assinatura ou Termo de Autenticação por entidade competente (Advogado, Solicitador ou Notário).`
       },
       {
-        titulo: "Assinatura",
-        texto: `Feito e assinado em ${dados.comarca || "Portugal"}, no dia ${dataHoje}.\n\nO Mandante,\n__________________________\n(Assinatura conforme CC)`
+        titulo: "ASSINATURA",
+        texto: `Feito em ${dados.comarca || "Portugal"}, no dia ${dataHoje}.\n\nO Mandante,\n\n______________________________________________\n(Assinatura conforme documento de identificação)`
       }
     ],
     assinantes: {
-      parte1: "", 
-      parte2: ""
+      parte1: "" // Procuração é ato unilateral, só assina o mandante no corpo principal
     }
   };
 };

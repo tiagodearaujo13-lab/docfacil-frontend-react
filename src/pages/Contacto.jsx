@@ -23,9 +23,8 @@ function Contacto() {
     setStatus("enviando");
 
     try {
-      // Chama o servidor de verdade!
       const res = await fetch(
-        "https://meu-backend-api-rohr.onrender.com/enviar-email",
+        "https://docfacil-api.onrender.com/enviar-email", // URL do Render
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -41,6 +40,8 @@ function Contacto() {
       }
     } catch (err) {
       showToast("Erro de conexão.", "erro");
+    } finally {
+      setStatus(""); // Limpa o estado de carregamento
     }
   };
 
@@ -53,7 +54,7 @@ function Contacto() {
         </div>
 
         <div className={styles.gridContact}>
-          {/* COLUNA 1: Informações (A Fachada Profissional) */}
+          {/* COLUNA 1: Informações */}
           <div className={styles.infoCard}>
             <h3>Canais Oficiais</h3>
             <p className={styles.infoText}>
@@ -68,12 +69,20 @@ function Contacto() {
               </div>
             </div>
 
+            {/* --- TELEFONE ADICIONADO PARA STRIPE --- */}
+            <div className={styles.infoItem}>
+              <span className={styles.icon}>📞</span>
+              <div>
+                <strong>Telefone / WhatsApp</strong>
+                <span>+351 939 347 977</span>
+              </div>
+            </div>
+
             <div className={styles.infoItem}>
               <span className={styles.icon}>📍</span>
               <div>
                 <strong>Sede Digital</strong>
-                {/* Morada estratégica: Verdadeira mas profissional */}
-                <span>Algarve</span>
+                <span>Lagoa, Algarve</span>
               </div>
             </div>
 
@@ -150,18 +159,6 @@ function Contacto() {
               >
                 {status === "enviando" ? "A enviar..." : "Enviar Mensagem"}
               </button>
-
-              {status === "sucesso" && (
-                <div className={styles.msgSucesso}>
-                  ✅ Recebido! Entraremos em contacto brevemente.
-                </div>
-              )}
-
-              {status === "erro" && (
-                <div className={styles.msgErro}>
-                  ❌ Algo correu mal. Tente novamente.
-                </div>
-              )}
             </form>
           </div>
         </div>
